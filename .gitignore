@@ -1,0 +1,8 @@
+log
+tmp
+vendor/ruby
+!Guardfile
+!Gemfile
+!Gemfile.lock
+!.bundle
+!.bundle/*
