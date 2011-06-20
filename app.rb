@@ -1,19 +1,21 @@
-require 'goliath'
-require 'em-synchrony/em-http'
-require 'em-http/middleware/json_response'
-require 'yajl'
+require 'bundler'
+Bundler.setup
+Bundler.require
 
-# automatically parse the JSON HTTP response
-# EM::HttpRequest.use EventMachine::Middleware::JSONResponse
+Mongoid.logger = nil # re-set in config/mongo
+
+Dir.glob(File.dirname(__FILE__) + '/app/**/*.rb', &method(:require))
 
 class App < Goliath::API
+  use Goliath::Rack::JSONP
+  use Goliath::Rack::Params
+  use Goliath::Rack::Formatters::JSON
 
-  # parse query params and auto format JSON response
-  # use Goliath::Rack::Params
-  # use Goliath::Rack::Formatters::JSON
-  # use Goliath::Rack::Render
+  get "/p/:site_token", :site_token => /^[a-z0-9]{8}$/ do
+    run PlayerViewsController.new
+  end
 
-  def response(env)
-    [200, {}, "Hello World"]
+  map '/' do
+    run Proc.new { |env| [404, {"Content-Type" => "text/html"}, ["Hello I'm an awesome data server!"]] }
   end
 end
