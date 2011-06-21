@@ -7,8 +7,8 @@ Mongoid.logger = nil # re-set in config/mongo
 Dir.glob(File.dirname(__FILE__) + '/app/**/*.rb', &method(:require))
 
 class App < Goliath::API
-  use HoptoadNotifier::Rack
   use Goliath::Rack::Params
+  use Goliath::Rack::Hoptoad
 
   get "/p/:site_token", :site_token => /^[a-z0-9]{8}$/ do
     run PlayerViewsController.new
