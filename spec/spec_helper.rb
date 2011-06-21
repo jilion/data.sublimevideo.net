@@ -1,14 +1,14 @@
 require 'bundler'
-
 Bundler.setup
 Bundler.require(:default, :test)
 
-require 'goliath/test_helper'
-
-# mongoid custom test setup
+# Mongoid custom test setup
 Mongoid.logger = nil
 settings = YAML.load(ERB.new(File.new('./config/mongoid.yml').read).result)
 Mongoid.from_hash(settings['test'])
+require 'em-synchrony/mongoid'
+
+require 'goliath/test_helper'
 
 RSpec.configure do |config|
   config.filter_run :focus => true
