@@ -16,5 +16,5 @@ staging:
 production:
   uri: <%= ENV['MONGOHQ_URL'] %>
   # persist_in_safe_mode: true
-  max_retries_on_connection_failure: 10
+  max_retries_on_connection_failure: 3
   use_utc: true

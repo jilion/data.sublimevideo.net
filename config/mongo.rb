@@ -3,5 +3,5 @@ Mongoid.logger = logger
 
 environment [:development, :production] do
   Mongoid.from_hash(settings[Goliath.env.to_s])
-  # require 'em-synchrony/mongoid'
+  require 'em-synchrony/mongoid'
 end

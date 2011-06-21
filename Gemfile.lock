@@ -69,6 +69,9 @@ GEM
       launchy (>= 0.3.2)
       rest-client (~> 1.6.1)
       term-ansicolor (~> 1.0.5)
+    hoptoad_notifier (2.4.11)
+      activesupport
+      builder
     http_parser.rb (0.5.1)
     http_router (0.8.9)
       rack (>= 1.0.0)
@@ -126,6 +129,7 @@ DEPENDENCIES
   guard!
   guard-rspec
   heroku
+  hoptoad_notifier
   mongoid (~> 2.0)
   rb-fsevent
   rspec (> 2.0)

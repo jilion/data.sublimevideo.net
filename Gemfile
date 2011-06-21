@@ -5,8 +5,10 @@ gem 'em-http-request', :git => 'git://github.com/igrigorik/em-http-request.git'
 gem 'em-synchrony', :git => 'git://github.com/igrigorik/em-synchrony.git'
 gem 'yajl-ruby'
 
-gem "mongoid", "~> 2.0"
-gem "bson_ext", "~> 1.3"
+gem 'mongoid', '~> 2.0'
+gem 'bson_ext', '~> 1.3'
+
+gem 'hoptoad_notifier'
 
 group :development do
   gem 'bundler', '1.1.pre.5'
