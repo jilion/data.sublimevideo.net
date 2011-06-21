@@ -1,6 +1,7 @@
 class SiteUsage
   include Mongoid::Document
-
+  store_in :site_usages_test
+  
   field :site_token
   field :day,             :type => Time
 
