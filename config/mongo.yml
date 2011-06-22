@@ -1,4 +1,5 @@
 development:
+  # uri: <%= ENV['MONGOHQ_URL'] %>
   host: localhost
   database: datasublime-dev
 
