@@ -17,6 +17,6 @@ environment :production do
   config['mongo'] = EventMachine::Synchrony::ConnectionPool.new(size: 20) do
     conn = EM::Mongo::Connection.new(host, port, 1, reconnect_in: 1)
     conn.db(db).authenticate(username,password)
-    conn
+    conn.db
   end
 end
