@@ -2,8 +2,6 @@ require 'bundler'
 Bundler.setup
 Bundler.require
 
-Mongoid.logger = nil # re-set in config/mongo
-
 Dir.glob(File.dirname(__FILE__) + '/app/**/*.rb', &method(:require))
 
 class App < Goliath::API

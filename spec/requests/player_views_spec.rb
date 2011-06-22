@@ -23,15 +23,29 @@ describe PlayerViewsController do
   end
 
   it "increments SiteUsage player_views" do
-    site_usage = SiteUsage.create(site_token: '12345678', day: today)
-    site_usage.player_views.should == 0
+    require 'erb'
+    require 'em-synchrony/em-mongo'
+    settings = YAML.load(ERB.new(File.new('./config/mongo.yml').read).result)['test']
+
+    EM.synchrony do
+      collection = EM::Mongo::Connection.new(settings['host'], 27017, 1, reconnect_in: 1).db(settings['database']).collection('site_usages')
+      collection.remove({})
+      collection.first({}).should be_nil
+      EM.stop
+    end
+
     with_api(App) do
       get_request({:path => '/p/12345678'}, err) do |cb|
         cb.response_header.status.should == 200
         cb.response.should == 'sublimevideo.pInc=true'
       end
     end
-    site_usage.reload.player_views.should == 1
+
+    EM.synchrony do
+      collection = EM::Mongo::Connection.new(settings['host'], 27017, 1, reconnect_in: 1).db(settings['database']).collection('site_usages')
+      collection.first({})['player_views'].should == 1
+      EM.stop
+    end
   end
 
 end

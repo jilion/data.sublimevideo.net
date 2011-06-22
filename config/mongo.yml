@@ -1,0 +1,11 @@
+development:
+  host: localhost
+  database: datasublime-dev
+
+test:
+  host: localhost
+  database: datasublime-test
+  use_utc: true
+
+production:
+  uri: <%= ENV['MONGOHQ_URL'] %>
