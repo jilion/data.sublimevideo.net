@@ -1,38 +1,20 @@
 GIT
   remote: git://github.com/guard/guard.git
-  revision: c2b2c15a808beee7132c1a7daff0741e0d97d447
+  revision: 5923cef530e5118560ff655d027089a516eb21f0
   specs:
     guard (0.4.2)
       thor (~> 0.14.6)
 
 GIT
-  remote: git://github.com/igrigorik/em-http-request.git
-  revision: c7848ff95a603c0d97b465ed1f2058178b3f78c0
-  specs:
-    em-http-request (1.0.0.beta.4)
-      addressable (>= 2.2.3)
-      em-socksify
-      eventmachine (>= 1.0.0.beta.3)
-      http_parser.rb (>= 0.5.1)
-
-GIT
-  remote: git://github.com/igrigorik/em-synchrony.git
-  revision: 5c2aa0ec22509102a1e2fda659c1d2cea5cb6d5e
-  specs:
-    em-synchrony (0.3.0.beta.1)
-      eventmachine (>= 1.0.0.beta.1)
-
-GIT
-  remote: git://github.com/postrank-labs/goliath.git
-  revision: f96bd2dc08895a56882fb621efb5ccc36635d50f
-  ref: f96bd2dc08895a56882fb621efb5ccc36635d50f
+  remote: https://github.com/postrank-labs/goliath.git
+  revision: b3f71e8a2f68d9c020473a186f18526f024bd464
   specs:
     goliath (0.9.1)
       async-rack
       em-synchrony (>= 0.3.0.beta.1)
       eventmachine (>= 1.0.0.beta.3)
       http_parser.rb
-      http_router (~> 0.8.8)
+      http_router (~> 0.8.9)
       log4r
       multi_json
       rack (>= 1.2.2)
@@ -42,21 +24,14 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (3.0.9)
-      activesupport (= 3.0.9)
-      builder (~> 2.1.2)
-      i18n (~> 0.5.0)
     activesupport (3.0.9)
-    addressable (2.2.6)
     async-rack (0.5.1)
       rack (~> 1.1)
-    bson (1.3.1)
-    bson_ext (1.3.1)
-    builder (2.1.2)
+    builder (3.0.0)
     configuration (1.3.1)
     diff-lcs (1.1.2)
-    em-socksify (0.1.0)
-      eventmachine
+    em-synchrony (0.3.0.beta.1)
+      eventmachine (>= 1.0.0.beta.1)
     eventmachine (1.0.0.beta.3)
     foreman (0.18.0)
       term-ansicolor (~> 1.0.5)
@@ -68,6 +43,7 @@ GEM
       launchy (>= 0.3.2)
       rest-client (~> 1.6.1)
       term-ansicolor (~> 1.0.5)
+    hiredis (0.3.2)
     hoptoad_notifier (2.4.11)
       activesupport
       builder
@@ -75,18 +51,11 @@ GEM
     http_router (0.8.9)
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
-    i18n (0.5.0)
     launchy (0.4.0)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
     log4r (1.1.9)
     mime-types (1.16)
-    mongo (1.3.1)
-      bson (>= 1.3.1)
-    mongoid (2.0.2)
-      activemodel (~> 3.0)
-      mongo (~> 1.3)
-      tzinfo (~> 0.3.22)
     multi_json (1.0.3)
     rack (1.3.0)
     rack-accept-media-types (0.9)
@@ -96,6 +65,7 @@ GEM
       rack-accept-media-types (>= 0.6)
     rake (0.9.2)
     rb-fsevent (0.4.0)
+    redis (2.2.1)
     rest-client (1.6.3)
       mime-types (>= 1.16)
     rspec (2.6.0)
@@ -108,7 +78,6 @@ GEM
     rspec-mocks (2.6.0)
     term-ansicolor (1.0.5)
     thor (0.14.6)
-    tzinfo (0.3.28)
     url_mount (0.2.1)
       rack
     yajl-ruby (0.8.2)
@@ -117,18 +86,17 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bson_ext
   bundler (= 1.1.pre.5)
-  em-http-request!
-  em-synchrony!
+  em-synchrony
   foreman
   goliath!
   growl
   guard!
   guard-rspec
   heroku
+  hiredis (~> 0.3.1)
   hoptoad_notifier
-  mongoid (~> 2.0.2)
   rb-fsevent
+  redis (~> 2.2.0)
   rspec (> 2.0)
   yajl-ruby

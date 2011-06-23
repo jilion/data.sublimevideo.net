@@ -1,9 +1,10 @@
 class PlayerViewsController < Goliath::API
 
   def response(env)
-    SiteUsage.increment(params[:site_token], :player_views)
+    res = redis.incr("p")
 
-    [200, { 'Content-Type' => 'text/javascript' }, 'sublimevideo.pInc=true']
+    # [200, { 'Content-Type' => 'text/javascript' }, 'sublimevideo.pInc=true']
+    [200, { 'Content-Type' => 'text/javascript' }, res]
   end
 
 

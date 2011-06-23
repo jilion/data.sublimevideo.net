@@ -1,4 +1,5 @@
-import('mongo')
+# import('mongo')
+import('redis')
 import('hoptoad')
 
 
