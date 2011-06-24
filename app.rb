@@ -8,7 +8,11 @@ class App < Goliath::API
   use Goliath::Rack::Hoptoad
 
   get "/p/:site_token", :site_token => /^[a-z0-9]{8}$/ do
-    run PlayerViewsController.new
+    run IncrPlayerViewsController.new
+  end
+
+  get "/gp/:site_token", :site_token => /^[a-z0-9]{8}$/ do
+    run GetPlayerViewsController.new
   end
 
   map '/' do

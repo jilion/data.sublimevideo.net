@@ -1,4 +1,4 @@
-environment :development do
+environment [:development, :test] do
   config['redis'] = Redis.new
 end
 

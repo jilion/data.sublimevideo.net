@@ -1,9 +1,10 @@
 source :rubygems
 
 gem "hiredis", "~> 0.3.1"
-gem "em-synchrony"
-gem "redis", "~> 2.2.0", :require => ["redis/connection/synchrony", "redis"]
+gem 'em-synchrony', :git => 'git://github.com/igrigorik/em-synchrony.git'
+gem 'em-http-request', :git => 'git://github.com/igrigorik/em-http-request.git'
 gem "goliath", :git => "https://github.com/postrank-labs/goliath.git"
+gem "redis", "~> 2.2.0", :require => ["redis/connection/synchrony", "redis"]
 gem "yajl-ruby"
 
 # gem 'goliath', :git => 'git://github.com/postrank-labs/goliath.git' #, :ref => 'f96bd2dc08895a56882fb621efb5ccc36635d50f'
