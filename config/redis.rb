@@ -1,7 +1,1 @@
-environment [:development, :test] do
-  config['redis'] = Redis.new
-end
-
-environment :production do
-  config['redis'] = Redis.new(url: ENV['REDISTOGO_URL'])
-end
+config['redis'] = Redis.connect(url: ENV['REDISTOGO_URL'])  # localhost if ENV['REDISTOGO_URL'] isn't present
