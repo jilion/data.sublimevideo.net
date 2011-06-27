@@ -1,1 +1,1 @@
-web: zappa -p $PORT app.coffee
+web: coffee app.coffee
