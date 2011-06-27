@@ -1,1 +1,1 @@
-web: bundle exec ruby app.rb -sv -e prod -p $PORT
+web: node app.js
