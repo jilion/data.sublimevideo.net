@@ -36,6 +36,16 @@ end
 # gem 'tilt'
 
 group :development do
+  gem 'heroku'
   # Development gems
   # gem 'ruby-debug19'
+end
+
+group :test do
+  gem 'rb-fsevent', :git => 'git://github.com/ttilley/rb-fsevent.git', :branch => 'pre-compiled-gem-one-off'
+  gem 'growl_notify'
+  gem 'guard-rspec'
+  gem 'rspec'
+  gem 'rspec-cramp', :require => 'rspec/cramp'
+  gem 'database_cleaner'
 end

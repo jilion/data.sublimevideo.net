@@ -10,7 +10,6 @@ module DataSublimeVideo
     end
 
     def self.env
-      # ENV['RACK_ENV'] = 'production'
       @_env ||= ENV['RACK_ENV'] || 'development'
     end
 
@@ -20,7 +19,6 @@ module DataSublimeVideo
 
     # Initialize the application
     def self.initialize!
-      p ENV['RACK_ENV']
       # Initialize Mongoid with the mongoid.yml once EventMachine has started.
       EM::next_tick do
         # require 'em-mongo'
