@@ -20,11 +20,11 @@ module DataSublimeVideo
 
     # Initialize the application
     def self.initialize!
+      p ENV['RACK_ENV']
       # Initialize Mongoid with the mongoid.yml once EventMachine has started.
       EM::next_tick do
         # require 'em-mongo'
         Mongoid.load!(File.join(DataSublimeVideo::Application.root, 'config', 'mongoid.yml'))
-        p Mongoid.database
       end
     end
 
