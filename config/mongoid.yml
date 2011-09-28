@@ -1,0 +1,13 @@
+development:
+  host: localhost
+  database: mysublime
+
+test:
+  host: localhost
+  database: msv_test
+
+# set these environment variables on your prod server
+production:
+  uri: <%= ENV['MONGOHQ_URL'] %>
+  logger: false
+

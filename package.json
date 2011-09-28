@@ -1,8 +1,0 @@
-{
-  "name": "data-sv-net",
-  "version": "0.0.1",
-  "dependencies": {
-    "express": "2.2.0",
-    "mongolian": "0.1.10"
-  }
-}
