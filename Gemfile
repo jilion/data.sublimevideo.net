@@ -11,16 +11,12 @@ gem 'http_router'
 # Collection of async-proof rack middlewares - https://github.com/rkh/async-rack.git
 gem 'async-rack'
 
-
 # For stats parsing
-gem 'addressable'
 gem 'useragent',  :git => 'git://github.com/Jilion/useragent.git'
 
-
-# For async Active Record models
-
-# gem 'mysql2', '~> 0.2.11'
-# gem 'activerecord', :require => 'active_record'
+gem 'settingslogic'
+gem 'pusher'
+gem 'em-http-request'
 
 # For Mongoid.
 gem 'bson_ext', '~> 1.3'
@@ -28,8 +24,8 @@ gem 'mongoid'
 gem 'em-mongo'
 
 platforms :mri_19 do
-# Using Fibers + async callbacks to emulate synchronous programming
-#  gem 'em-synchrony'
+  # Using Fibers + async callbacks to emulate synchronous programming
+  gem 'em-synchrony',  '~> 1.0.0'
 end
 
 # Generic interface to multiple Ruby template engines - https://github.com/rtomayko/tilt
@@ -47,5 +43,4 @@ group :test do
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-cramp', :require => 'rspec/cramp'
-  gem 'database_cleaner'
 end

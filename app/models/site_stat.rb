@@ -11,79 +11,43 @@ class SiteStat
   field :md, :type => Hash # Player Mode + Device hash { h (html5) => { d (desktop) => 2, m (mobile) => 1 }, f (flash) => ... }
   field :bp, :type => Hash # Browser + Plateform hash { "saf-win" => 2, "saf-osx" => 4, ...}
 
-  # ================
-  # = Associations =
-  # ================
-
-  # ==========
-  # = Scopes =
-  # ==========
-
-  %w[s m h d].each do |period|
-    scope "#{period}_after".to_sym, lambda { |date| where(period => { "$gte" => date.to_i }).order_by([period.to_sym, :asc]) }
-    scope "#{period}_before".to_sym,  lambda { |date| where(period => { "$lt" => date.to_i }).order_by([period.to_sym, :asc]) }
-    scope "#{period}_between".to_sym, lambda { |start_date, end_date| where(period => { "$gte" => start_date.to_i, "$lt" => end_date.to_i }).order_by([period.to_sym, :asc]) }
-  end
-
-  # ====================
-  # = Instance Methods =
-  # ====================
-
-  # time for backbonejs model
-  def t
-    s.to_i
-  end
-
-  # only main & extra hostname are counted in charts
-  def pv
-    pv = read_attribute(:pv)
-    pv['m'].to_i + pv['e'].to_i
-  end
-  def vv
-    vv = read_attribute(:vv)
-    vv['m'].to_i + vv['e'].to_i
-  end
-
   # =================
   # = Class Methods =
   # =================
 
-  # def self.json(token, period_type = 'days')
-  #   json_stats.to_json(except: [:_id, :t, :s, :m, :h, :d], methods: [:t])
-  # end
-
-  def self.inc_second_stats(params, user_agent)
-    second = Time.now.change(usec: 0).to_time
-    inc = incs_from_params_and_user_agent(params, user_agent)
-    self.collection.update({ t: params[:t], s: second }, { "$inc" => inc }, upsert: true)
+  def self.inc_stats_and_pusher(params, user_agent)
+    if params.key?(:t) && %w[l p s].include?(params[:e]) && %w[m e].include?(params[:h])
+      second    = Time.now.change(usec: 0).to_time
+      inc, json = inc_and_json(params, user_agent)
+      self.collection.update({ t: params[:t], s: second }, { "$inc" => inc }, upsert: true)
+      Pusher["private-#{params[:t]}"].trigger_async('stats', json.merge(id: second.to_i))
+    end
   end
 
 private
 
-  def self.incs_from_params_and_user_agent(params, user_agent)
-    incs = {}
-    if params.key?(:e) && params.key?(:h)
-      case params[:e]
-      when 'l' # Player load
-        # Page Visits
-        incs['pv.' + params[:h]] = 1
-        # Browser + Plateform
-        if %w[m e].include?(params[:h])
-          incs['bp.' + browser_and_platform_key(user_agent)] = 1
+  def self.inc_and_json(params, user_agent)
+    inc, json = {}, {}
+    case params[:e]
+    when 'l' # Player load
+      inc['pv.' + params[:h]] = 1 # Page Visits
+      inc['bp.' + browser_and_platform_key(user_agent)] = 1 # Browser + Plateform
+      json = { 'pv' => 1, 'bp' => { browser_and_platform_key(user_agent) => 1 } }
+    when 'p' # Video prepare
+      # Player Mode + Device hash
+      if params.key?(:pm) && params.key?(:pd)
+        json['md'] = { 'h' => {}, 'f' => {} }
+        params[:pm].uniq.each do |pm|
+          inc['md.' + pm + '.' + params[:pd]] = params[:pm].count(pm)
+          json['md'][pm] = { params[:pd] => params[:pm].count(pm) }
         end
-      when 'p' # Video prepare
-        # Player Mode + Device hash
-        if %w[m e].include?(params[:h]) && params.key?(:pm) && params.key?(:pd)
-          params[:pm].uniq.each do |pm|
-            incs['md.' + pm + '.' + params[:pd]] = params[:pm].count(pm)
-          end
-        end
-      when 's' # Video start (play)
-        # Video Views
-        incs['vv.' + params[:h]] = 1
       end
+    when 's' # Video start (play)
+      # Video Views
+      inc['vv.' + params[:h]] = 1
+      json = { 'vv' => 1 }
     end
-    incs
+    [inc, json]
   end
 
   SUPPORTED_BROWSER = {

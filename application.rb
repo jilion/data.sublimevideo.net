@@ -1,5 +1,5 @@
-require "rubygems"
-require "bundler"
+require 'rubygems'
+require 'bundler'
 
 module DataSublimeVideo
   class Application
@@ -19,9 +19,8 @@ module DataSublimeVideo
 
     # Initialize the application
     def self.initialize!
-      # Initialize Mongoid with the mongoid.yml once EventMachine has started.
       EM::next_tick do
-        # require 'em-mongo'
+        Pusher.url = PusherConfig.url
         Mongoid.load!(File.join(DataSublimeVideo::Application.root, 'config', 'mongoid.yml'))
       end
     end
@@ -30,6 +29,8 @@ module DataSublimeVideo
 end
 
 Bundler.require(:default, DataSublimeVideo::Application.env)
+require 'em-synchrony/em-http'
+require 'em-synchrony/em-mongo'
 
 # Preload application classes
-Dir['./app/**/*.rb'].each {|f| require f}
+Dir['./app/**/*.rb'].each { |f| require f }

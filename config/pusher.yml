@@ -1,0 +1,17 @@
+# thibaud@jilion.com credentials
+# url = http://KEY:SECRET@api.pusherapp.com/apps/APP_ID
+
+defaults: &defaults
+  url: http://c76b85222fbec28c8508:7ab0d643924b2bcc23d2@api.pusherapp.com/apps/8211
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  url: <%= ENV['PUSHER_URL'] %>
