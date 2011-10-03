@@ -19,7 +19,9 @@ class SiteStat
     if params.key?(:t) && %w[l p s].include?(params[:e]) && %w[m e].include?(params[:h])
       second    = Time.now.change(usec: 0).to_time
       inc, json = inc_and_json(params, user_agent)
-      # self.collection.update({ t: params[:t], s: second }, { "$inc" => inc }, upsert: true)
+      EM.defer do
+        self.collection.update({ t: params[:t], s: second }, { "$inc" => inc }, upsert: true)
+      end
       Pusher["presence-#{params[:t]}"].trigger_async('stats', json.merge(id: second.to_i))
     end
   end
