@@ -16,7 +16,7 @@ class SiteStat
   # =================
 
   def self.inc_stats_and_pusher(params, user_agent)
-    if params.key?(:t) && %w[l p s].include?(params[:e]) && %w[m e].include?(params[:h])
+    if params.key?(:t) && %w[l s].include?(params[:e]) && %w[m e].include?(params[:h]) && !params.key?(:em)
       second    = Time.now.change(usec: 0).to_time
       inc, json = inc_and_json(params, user_agent)
       EM.defer do
@@ -31,11 +31,12 @@ private
   def self.inc_and_json(params, user_agent)
     inc, json = {}, {}
     case params[:e]
-    when 'l' # Player load
-      inc['pv.' + params[:h]] = 1 # Page Visits
-      inc['bp.' + browser_and_platform_key(user_agent)] = 1 # Browser + Plateform
-      json = { 'pv' => 1, 'bp' => { browser_and_platform_key(user_agent) => 1 } }
-    when 'p' # Video prepare
+    when 'l' # Player load &  Video prepare
+      unless params.key?(:po) # video prepare only
+        inc['pv.' + params[:h]] = 1 # Page Visits
+        inc['bp.' + browser_and_platform_key(user_agent)] = 1 # Browser + Plateform
+        json = { 'pv' => 1, 'bp' => { browser_and_platform_key(user_agent) => 1 } }
+      end
       # Player Mode + Device hash
       if params.key?(:pm) && params.key?(:pd)
         json['md'] = { 'h' => {}, 'f' => {} }
