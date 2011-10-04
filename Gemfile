@@ -19,8 +19,8 @@ gem 'pusher'
 gem 'em-http-request'
 
 # For Mongoid.
-gem 'bson_ext', '~> 1.3'
-gem 'mongoid'
+gem 'bson_ext'
+gem 'mongoid', '~> 2.2.0'
 gem 'em-mongo'
 
 platforms :mri_19 do
@@ -39,7 +39,7 @@ end
 
 group :test do
   gem 'rb-fsevent', :git => 'git://github.com/ttilley/rb-fsevent.git', :branch => 'pre-compiled-gem-one-off'
-  gem 'growl_notify'
+  gem 'growl_notify', :git => 'git://github.com/agileanimal/growl_notify.git'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-cramp', :require => 'rspec/cramp'
