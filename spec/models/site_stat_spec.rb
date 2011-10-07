@@ -14,13 +14,13 @@ describe SiteStat do
       it { @json.should eql("pv" => 1, "bp" => { "saf-osx" => 1 }) }
     end
     context "with video prepare event / main hostname" do
-      let(:params) { { t: 'ibvjcopp', h: 'm', e: 'l', po: 1, pd: 'd', pm: ['h','f'] } }
+      let(:params) { { t: 'ibvjcopp', h: 'm', e: 'l', po: 1, d: 'd', pm: ['h','f'] } }
 
       it { @inc.should  eql("md.h.d" => 1, "md.f.d" => 1) }
       it { @json.should eql("md" => { "f" => { "d" => 1 }, "h" => { "d" => 1 }}) }
     end
     context "with video view event / main hostname" do
-      let(:params) { { t: 'ibvjcopp', h: 'm', e: 's', pd: 'd', pm: 'f' } }
+      let(:params) { { t: 'ibvjcopp', h: 'm', e: 's', d: 'd', pm: 'f' } }
 
       it { @inc.should  eql("vv.m" => 1) }
       it { @json.should eql("vv" => 1) }

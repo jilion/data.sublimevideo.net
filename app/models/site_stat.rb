@@ -38,11 +38,11 @@ private
         json = { 'pv' => 1, 'bp' => { browser_and_platform_key(user_agent) => 1 } }
       end
       # Player Mode + Device hash
-      if params.key?(:pm) && params.key?(:pd)
+      if params.key?(:pm) && params.key?(:d)
         json['md'] = { 'h' => {}, 'f' => {} }
         params[:pm].uniq.each do |pm|
-          inc['md.' + pm + '.' + params[:pd]] = params[:pm].count(pm)
-          json['md'][pm] = { params[:pd] => params[:pm].count(pm) }
+          inc['md.' + pm + '.' + params[:d]] = params[:pm].count(pm)
+          json['md'][pm] = { params[:d] => params[:pm].count(pm) }
         end
       end
     when 's' # Video start (play)
