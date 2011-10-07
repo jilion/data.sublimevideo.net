@@ -1,5 +1,7 @@
 source :rubygems
 
+gem 'rake'
+
 gem 'cramp'
 
 # Async webserver for running a cramp application
@@ -33,13 +35,14 @@ end
 
 group :development do
   gem 'heroku'
+  gem 'bundler', '~> 1.1.rc'
   # Development gems
   # gem 'ruby-debug19'
 end
 
 group :test do
   gem 'rb-fsevent', :git => 'git://github.com/ttilley/rb-fsevent.git', :branch => 'pre-compiled-gem-one-off'
-  gem 'growl_notify', :git => 'git://github.com/agileanimal/growl_notify.git'
+  gem 'growl_notify'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-cramp', :require => 'rspec/cramp'
