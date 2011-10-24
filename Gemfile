@@ -35,7 +35,7 @@ end
 
 group :development do
   gem 'heroku'
-  gem 'bundler', '~> 1.1.rc'
+  gem 'bundler'
   # Development gems
   # gem 'ruby-debug19'
 end
