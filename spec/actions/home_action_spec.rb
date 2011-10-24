@@ -9,8 +9,9 @@ describe HomeAction, :cramp => true do
 
   # Matching on status code.
   it "should respond to a GET request" do
-    get("/").should respond_with :status => 200
-    get("/").should respond_with :body => "I'm a super stats async server :)"
+    get("/").should respond_with :status => 301
+    get("/").headers["Location"].should eql 'http://sublimevideo.net'
+    # get("/").should respond_with :body => "I'm a super stats async server :)"
   end
 
 end
