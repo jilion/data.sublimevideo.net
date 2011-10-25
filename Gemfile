@@ -14,7 +14,8 @@ gem 'http_router'
 gem 'async-rack'
 
 # For stats parsing
-gem 'useragent',  :git => 'git://github.com/Jilion/useragent.git'
+gem 'useragent', git: 'git://github.com/Jilion/useragent.git'
+gem 'stat_request_parser', git: 'git@jime1.epfl.ch:sv_stats_request_parser.git'
 
 gem 'settingslogic'
 gem 'pusher'
@@ -27,7 +28,7 @@ gem 'em-mongo'
 
 platforms :mri_19 do
   # Using Fibers + async callbacks to emulate synchronous programming
-  gem 'em-synchrony',  '~> 1.0.0'
+  gem 'em-synchrony', '~> 1.0.0'
 end
 
 # Generic interface to multiple Ruby template engines - https://github.com/rtomayko/tilt
@@ -41,9 +42,9 @@ group :development do
 end
 
 group :test do
-  gem 'rb-fsevent', :git => 'git://github.com/ttilley/rb-fsevent.git', :branch => 'pre-compiled-gem-one-off'
+  gem 'rb-fsevent', '~> 0.9.0.pre3'
   gem 'growl_notify'
   gem 'guard-rspec'
   gem 'rspec'
-  gem 'rspec-cramp', :require => 'rspec/cramp'
+  gem 'rspec-cramp', require: 'rspec/cramp'
 end
