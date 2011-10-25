@@ -33,4 +33,5 @@ require 'em-synchrony/em-http'
 require 'em-synchrony/em-mongo'
 
 # Preload application classes
+require './app/models/stat'
 Dir['./app/**/*.rb'].each { |f| require f }
