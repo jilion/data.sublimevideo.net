@@ -16,8 +16,8 @@ gem 'async-rack'
 # For stats parsing
 gem 'useragent', git: 'git://github.com/Jilion/useragent.git'
 
-# Need to be updated manually until https://github.com/carlhuda/bundler/issues/67 fixed.
-gem 'stat_request_parser', path: 'vendor/git/sv_stats_request_parser'
+# Need to be updated manually until https://github.com/carlhuda/bundler/issues/67 is fixed.
+gem 'stat_request_parser', path: 'vendor/sv_stats_request_parser'
 
 gem 'settingslogic'
 gem 'pusher'
