@@ -10,7 +10,9 @@ class Stat
 
   def self.inc_and_push_stats(params, user_agent)
     if %w[m e].include?(params[:h]) && !params.key?(:em)
+      p params
       incs = StatRequestParser.stat_incs(params, user_agent)
+      p incs
       second = Time.now.change(usec: 0).to_time
       inc_stats(incs, second)
       push_stats(incs, second)
@@ -35,7 +37,7 @@ private
   end
 
   def self.push_stats(incs, second)
-    json = convert_incs_to_json(incs, second)
+    json = convert_incs_to_json(incs, second.to_i)
     Pusher["presence-#{incs[:site][:t]}"].trigger_async('stats', json)
   end
 
