@@ -15,7 +15,7 @@ gem 'async-rack'
 
 # For stats parsing
 gem 'useragent', git: 'git://github.com/Jilion/useragent.git'
-gem 'stat_request_parser', path: 'vendor/git/sv_stats_request_parser'
+gem 'stat_request_parser', git: 'git@jime1.epfl.ch:sv_stats_request_parser.git'
 
 gem 'settingslogic'
 gem 'pusher'
