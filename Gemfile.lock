@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git@jime1.epfl.ch:sv_stats_request_parser.git
-  revision: 32bfb8afb314d8e0e22dd6e38d4cb762a74abf47
+  revision: 66b141de44142b4fb30be1be2c9775798a2e4fac
   specs:
     stat_request_parser (0.0.1)
       activesupport (>= 3.0.0)
@@ -65,7 +65,7 @@ GEM
     i18n (0.5.0)
     launchy (2.0.5)
       addressable (~> 2.2.6)
-    mime-types (1.17.1)
+    mime-types (1.17.2)
     mongo (1.4.1)
       bson (= 1.4.1)
     mongoid (2.2.3)
