@@ -4,9 +4,8 @@ GIT
   specs:
     useragent (0.2.3)
 
-GIT
-  remote: git@jime1.epfl.ch:sv_stats_request_parser.git
-  revision: 66b141de44142b4fb30be1be2c9775798a2e4fac
+PATH
+  remote: vendor/git/sv_stats_request_parser
   specs:
     stat_request_parser (0.0.1)
       activesupport (>= 3.0.0)
