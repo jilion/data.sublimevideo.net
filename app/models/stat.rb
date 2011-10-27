@@ -10,9 +10,7 @@ class Stat
 
   def self.inc_and_push_stats(params, user_agent)
     if %w[m e].include?(params[:h]) && !params.key?(:em)
-      p params
       incs = StatRequestParser.stat_incs(params, user_agent)
-      p incs
       second = Time.now.change(usec: 0).to_time
       inc_stats(incs, second)
       push_stats(incs, second)
@@ -53,13 +51,13 @@ private
       site[:inc].each do |key, value|
         case key
         when /^pv\./
-          json[:site][:pv] = value; next
+          json[:site][:pv] = value
         when /^bp\./
-          one_level_json_convert!(json[:site], key, value); next
+          one_level_json_convert!(json[:site], key, value)
         when /^md\./
-          double_level_json_convert!(json[:site], key, value); next
+          double_level_json_convert!(json[:site], key, value)
         when /^vv\./
-          json[:site][:vv] = value; next
+          json[:site][:vv] = value
         end
       end
     end
@@ -70,15 +68,15 @@ private
         video[:inc].each do |key, value|
           case key
           when /^vl\./
-            video_json[:vl] = value; next
+            video_json[:vl] = value
           when /^bp\./
-            one_level_json_convert!(video_json, key, value); next
+            one_level_json_convert!(video_json, key, value)
           when /^md\./
-            double_level_json_convert!(video_json, key, value); next
+            double_level_json_convert!(video_json, key, value)
           when /^vs\./
-            one_level_json_convert!(video_json, key, value); next
+            one_level_json_convert!(video_json, key, value)
           when /^vv\./
-            video_json[:vv] = value; next
+            video_json[:vv] = value
           end
         end
         json[:videos] << video_json
