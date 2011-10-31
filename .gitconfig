@@ -5,7 +5,7 @@
 	logallrefupdates = true
 	ignorecase = true
 [remote "origin"]
-	url    = git@jime1.epfl.ch:data.sublimevideo.net.git
+	url    = git@github.com:jilion/data.sublimevideo.net.git
 	fetch  = +refs/heads/*:refs/remotes/origin/*
 [remote "production"]
 	url    = git@heroku.com:datasublime.git
