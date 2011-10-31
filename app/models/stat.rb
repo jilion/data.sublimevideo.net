@@ -1,8 +1,12 @@
-class Stat
-  include Mongoid::Document
+module Stat
+  extend ActiveSupport::Concern
+  
+  included do
 
-  # DateTime periods
-  field :s,  :type => DateTime  # Second
+    # DateTime periods
+    field :s,  :type => DateTime  # Second
+
+  end
 
   # =================
   # = Class Methods =
