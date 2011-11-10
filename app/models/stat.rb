@@ -1,11 +1,9 @@
 module Stat
   extend ActiveSupport::Concern
-  
-  included do
 
+  included do
     # DateTime periods
     field :s,  :type => DateTime  # Second
-
   end
 
   # =================
@@ -40,7 +38,7 @@ private
 
   def self.push_stats(incs, second)
     json = convert_incs_to_json(incs, second.to_i)
-    Pusher["presence-#{incs[:site][:t]}"].trigger_async('stats', json)
+    Pusher["private-#{incs[:site][:t]}"].trigger_async('stats', json)
   end
 
   # Convert StatRequestParser incs to json for Pusher
