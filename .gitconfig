@@ -8,7 +8,7 @@
 	url    = git@github.com:jilion/data.sublimevideo.net.git
 	fetch  = +refs/heads/*:refs/remotes/origin/*
 [remote "production"]
-	url    = git@heroku.com:datasublime.git
+	url    = git@heroku.com:datasublimevideo.git
 	fetch  = +refs/heads/*:refs/remotes/production/*
   push   = master:master
 [branch "master"]
