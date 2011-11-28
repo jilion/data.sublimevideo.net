@@ -10,8 +10,5 @@ development:
 test:
   <<: *defaults
 
-staging:
-  <<: *defaults
-
 production:
   url: <%= ENV['PUSHER_URL'] %>

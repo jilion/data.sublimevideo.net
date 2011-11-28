@@ -7,3 +7,4 @@ vendor/ruby
 !.bundle
 !.bundle/*
 node_modules
+.env

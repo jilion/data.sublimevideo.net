@@ -39,6 +39,7 @@ end
 group :development do
   gem 'heroku'
   gem 'bundler'
+  gem 'foreman'
   # Development gems
   # gem 'ruby-debug19'
 end
