@@ -38,7 +38,7 @@ private
 
   def self.push_stats(incs, second)
     json = convert_incs_to_json(incs, second.to_i)
-    Pusher["private-#{incs[:site][:t]}"].trigger_async('stats', json)
+    Pusher["presence-#{incs[:site][:t]}"].trigger_async('stats', json)
   end
 
   # Convert StatRequestParser incs to json for Pusher
