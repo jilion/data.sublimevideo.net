@@ -2,4 +2,5 @@
 HttpRouter.new do
   add('/').to(HomeAction)
   add('/_.gif').to(StatAction)
+  add('/proxy').to(ProxyAction)
 end
