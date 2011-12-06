@@ -28,6 +28,9 @@ gem 'bson_ext'
 gem 'mongoid'
 gem 'em-mongo'
 
+gem 'newrelic_rpm'
+gem 'rpm_contrib'
+
 platforms :mri_19 do
   # Using Fibers + async callbacks to emulate synchronous programming
   gem 'em-synchrony', '~> 1.0.0'
