@@ -2,13 +2,15 @@ require 'new_relic/agent/instrumentation/rack'
 
 module DataSublimeVideo
 
-  class NewRelic < AsyncRack::CommonLogger
-    def async_callback(result)
-      super result
+  class NewRelic
+    include ::AsyncRack::AsyncCallback::SimpleWrapper
+
+    def initialize(app)
+      @app = app
     end
 
     def call(env)
-      super
+      @app.call(env)
     end
 
     include ::NewRelic::Agent::Instrumentation::Rack
