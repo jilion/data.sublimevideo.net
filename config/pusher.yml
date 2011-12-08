@@ -1,7 +1,7 @@
-# thibaud@jilion.com credentials
 # url = http://KEY:SECRET@api.pusherapp.com/apps/APP_ID
 
 defaults: &defaults
+  # thibaud@jilion.com credentials
   url: http://c76b85222fbec28c8508:7ab0d643924b2bcc23d2@api.pusherapp.com/apps/8211
 
 development:
