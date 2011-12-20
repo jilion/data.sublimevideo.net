@@ -37,8 +37,38 @@ private
   end
 
   def self.push_stats(incs, second)
-    json = StatRequestParser.convert_incs_to_json(incs, second.to_i)
-    Pusher["private-#{incs[:site][:t]}"].trigger_async('stats', json)
+    channel = Pusher["private-#{incs[:site][:t]}"]
+    trigger_async_if_channel_occupied(channel, incs, second)
+  end
+
+  def self.trigger_async_if_channel_occupied(channel, incs, second)
+    request  = Pusher::Request.new(:get, channel.instance_variable_get(:@uri) + 'stats', {}, '')
+    uri      = request.instance_variable_get(:@uri)
+    params   = request.instance_variable_get(:@params)
+
+    deferrable = EM::DefaultDeferrable.new
+    http = EventMachine::HttpRequest.new(uri).get({
+      :query => params, :timeout => 5,
+      :head => {'Content-Type'=> 'application/json'}
+    })
+    http.callback {
+      begin
+        response = MultiJson.decode(http.response)
+        if response['occupied']
+          json = StatRequestParser.convert_incs_to_json(incs, second.to_i)
+          channel.trigger_async('stats', json)
+        end
+        handle_response(http.response_header.status, http.response.chomp)
+        deferrable.succeed
+      rescue => e
+        deferrable.fail(e)
+      end
+    }
+    http.errback {
+      Pusher.logger.debug("Network error connecting to pusher: #{http.inspect}")
+      deferrable.fail(Error.new("Network error connecting to pusher"))
+    }
+    deferrable
   end
 
 end
