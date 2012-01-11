@@ -1,4 +1,5 @@
-source :rubygems
+source 'http://rubygems.org'
+source 'https://gems.gemfury.com/8dezqz7z7HWea9vtaFwg/' # thibaud@jilion.com account
 
 gem 'rake', '0.9.2'
 
@@ -14,10 +15,8 @@ gem 'http_router'
 gem 'async-rack'
 
 # For stats parsing
-gem 'useragent', git: 'git://github.com/jilion/useragent.git'
-
-# Need to be updated manually until https://github.com/carlhuda/bundler/issues/67 is fixed.
-gem 'stat_request_parser', path: 'vendor/sv_stats_request_parser'
+gem 'useragent', git: 'git://github.com/jilion/useragent.git' # needed for stat_request_parser
+gem 'stat_request_parser',   '~> 1.0.0' # hosted on gemfury
 
 gem 'settingslogic'
 gem 'pusher'
