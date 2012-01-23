@@ -13,7 +13,16 @@ class ProxyAction < Cramp::Action
 
   def respond_with
     header = @page.response_header
-    [200, { 'Content-Type' => header['CONTENT_TYPE'], 'Content-Length' => header['CONTENT_LENGTH'] }]
+    [200, {
+      'Content-Type'   => header['CONTENT_TYPE'],
+      'Content-Length' => header['CONTENT_LENGTH'],
+      'Cache-Control'  => header['CACHE_CONTROL'],
+      'Expires'        => header['EXPIRES'],
+      'Date'           => header['DATE'],
+      'Age'            => header['AGE'],
+      'Etag'           => header['ETAG'],
+      'Last-Modified'  => header['LAST_MODIFIED']
+    }]
   end
 
   def get_page
