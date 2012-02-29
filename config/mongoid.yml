@@ -20,3 +20,4 @@ production:
   max_retries_on_connection_failure: 3
   skip_version_check: true
   logger: false
+  read: :secondary
