@@ -14,13 +14,19 @@ module Stat
     if %w[m e].include?(params[:h]) && !params.key?(:em)
       incs = StatRequestParser.stat_incs(params, user_agent)
       second = Time.now.change(usec: 0).to_time
-      inc_stats(incs, second)
+      inc_stats(incs, second) unless skipped_token?(params[:t])
       push_stats(incs, second)
     end
   rescue StatRequestParser::BadParamsError
   end
 
 private
+
+  def self.skipped_token?(token)
+    [
+      "2xrynuh2" # schooltube.com
+    ].include?(token)
+  end
 
   def self.inc_stats(incs, second)
     EM.defer do
