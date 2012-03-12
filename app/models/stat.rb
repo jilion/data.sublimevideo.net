@@ -1,15 +1,6 @@
 module Stat
   extend ActiveSupport::Concern
 
-  included do
-    # DateTime periods
-    field :s,  :type => DateTime  # Second
-  end
-
-  # =================
-  # = Class Methods =
-  # =================
-
   def self.inc_and_push_stats(params, user_agent)
     if %w[m e].include?(params[:h]) && !params.key?(:em)
       incs = StatRequestParser.stat_incs(params, user_agent)
@@ -32,11 +23,11 @@ private
     EM.defer do
       site = incs[:site]
       if site[:inc].present?
-        Stat::Site.collection.update({ t: site[:t], s: second }, { "$inc" => site[:inc] }, upsert: true)
+        Stat::Site::Second.collection.update({ t: site[:t], d: second }, { "$inc" => site[:inc] }, upsert: true)
       end
       incs[:videos].each do |video|
         if video[:inc].present?
-          Stat::Video.collection.update({ st: video[:st], u: video[:u], s: second }, { "$inc" => video[:inc] }, upsert: true)
+          Stat::Video::Second.collection.update({ st: video[:st], u: video[:u], d: second }, { "$inc" => video[:inc] }, upsert: true)
         end
       end
     end
