@@ -16,7 +16,7 @@ gem 'async-rack'
 
 # For stats parsing
 gem 'useragent', git: 'git://github.com/jilion/useragent.git' # needed for stat_request_parser
-gem 'stat_request_parser',   '~> 1.0.0' # hosted on gemfury
+gem 'stat_request_parser', '~> 1.1.0' # hosted on gemfury
 
 gem 'settingslogic'
 gem 'pusher'
@@ -26,6 +26,8 @@ gem 'em-http-request'
 gem 'bson_ext'
 gem 'mongoid'
 gem 'em-mongo'
+
+gem 'require_all'
 
 gem 'newrelic_rpm'
 gem 'rpm_contrib'
@@ -47,8 +49,8 @@ group :development do
 end
 
 group :test do
-  gem 'rb-fsevent', '~> 0.9.0.pre3'
-  gem 'growl_notify'
+  gem 'rb-fsevent'
+  gem 'growl'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-cramp', require: 'rspec/cramp'

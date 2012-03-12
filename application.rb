@@ -31,7 +31,4 @@ end
 Bundler.require(:default, DataSublimeVideo::Application.env)
 require 'em-synchrony/em-http'
 require 'em-synchrony/em-mongo'
-
-# Preload application classes
-require './app/models/stat'
-Dir['./app/**/*.rb'].each { |f| require f }
+require_all 'app'
