@@ -11,9 +11,8 @@ production:
   database: sublimevideo-stats
   username: <%= ENV['MONGOHQ_USERNAME'] %>
   password: <%= ENV['MONGOHQ_PASSWORD'] %>
-  hosts:
-    - - sublimevideo.member0.mongolayer.com
-      - 27017
+  host: sublimevideo.member0.mongolayer.com
+  port: 27017
   use_utc: true
   max_retries_on_connection_failure: 3
   pool_size: 10
