@@ -3,7 +3,7 @@ source 'https://gems.gemfury.com/8dezqz7z7HWea9vtaFwg/' # thibaud@jilion.com acc
 
 gem 'rake', '0.9.2'
 
-gem 'cramp'
+gem 'cramp', git: 'git://github.com/wtn/cramp.git', branch: 'rails_3.1-3.2'
 
 # Async webserver for running a cramp application
 gem 'thin'
@@ -24,7 +24,7 @@ gem 'em-http-request'
 
 # For Mongoid.
 gem 'bson_ext'
-gem 'mongoid'
+gem 'mongoid', git: 'git://github.com/mongoid/mongoid.git', branch: '2.4.0-stable'
 gem 'em-mongo'
 
 gem 'require_all'
