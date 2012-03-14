@@ -8,16 +8,15 @@ test:
 
 # set these environment variables on your prod server
 production:
-  database: sublimevideo_production
+  database: sublimevideo-stats
   username: <%= ENV['MONGOHQ_USERNAME'] %>
   password: <%= ENV['MONGOHQ_PASSWORD'] %>
   hosts:
-    - - hurley.member0.mongohq.com
-      - 10006
-    - - hurley.member1.mongohq.com
-      - 10006
+    - - sublimevideo.member0.mongolayer.com
+      - 27017
   use_utc: true
   max_retries_on_connection_failure: 3
+  pool_size: 10
   skip_version_check: true
   logger: false
-  read: :secondary
+  # read: :secondary
