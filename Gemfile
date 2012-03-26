@@ -24,7 +24,7 @@ gem 'em-http-request'
 
 # For Mongoid.
 gem 'bson_ext'
-gem 'mongoid', git: 'git://github.com/mongoid/mongoid.git', branch: '2.4.0-stable'
+gem 'mongoid'
 gem 'em-mongo'
 
 gem 'require_all'
@@ -32,26 +32,28 @@ gem 'require_all'
 gem 'newrelic_rpm'
 gem 'rpm_contrib'
 
-platforms :mri_19 do
-  # Using Fibers + async callbacks to emulate synchronous programming
-  gem 'em-synchrony', '~> 1.0.0'
-end
+# Using Fibers + async callbacks to emulate synchronous programming
+gem 'em-synchrony', '~> 1.0.0'
 
 # Generic interface to multiple Ruby template engines - https://github.com/rtomayko/tilt
 # gem 'tilt'
 
-group :development do
-  gem 'heroku'
-  gem 'bundler'
-  gem 'foreman'
-  # Development gems
-  # gem 'ruby-debug19'
-end
-
 group :test do
-  gem 'rb-fsevent'
-  gem 'growl'
-  gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-cramp', require: 'rspec/cramp'
+end
+
+group :tools do
+  gem 'heroku'
+  gem 'foreman'
+  gem 'powder'
+  gem 'pry'
+
+  # Guard
+  gem 'growl'
+  platforms :ruby do
+    gem 'rb-readline'
+  end
+
+  gem 'guard-rspec'
 end

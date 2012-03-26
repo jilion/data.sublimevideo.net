@@ -1,6 +1,7 @@
 log
 tmp
 vendor/ruby
+vendor/bundler
 !Guardfile
 !Gemfile
 !Gemfile.lock
