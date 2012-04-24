@@ -40,6 +40,8 @@ private
       json = StatRequestParser.convert_incs_to_json(incs, second.to_i)
       Pusher[channel_name].trigger_async('stats', json)
     end
+  ensure
+    redis.close_connection if redis
   end
 
 end
