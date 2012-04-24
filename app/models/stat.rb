@@ -35,13 +35,10 @@ private
 
   def self.push_stats(incs, second)
     channel_name = "private-#{incs[:site][:t]}"
-    redis = Redis.connect(url: ENV['REDISTOGO_URL'] || 'redis://127.0.0.1:6379')
-    if redis.sismember("pusher:channels", channel_name)
+    if $redis.sismember("pusher:channels", channel_name)
       json = StatRequestParser.convert_incs_to_json(incs, second.to_i)
       Pusher[channel_name].trigger_async('stats', json)
     end
-  ensure
-    redis.close_connection if redis
   end
 
 end
