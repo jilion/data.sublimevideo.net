@@ -35,6 +35,10 @@ gem 'rpm_contrib'
 # Using Fibers + async callbacks to emulate synchronous programming
 gem 'em-synchrony', '~> 1.0.0'
 
+# For Redis
+gem 'hiredis', '~> 0.4.5'
+gem 'redis',   '~> 2.2.2', require: ['redis/connection/synchrony', 'redis']
+
 # Generic interface to multiple Ruby template engines - https://github.com/rtomayko/tilt
 # gem 'tilt'
 
