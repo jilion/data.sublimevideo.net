@@ -10,7 +10,7 @@
   ignorecase              = true
 
 [remote "origin"]
-  url   = git@github.com:jilion/my.sublimevideo.net.git
+  url   = git@github.com:jilion/data.sublimevideo.net.git
   fetch = +refs/heads/*:refs/remotes/origin/*
 
 [remote "staging"]
