@@ -18,6 +18,6 @@ class Application < Goliath::API
 
   def response(env)
     body = Yajl::Encoder.encode(status: 'ok')
-    [200, {}, body]
+    [200, { "Access-Control-Allow-Origin" => '*' }, body]
   end
 end
