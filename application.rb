@@ -16,8 +16,8 @@ class Application < Goliath::API
         'Access-Control-Allow-Origin' => '*',
         'Access-Control-Allow-Methods' => 'POST',
         'Access-Control-Allow-Headers' => 'Content-Type',
-        'Access-Control-Allow-Credentials' => true,
-        'Access-Control-Max-Age' => 60 # 1728000
+        'Access-Control-Allow-Credentials' => 'true',
+        'Access-Control-Max-Age' => '60'
       }, {}]
     else
       response_params = Yajl::Encoder.encode(params)
