@@ -9,7 +9,7 @@ module Rack
           'Access-Control-Allow-Methods' => 'POST',
           'Access-Control-Allow-Headers' => 'Content-Type',
           'Access-Control-Allow-Credentials' => 'true',
-          'Access-Control-Max-Age' => '5'
+          'Access-Control-Max-Age' => '1728000'
         }, {}]
       else
         super(env, *args)
