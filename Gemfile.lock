@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/rapportive-oss/rack-cors.git
+  revision: 225b4c48c8a6533dd97248bad4a4ede824bbe622
+  specs:
+    rack-cors (0.2.4)
+      rack
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -84,6 +91,7 @@ DEPENDENCIES
   guard-rspec
   hiredis (~> 0.4.5)
   powder
+  rack-cors!
   rb-fsevent
   rb-readline
   redis (~> 3.0.1)

@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'goliath'
 require 'yajl'
+require 'rack/cors'
 
 class Application < Goliath::API
   use Goliath::Rack::Params                 # parse & merge query and body parameters
@@ -8,8 +9,14 @@ class Application < Goliath::API
   use Goliath::Rack::Formatters::JSON       # JSON output formatter
   use Goliath::Rack::Render                 # auto-negotiate response format
   use Goliath::Rack::Heartbeat              # respond to /status with 200, OK (monitoring, etc)
+  use Rack::Cors do
+    allow do
+      origins '*'
+    end
+  end
 
   def response(env)
-    [200, {}, "echo:'#{params['echo']}'"]
+    body = Yajl::Encoder.encode(status: 'ok')
+    [200, {}, body]
   end
 end

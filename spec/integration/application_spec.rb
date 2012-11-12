@@ -1,13 +1,11 @@
 require 'spec_helper'
 
 describe Application do
-  it "my" do
+  it "responses json" do
     with_api(Application) do |a|
       get_request(path: '/', query: { echo: "foo"}) do |api|
-            # puts  MultiJson.load(api.response)
-        #     b['response'].should == 'test'
-        # puts api
-        api.response.should eq "echo:'foo'"
+        body = MultiJson.load(api.response)
+        body.should eq('status' => 'ok')
       end
     end
   end
