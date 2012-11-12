@@ -5,7 +5,7 @@ describe Application do
     with_api(Application) do |a|
       get_request(path: '/', query: { echo: "foo"}) do |api|
         body = MultiJson.load(api.response)
-        body.should eq('status' => 'ok')
+        body.should eq("echo" => "foo")
       end
     end
   end
