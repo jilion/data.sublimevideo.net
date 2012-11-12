@@ -1,15 +1,15 @@
 #!/usr/bin/env ruby
 require 'goliath'
 require 'yajl'
-require 'rack/cors'
+# require 'rack/cors'
 
 class Application < Goliath::API
-  use Rack::Cors do
-    allow do
-      origins '*'
-      resource '/*', headers: :any, methods: :get
-    end
-  end
+  # use Rack::Cors do
+  #   allow do
+  #     origins '*'
+  #     resource '/*', headers: :any, methods: :get
+  #   end
+  # end
   use Goliath::Rack::Params                 # parse & merge query and body parameters
   use Goliath::Rack::DefaultMimeType        # cleanup accepted media types
   use Goliath::Rack::Formatters::JSON       # JSON output formatter
@@ -18,6 +18,6 @@ class Application < Goliath::API
 
   def response(env)
     body = Yajl::Encoder.encode(status: 'ok')
-    [200, {}, body]
+    [200, { "Access-Control-Allow-Origin" => '*' }, body]
   end
 end

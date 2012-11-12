@@ -5,8 +5,6 @@ gem 'goliath'
 
 gem 'yajl-ruby' # fast json
 
-gem 'rack-cors', github: 'rapportive-oss/rack-cors'
-
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 # gem 'newrelic_rpm'
 # gem 'rpm_contrib'
