@@ -1,4 +1,4 @@
-# SublimeVideo Async Data Server (Cramp)
+# SublimeVideo Async Data2 Server (Goliath)
 
 ## Installation
 
@@ -10,23 +10,14 @@ bundle install
 
 ## Development
 
-Running thin:
+Running Goliath:
 
 ``` bash
-bundle exec thin --max-persistent-conns 1024 --timeout 0 -R config.ru start
+bundle exec ruby application.rb -sv
 ```
-Vebose mode (Very useful when you want to view all the data being sent/received by thin):
-
-``` bash
-bundle exec thin --max-persistent-conns 1024 --timeout 0 -V -R config.ru start
-```
-
-## Documentations
-
-- [http://cramp.in](http://cramp.in)
 
 ## Deployment
 
 ``` bash
-git push production
+git push production2
 ```

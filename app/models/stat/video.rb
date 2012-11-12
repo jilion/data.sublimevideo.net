@@ -1,2 +1,0 @@
-module Stat::Video
-end

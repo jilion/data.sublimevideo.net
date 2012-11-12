@@ -1,35 +1,15 @@
-require 'rubygems'
-require 'bundler'
+#!/usr/bin/env ruby
+require 'goliath'
+require 'yajl'
 
-module DataSublimeVideo
-  class Application
+class Application < Goliath::API
+  use Goliath::Rack::Params                 # parse & merge query and body parameters
+  use Goliath::Rack::DefaultMimeType        # cleanup accepted media types
+  use Goliath::Rack::Formatters::JSON       # JSON output formatter
+  use Goliath::Rack::Render                 # auto-negotiate response format
+  use Goliath::Rack::Heartbeat              # respond to /status with 200, OK (monitoring, etc)
 
-    def self.root(path = nil)
-      @_root ||= File.expand_path(File.dirname(__FILE__))
-      path ? File.join(@_root, path.to_s) : @_root
-    end
-
-    def self.env
-      @_env ||= ENV['RACK_ENV'] || 'development'
-    end
-
-    def self.routes
-      @_routes ||= eval(File.read('./config/routes.rb'))
-    end
-
-    # Initialize the application
-    def self.initialize!
-      EM::next_tick do
-        Pusher.url = PusherConfig.url
-        Mongoid.load!(File.join(DataSublimeVideo::Application.root, 'config', 'mongoid.yml'))
-        $redis = Redis.connect(url: ENV['REDISTOGO_URL'] || 'redis://127.0.0.1:6379')
-      end
-    end
-
+  def response(env)
+    [200, {}, "echo:'#{params['echo']}'"]
   end
 end
-
-Bundler.require(:default, DataSublimeVideo::Application.env)
-require 'em-synchrony/em-http'
-require 'em-synchrony/em-mongo'
-require_all 'app'
