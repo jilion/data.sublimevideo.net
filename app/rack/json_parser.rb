@@ -1,7 +1,7 @@
 require 'multi_json'
 
 module Rack
-  # A middle ware to alwyas parse params as JSON.
+  # A middle ware to alwyas parse body as JSON.
   #
   # @example
   #  use Rack::Params::JSONParser
