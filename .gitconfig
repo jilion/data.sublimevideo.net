@@ -14,7 +14,7 @@
   fetch = +refs/heads/*:refs/remotes/origin/*
 
 [remote "staging"]
-  url   = git@heroku.com:sv-my-staging.git
+  url   = git@heroku.com:sv-data-staging.git
   fetch = +refs/heads/master:refs/remotes/staging/master
   push  = HEAD:master
 
