@@ -24,7 +24,7 @@
   push  = master:master
 
 [remote "production2"]
-  url   = git@heroku.com:sv-data.git
+  url   = git@heroku.com:sv-data2.git
   fetch = +refs/heads/*:refs/remotes/production/*
   push  = data2:master
 
