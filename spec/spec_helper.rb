@@ -1,8 +1,9 @@
 ENV["RACK_ENV"] ||= 'test'
 
-require File.dirname(__FILE__) + "/../application.rb"
+require File.dirname(__FILE__) + '/../application.rb'
 
 require 'goliath/test_helper'
+require 'sidekiq/testing'
 
 RSpec.configure do |config|
   config.include Goliath::TestHelper
@@ -12,4 +13,11 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.fail_fast = ENV['FAST_FAIL'] != 'false'
   config.order = 'random'
+
+  config.before do
+    with_api(Application) do
+      Sidekiq.redis { |r| r.flushall }
+      EM.stop
+    end
+  end
 end

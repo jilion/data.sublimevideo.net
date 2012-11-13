@@ -3,7 +3,7 @@ module Rack
     include Goliath::Rack::AsyncMiddleware
 
     def call(env, *args)
-      if options_resquest?(env)
+      if env['REQUEST_METHOD'] == 'OPTIONS'
         [200, {
           'Access-Control-Allow-Origin' => '*',
           'Access-Control-Allow-Methods' => 'POST',
@@ -17,12 +17,10 @@ module Rack
     end
 
     def post_process(env, status, headers, body)
+      headers ||= {}
       headers['Access-Control-Allow-Origin'] = '*'
       [status, headers, body]
     end
 
-    def options_resquest?(env)
-      env['REQUEST_METHOD'] == 'OPTIONS'
-    end
   end
 end
