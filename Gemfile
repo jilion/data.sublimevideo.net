@@ -5,8 +5,8 @@ gem 'goliath'
 gem 'yajl-ruby', require: 'yajl' # fast json
 
 gem 'sidekiq'
-gem 'redis', '~> 3.0.1', require: ['redis/connection/synchrony', 'redis']
-gem 'hiredis', '~> 0.4.5'
+gem 'redis', require: ['redis/connection/synchrony', 'redis']
+gem 'hiredis'
 
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 # gem 'newrelic_rpm'
