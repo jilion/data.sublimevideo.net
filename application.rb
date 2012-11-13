@@ -2,6 +2,7 @@
 require "bundler"
 Bundler.require
 
+$: << File.dirname(__FILE__) + '/lib'
 require 'rack/cors'
 require 'rack/get_redirector'
 require 'rack/json_parser'
