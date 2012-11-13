@@ -7,10 +7,12 @@ require 'rack/cors'
 require 'rack/get_redirector'
 require 'rack/json_parser'
 require 'rack/json_formatter'
+require 'rack/newrelic_stats_reporter'
 require 'video_tag_data_md5_hash'
 require 'video_tag_data_updater'
 
 class Application < Goliath::API
+  use Rack::NewrelicStatsReporter
   use Goliath::Rack::Heartbeat  # respond to /status with 200, OK (monitoring, etc)
   use Rack::GETRedirector       # add good headers for CORS
   use Rack::Cors                # add good headers for CORS

@@ -9,8 +9,8 @@ gem 'redis', require: ['redis/connection/synchrony', 'redis']
 gem 'hiredis'
 
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
-# gem 'newrelic_rpm'
-# gem 'rpm_contrib'
+gem 'newrelic_rpm'
+gem 'newrelic-redis'
 
 group :test do
   gem 'em-http-request'
