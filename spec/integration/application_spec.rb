@@ -65,22 +65,22 @@ describe Application do
     end
 
     context "with e=h requests" do
-      let(:video_uid) { 'video_uid' }
+      let(:uid) { 'uid' }
       let(:md5_hash) { 'md5_hash' }
 
-      before { with_api(Application) { VideoTagDataMD5Hash.set(site_token, video_uid , md5_hash); EM.stop } }
+      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , md5_hash); EM.stop } }
 
       it "responses with VideoTag data MD5 hash" do
         data = [
-          { e: 'h', u: video_uid },
-          { e: 'h', u: 'other_video_uid' }
+          { e: 'h', u: uid },
+          { e: 'h', u: 'other_uid' }
         ]
         with_api(Application) do |a|
           post_request(path: path, body: MultiJson.dump(data)) do |api|
             body = MultiJson.load(api.response)
             body.should eq([
-              { "h" => { video_uid => md5_hash } },
-              { "h" => { 'other_video_uid' => nil } }
+              { "h" => { uid => md5_hash } },
+              { "h" => { 'other_uid' => nil } }
             ])
           end
         end
@@ -88,26 +88,26 @@ describe Application do
     end
 
     context "with e=v requests" do
-      let(:video_uid) { 'video_uid' }
+      let(:uid) { 'uid' }
       let(:md5_hash) { 'md5_hash' }
       let(:data) { [
-        { e: 'v', u: video_uid, h: md5_hash, uo: 'a', t: { "data" => "settings" } },
+        { e: 'v', u: uid, h: md5_hash, uo: 'a', t: { "data" => "settings" } },
       ] }
-      before { with_api(Application) { VideoTagDataMD5Hash.set(site_token, video_uid , 'old_md5_hash'); EM.stop } }
+      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , 'old_md5_hash'); EM.stop } }
 
       it "sets VideoTag data MD5 hash" do
         with_api(Application) do |a|
           post_request(path: path, body: MultiJson.dump(data)) do |api|
-            VideoTagDataMD5Hash.get(site_token, video_uid).should eq md5_hash
+            VideoTagMD5Hash.get(site_token, uid).should eq md5_hash
           end
         end
       end
 
-      it "delays update on VideoTagDataUpdater" do
+      it "delays update on VideoTagUpdater" do
         with_api(Application) do |a|
           post_request(path: path, body: MultiJson.dump(data)) do |api|
             Sidekiq::Worker.jobs.should have(1).job
-            Sidekiq::Worker.jobs.to_s.should match /VideoTagDataUpdater/
+            Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
           end
         end
       end

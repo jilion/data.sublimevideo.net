@@ -8,8 +8,8 @@ require 'rack/get_redirector'
 require 'rack/json_parser'
 require 'rack/json_formatter'
 require 'rack/newrelic_stats_reporter'
-require 'video_tag_data_md5_hash'
-require 'video_tag_data_updater'
+require 'video_tag_md5_hash'
+require 'video_tag_updater'
 
 class Application < Goliath::API
   use Rack::NewrelicStatsReporter
@@ -23,15 +23,15 @@ class Application < Goliath::API
     response = []
     if site_token = extract_site_token(env)
       events(params) do |event, data|
-        video_uid = data.delete('u')
+        uid = data.delete('u')
         case event
         when 'h'
-          md5 = VideoTagDataMD5Hash.get(site_token, video_uid)
-          response << { h: { video_uid => md5 } }
+          md5 = VideoTagMD5Hash.get(site_token, uid)
+          response << { h: { uid => md5 } }
         when 'v'
           md5 = data.delete('h')
-          VideoTagDataMD5Hash.set(site_token, video_uid, md5)
-          VideoTagDataUpdater.delay(queue: 'low').update(site_token, video_uid, data)
+          VideoTagMD5Hash.set(site_token, uid, md5)
+          VideoTagUpdater.delay(queue: 'low').update(site_token, uid, data)
         end
       end
     end
