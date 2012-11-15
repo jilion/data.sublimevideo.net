@@ -18,8 +18,6 @@ group :test do
 end
 
 group :tools do
-  gem 'powder'
-
   # Guard
   gem 'ruby_gntp'
   gem 'rb-fsevent'
