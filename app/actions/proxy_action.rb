@@ -16,10 +16,7 @@ class ProxyAction < Cramp::Action
     [200, {
       'Content-Type'   => header['CONTENT_TYPE'],
       'Content-Length' => header['CONTENT_LENGTH'],
-      'Cache-Control'  => header['CACHE_CONTROL'],
-      'Expires'        => header['EXPIRES'],
-      'Date'           => header['DATE'],
-      'Age'            => header['AGE'],
+      'Cache-Control'  => 'max-age=3600, public', # 1 hour
       'Etag'           => header['ETAG'],
       'Last-Modified'  => header['LAST_MODIFIED']
     }]
