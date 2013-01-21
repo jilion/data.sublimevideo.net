@@ -8,8 +8,7 @@ require 'rack/get_redirector'
 require 'rack/json_parser'
 require 'rack/json_formatter'
 require 'rack/newrelic_stats_reporter'
-require 'video_tag_md5_hash'
-require 'video_tag_updater'
+require 'events_responder'
 
 class Application < Goliath::API
   use Rack::NewrelicStatsReporter
@@ -20,31 +19,16 @@ class Application < Goliath::API
   use Rack::JSONFormatter       # always ouptut JSON
 
   def response(env)
-    response = []
-    if site_token = extract_site_token(env)
-      events(params) do |event, data|
-        uid = data.delete('u')
-        case event
-        when 'h'
-          md5 = VideoTagMD5Hash.get(site_token, uid)
-          response << { h: { uid => md5 } }
-        when 'v'
-          md5 = data.delete('h')
-          VideoTagMD5Hash.set(site_token, uid, md5)
-          VideoTagUpdater.delay(queue: 'low').update(site_token, uid, data)
-        end
-      end
+    site_token = extract_site_token(env)
+    response = if site_token
+      EventsResponder.new(site_token, params).response
+    else
+      []
     end
     [200, {}, response]
   end
 
-  def events(params, &block)
-    return unless params.is_a?(Array)
-    params.each do |event_data|
-      event = event_data.delete('e')
-      block.call(event, event_data)
-    end
-  end
+  private
 
   def extract_site_token(env)
     matches = env['REQUEST_PATH'].match(%r{/([a-z0-9]{8}).json})
