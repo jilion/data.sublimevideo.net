@@ -1,4 +1,4 @@
-guard 'rspec', version: 2, cli: '--color', all_after_pass: false, keep_failed: false do
+guard 'rspec', all_after_pass: false, keep_failed: false do
   watch('application.rb')       { "spec" }
   watch(%r{^config/.+\.rb$})    { "spec" }
   watch(%r{^lib/rack/.+\.rb$})  { "spec" }

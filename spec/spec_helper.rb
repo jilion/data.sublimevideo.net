@@ -13,7 +13,7 @@ RSpec.configure do |config|
   config.before do
     with_api(Application) do
       Sidekiq.redis { |r| r.flushall }
-      EM.stop
+      stop
     end
   end
 end
