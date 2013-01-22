@@ -14,8 +14,8 @@ describe EventsResponder do
       responder.response.should eq []
     end
 
-    context "one h event" do
-      let(:params) { [{ 'e' => 'h', 'u' => uid }] }
+    context "with one h event" do
+      let(:params) { [{ 'h' => { 'u' => uid } }] }
 
       it "returns video_tag_md5_hash" do
         VideoTagMD5Hash.should_receive(:get).with(site_token, uid) { 'md5_hash' }
@@ -23,10 +23,10 @@ describe EventsResponder do
       end
     end
 
-    context "multiple h events" do
+    context "with multiple h events" do
       let(:params) { [
-        { 'e' => 'h', 'u' => uid },
-        { 'e' => 'h', 'u' => 'other_uid' }
+        { 'h' => { 'u' => uid } },
+        { 'h' => { 'u' => 'other_uid' } }
       ] }
 
       it "returns video_tag_md5_hash" do
@@ -39,8 +39,8 @@ describe EventsResponder do
       end
     end
 
-    context "one v event" do
-      let(:params) { [{ 'e' => 'v', 'u' => uid, 'h' => 'md5_hash', 'uo' => 'a', 't' => { "data" => "settings" } }] }
+    context "with one v event" do
+      let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'md5_hash', 'uo' => 'a', 't' => { "data" => "settings" } } }] }
 
       before {
         VideoTagMD5Hash.stub(:set)

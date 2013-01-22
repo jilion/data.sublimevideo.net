@@ -64,16 +64,16 @@ describe Application do
       end
     end
 
-    context "with e=h requests" do
+    context "with h event" do
       let(:uid) { 'uid' }
       let(:md5_hash) { 'md5_hash' }
 
-      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , md5_hash); EM.stop } }
+      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , md5_hash); stop } }
 
       it "responses with VideoTag data MD5 hash" do
         data = [
-          { e: 'h', u: uid },
-          { e: 'h', u: 'other_uid' }
+          { 'h' => { 'u' => uid } },
+          { 'h' => { 'u' => 'other_uid' } }
         ]
         with_api(Application) do |a|
           post_request(path: path, body: MultiJson.dump(data)) do |api|
@@ -91,9 +91,9 @@ describe Application do
       let(:uid) { 'uid' }
       let(:md5_hash) { 'md5_hash' }
       let(:data) { [
-        { e: 'v', u: uid, h: md5_hash, uo: 'a', t: { "data" => "settings" } },
+        { 'v' => { 'u' => uid, 'h' => md5_hash, 'uo' => 'a', 't' => { "data" => "settings" } } },
       ] }
-      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , 'old_md5_hash'); EM.stop } }
+      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , 'old_md5_hash'); stop } }
 
       it "sets VideoTag data MD5 hash" do
         with_api(Application) do |a|
