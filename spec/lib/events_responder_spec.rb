@@ -17,9 +17,9 @@ describe EventsResponder do
     context "with one h event" do
       let(:params) { [{ 'h' => { 'u' => uid } }] }
 
-      it "returns video_tag_md5_hash" do
-        VideoTagMD5Hash.should_receive(:get).with(site_token, uid) { 'md5_hash' }
-        events_responder.response.should eq [{ h: { "uid" => "md5_hash" } }]
+      it "returns video_tag_crc32_hash" do
+        VideoTagCRC32Hash.should_receive(:get).with(site_token, uid) { 'crc32_hash' }
+        events_responder.response.should eq [{ h: { "uid" => "crc32_hash" } }]
       end
     end
 
@@ -29,26 +29,26 @@ describe EventsResponder do
         { 'h' => { 'u' => 'other_uid' } }
       ] }
 
-      it "returns video_tag_md5_hash" do
-        VideoTagMD5Hash.should_receive(:get).with(site_token, uid) { 'md5_hash' }
-        VideoTagMD5Hash.should_receive(:get).with(site_token, 'other_uid') { nil }
+      it "returns video_tag_crc32_hash" do
+        VideoTagCRC32Hash.should_receive(:get).with(site_token, uid) { 'crc32_hash' }
+        VideoTagCRC32Hash.should_receive(:get).with(site_token, 'other_uid') { nil }
         events_responder.response.should eq [
-          { h: { "uid" => "md5_hash" } },
+          { h: { "uid" => "crc32_hash" } },
           { h: { "other_uid" =>  nil } }
         ]
       end
     end
 
     context "with one v event" do
-      let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'md5_hash', 'uo' => 'a', 't' => { "data" => "settings" } } }] }
+      let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'crc32_hash', 'uo' => 'a', 't' => { "data" => "settings" } } }] }
 
       before {
-        VideoTagMD5Hash.stub(:set)
+        VideoTagCRC32Hash.stub(:set)
         VideoTagUpdaterWorker.stub(:perform_async)
       }
 
-      it "sets video_tag_md5_hash" do
-        VideoTagMD5Hash.should_receive(:set).with(site_token, uid, 'md5_hash')
+      it "sets video_tag_crc32_hash" do
+        VideoTagCRC32Hash.should_receive(:set).with(site_token, uid, 'crc32_hash')
         events_responder.response
       end
 

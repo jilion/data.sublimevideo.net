@@ -1,14 +1,14 @@
 require 'redis_wrapper'
 
-class VideoTagMD5Hash
+class VideoTagCRC32Hash
   attr_reader :site_token, :uid
 
   def self.get(site_token, uid)
     new(site_token, uid).get
   end
 
-  def self.set(site_token, uid, md5_hash)
-    new(site_token, uid).set(md5_hash)
+  def self.set(site_token, uid, crc32_hash)
+    new(site_token, uid).set(crc32_hash)
   end
 
   def initialize(site_token, uid)
@@ -17,11 +17,11 @@ class VideoTagMD5Hash
   end
 
   def get
-    RedisWrapper.connection { |r| r.hget(:video_tag_md5_hashes, key) }
+    RedisWrapper.connection { |r| r.hget(:video_tag_crc32_hashes, key) }
   end
 
-  def set(md5_hash)
-    RedisWrapper.connection { |r| r.hset(:video_tag_md5_hashes, key, md5_hash) }
+  def set(crc32_hash)
+    RedisWrapper.connection { |r| r.hset(:video_tag_crc32_hashes, key, crc32_hash) }
   end
 
   private

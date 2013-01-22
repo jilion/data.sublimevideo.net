@@ -66,11 +66,11 @@ describe Application do
 
     context "with h event" do
       let(:uid) { 'uid' }
-      let(:md5_hash) { 'md5_hash' }
+      let(:crc32_hash) { 'crc32_hash' }
 
-      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , md5_hash); stop } }
+      before { with_api(Application) { VideoTagCRC32Hash.set(site_token, uid , crc32_hash); stop } }
 
-      it "responses with VideoTag data MD5 hash" do
+      it "responses with VideoTag data CRC32 hash" do
         data = [
           { 'h' => { 'u' => uid } },
           { 'h' => { 'u' => 'other_uid' } }
@@ -79,7 +79,7 @@ describe Application do
           post_request(path: path, body: MultiJson.dump(data)) do |api|
             body = MultiJson.load(api.response)
             body.should eq([
-              { "h" => { uid => md5_hash } },
+              { "h" => { uid => crc32_hash } },
               { "h" => { 'other_uid' => nil } }
             ])
           end
@@ -89,16 +89,16 @@ describe Application do
 
     context "with e=v requests" do
       let(:uid) { 'uid' }
-      let(:md5_hash) { 'md5_hash' }
+      let(:crc32_hash) { 'crc32_hash' }
       let(:data) { [
-        { 'v' => { 'u' => uid, 'h' => md5_hash, 'uo' => 'a', 't' => { "data" => "settings" } } },
+        { 'v' => { 'u' => uid, 'h' => crc32_hash, 'uo' => 'a', 't' => { "data" => "settings" } } },
       ] }
-      before { with_api(Application) { VideoTagMD5Hash.set(site_token, uid , 'old_md5_hash'); stop } }
+      before { with_api(Application) { VideoTagCRC32Hash.set(site_token, uid , 'old_crc32_hash'); stop } }
 
-      it "sets VideoTag data MD5 hash" do
+      it "sets VideoTag data CRC32 hash" do
         with_api(Application) do |a|
           post_request(path: path, body: MultiJson.dump(data)) do |api|
-            VideoTagMD5Hash.get(site_token, uid).should eq md5_hash
+            VideoTagCRC32Hash.get(site_token, uid).should eq crc32_hash
           end
         end
       end

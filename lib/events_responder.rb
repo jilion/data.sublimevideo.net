@@ -1,4 +1,4 @@
-require 'video_tag_md5_hash'
+require 'video_tag_crc32_hash'
 require 'workers/video_tag_updater_worker'
 
 class EventsResponder
@@ -23,14 +23,14 @@ class EventsResponder
 
   def h_event_response(data)
     uid = data.delete('u')
-    md5 = VideoTagMD5Hash.get(site_token, uid)
-    { h: { uid => md5 } }
+    crc32 = VideoTagCRC32Hash.get(site_token, uid)
+    { h: { uid => crc32 } }
   end
 
   def v_event_response(data)
     uid = data.delete('u')
-    md5 = data.delete('h')
-    VideoTagMD5Hash.set(site_token, uid, md5)
+    crc32 = data.delete('h')
+    VideoTagCRC32Hash.set(site_token, uid, crc32)
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
     nil
   end
