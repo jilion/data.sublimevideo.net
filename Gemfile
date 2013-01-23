@@ -18,7 +18,7 @@ gem 'async-rack'
 
 # For stats parsing
 gem 'useragent', git: 'git://github.com/jilion/useragent.git' # needed for stat_request_parser
-gem 'stat_request_parser', '~> 1.1.0' # hosted on gemfury
+gem 'stat_request_parser'
 
 gem 'settingslogic'
 gem 'pusher'
