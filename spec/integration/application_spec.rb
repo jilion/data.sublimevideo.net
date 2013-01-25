@@ -79,8 +79,8 @@ describe Application do
           post_request(path: path, body: MultiJson.dump(data)) do |api|
             body = MultiJson.load(api.response)
             body.should eq([
-              { "h" => { uid => crc32_hash } },
-              { "h" => { 'other_uid' => nil } }
+              { 'h' => { 'u' => uid, 'h' => crc32_hash } },
+              { 'h' => { 'u' => 'other_uid', 'h' => nil } }
             ])
           end
         end

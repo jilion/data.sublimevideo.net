@@ -63,7 +63,8 @@ Response params:
 ```
 {
   h: {
-    <video uid>: <video tag crc32 hash on mysv side>
+    u: <video uid>,
+    h: <video tag crc32 hash on mysv side>
   }
 }
 ```

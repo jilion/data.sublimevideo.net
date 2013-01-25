@@ -19,7 +19,7 @@ describe EventsResponder do
 
       it "returns video_tag_crc32_hash" do
         VideoTagCRC32Hash.should_receive(:get).with(site_token, uid) { 'crc32_hash' }
-        events_responder.response.should eq [{ h: { "uid" => "crc32_hash" } }]
+        events_responder.response.should eq [{ h: { u: "uid", h: "crc32_hash" } }]
       end
     end
 
@@ -33,8 +33,8 @@ describe EventsResponder do
         VideoTagCRC32Hash.should_receive(:get).with(site_token, uid) { 'crc32_hash' }
         VideoTagCRC32Hash.should_receive(:get).with(site_token, 'other_uid') { nil }
         events_responder.response.should eq [
-          { h: { "uid" => "crc32_hash" } },
-          { h: { "other_uid" =>  nil } }
+          { h: { u: "uid", h: "crc32_hash" } },
+          { h: { u: "other_uid", h: nil } }
         ]
       end
     end

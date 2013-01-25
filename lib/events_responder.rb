@@ -24,7 +24,7 @@ class EventsResponder
   def h_event_response(data)
     uid = data.delete('u')
     crc32 = VideoTagCRC32Hash.get(site_token, uid)
-    { h: { uid => crc32 } }
+    { h: { u: uid, h: crc32 } }
   end
 
   def v_event_response(data)
