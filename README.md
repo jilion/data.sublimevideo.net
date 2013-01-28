@@ -97,7 +97,6 @@ Request params:
 ```
 h, new Video tag crc32 hash, e.g. h: "23ads4ad"
 u, Video uid, e.g. u: "asd123ef"
-uo, Video uid origin (attribute/source/youtube), e.g. uo: "a" / uo: "s" / uo: "y"
 i*, Video id (sublimevideo hosting or youtube), e.g. i: "12asd2ea"
 io*, Video id origin  (sublimevideo/youtube), e.g. io: "sv" / io: "y"
 n*, Video name, e.g. n: "My Awesome Video"
