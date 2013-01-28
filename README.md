@@ -111,13 +111,14 @@ t*, Video data settings hash, with mangled params.
 Video sources of hash params:
 
 ```
-s: {
-   <video source crc32>: {
-      u: "<video source url>",
-      q: "<video source quality (hd/base)>",
-      f:  "<video source family (mp4/webm/ogg)>"
+s: [{
+  h: "<video source crc32>"
+  u: "<video source url>",
+  q: "<video source quality (hd/base)>",
+  f:  "<video source family (mp4/webm/ogg)>"
   },
   # other sources...
+]
 }
 ```
 No respond need to be sent back.
