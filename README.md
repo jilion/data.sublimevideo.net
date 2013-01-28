@@ -100,7 +100,6 @@ u, Video uid, e.g. u: "asd123ef"
 i*, Video id (sublimevideo hosting or youtube), e.g. i: "12asd2ea"
 io*, Video id origin  (sublimevideo/youtube), e.g. io: "sv" / io: "y"
 n*, Video name, e.g. n: "My Awesome Video"
-no*, Video name origin (attribute/source), e.g. no: "a" / no: "s"
 p*, Video poster url, e.g. p: "http://posters.sublimevideo.net/123asda3.png"
 z, Player size, e.g. z: "400x300"
 s*, Video sources hash, see below params for each source
