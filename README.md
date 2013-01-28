@@ -112,7 +112,6 @@ Video sources of hash params:
 
 ```
 s: [{
-  h: "<video source crc32>"
   u: "<video source url>",
   q: "<video source quality (hd/base)>",
   f:  "<video source family (mp4/webm/ogg)>"
