@@ -73,7 +73,7 @@ Note:
 
 - Video tag crc32 hash can be null, if not present on mysv side.
 - Player must not do that request for video tag in an auto-embed iframe.
-- Player must not do that request if uid is unvalid ([regex](https://basecamp.com/1793177/projects/1896719-stats-new-videotag/documents/2126214-data-uid-validation)).
+- Player must not do that request if uid is invalid ([regex](https://basecamp.com/1793177/projects/1896719-stats-new-videotag/documents/2126214-data-uid-validation)).
 - Player must do that request only for main & extra (alias) hostnames.
 
 Video tag data crc32 hash generation:
