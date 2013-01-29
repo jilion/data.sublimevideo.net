@@ -78,7 +78,7 @@ Note:
 
 Video tag data crc32 hash generation:
 
-The video tag data used to generate the crc32 hash are all video tag data without the source's urls (but including source's crc32, family and quality)
+The video tag data used to generate the crc32 hash are all video tag data with source's urls without the query ?... params.
 
 ### CORS – Video tag data
 
