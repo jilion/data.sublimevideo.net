@@ -7,4 +7,3 @@ guard 'rspec', all_after_pass: false, keep_failed: false do
   watch('spec/spec_helper.rb')  { "spec" }
   watch(%r{^spec/.+_spec\.rb$})
 end
-
