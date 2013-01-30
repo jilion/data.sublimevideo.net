@@ -19,6 +19,7 @@ module Rack
     def post_process(env, status, headers, body)
       headers ||= {}
       headers['Access-Control-Allow-Origin'] = '*'
+      headers['Cache-Control'] = 'no-cache'
       [status, headers, body]
     end
 
