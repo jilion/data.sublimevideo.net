@@ -34,7 +34,7 @@ The params (json) sent can include multiples requests event types (load, play, v
 [
   { l: { # load event params } },
   { s: { # start play event params } },
-  { s: ﻿{ # start play event params },
+  { s: { # start play event params },
   { h: { # video tag crc32 hash request params } },
   { v: { # video tag data params } },
 ]
@@ -71,14 +71,14 @@ Response params:
 
 Note:
 
-- Video tag crc32 hash can be null, if not present on mysv side.
+- Video tag crc32 hash can be null, if inexsitent or old on mysv side.
 - Player must not do that request for video tag in an auto-embed iframe.
 - Player must not do that request if uid is invalid ([regex](https://basecamp.com/1793177/projects/1896719-stats-new-videotag/documents/2126214-data-uid-validation)).
 - Player must do that request only for main & extra (alias) hostnames.
 
 Video tag data crc32 hash generation:
 
-The video tag data used to generate the crc32 hash are all video tag data with source's urls without the query ?... params.
+The video tag data used to generate the crc32 hash are all video tag data without source's urls. When autoembed is true, videos sources are used to generate the crc32.
 
 ### CORS – Video tag data
 
@@ -100,11 +100,12 @@ h, new Video tag crc32 hash, e.g. h: "23ads4ad"
 u, Video uid, e.g. u: "asd123ef"
 i*, Video id (sublimevideo hosting or youtube), e.g. i: "12asd2ea"
 io*, Video id origin  (sublimevideo/youtube), e.g. io: "sv" / io: "y"
-n*, Video name, e.g. n: "My Awesome Video"
+t*, Video title, e.g. n: "My Awesome Video"
 p*, Video poster url, e.g. p: "http://posters.sublimevideo.net/123asda3.png"
 z, Player size, e.g. z: "400x300"
 s*, Video sources hash, see below params for each source
-t*, Video data settings hash, with mangled params.
+a*, Video data attributes hash.
+o*, Video options hash (ie. { autoembed: true })
 ```
 
 (*) optional param, nil/false if not present

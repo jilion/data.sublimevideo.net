@@ -30,7 +30,16 @@ describe Application do
 
   context "on /<site token>.json path" do
     let(:site_token) { 'abcd1234' }
+    let(:uid) { 'uid' }
+    let(:crc32_hash) { 'crc32_hash' }
     let(:path) { "/#{site_token}.json" }
+    let(:h_data) { [
+      { 'h' => { 'u' => uid } },
+      { 'h' => { 'u' => 'other_uid' } }
+    ] }
+    let(:v_data) { [
+      { 'v' => { 'u' => uid, 'h' => crc32_hash, 't' => 'Video Title', 'a' => { "data" => "settings" } } }
+    ] }
 
     it "responses with CORS headers on OPTIONS" do
       with_api(Application) do |a|
@@ -65,18 +74,12 @@ describe Application do
     end
 
     context "with h event" do
-      let(:uid) { 'uid' }
-      let(:crc32_hash) { 'crc32_hash' }
 
-      before { with_api(Application) { VideoTagCRC32Hash.set(site_token, uid , crc32_hash); stop } }
+      before { with_api(Application) { post_request(path: path, body: MultiJson.dump(v_data)) } }
 
       it "responses with VideoTag data CRC32 hash" do
-        data = [
-          { 'h' => { 'u' => uid } },
-          { 'h' => { 'u' => 'other_uid' } }
-        ]
         with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(data)) do |api|
+          post_request(path: path, body: MultiJson.dump(h_data)) do |api|
             body = MultiJson.load(api.response)
             body.should eq([
               { 'h' => { 'u' => uid, 'h' => crc32_hash } },
@@ -90,22 +93,10 @@ describe Application do
     context "with e=v requests" do
       let(:uid) { 'uid' }
       let(:crc32_hash) { 'crc32_hash' }
-      let(:data) { [
-        { 'v' => { 'u' => uid, 'h' => crc32_hash, 'uo' => 'a', 't' => { "data" => "settings" } } },
-      ] }
-      before { with_api(Application) { VideoTagCRC32Hash.set(site_token, uid , 'old_crc32_hash'); stop } }
-
-      it "sets VideoTag data CRC32 hash" do
-        with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(data)) do |api|
-            VideoTagCRC32Hash.get(site_token, uid).should eq crc32_hash
-          end
-        end
-      end
 
       it "delays update on VideoTagUpdater" do
         with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(data)) do |api|
+          post_request(path: path, body: MultiJson.dump(v_data)) do |api|
             Sidekiq::Worker.jobs.should have(1).job
             Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
           end
@@ -114,7 +105,7 @@ describe Application do
 
       it "responses and empty array" do
         with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(data)) do |api|
+          post_request(path: path, body: MultiJson.dump(v_data)) do |api|
             body = MultiJson.load(api.response)
             body.should eq []
           end

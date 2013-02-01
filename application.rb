@@ -21,7 +21,7 @@ class Application < Goliath::API
   def response(env)
     site_token = extract_site_token(env)
     response = if site_token
-      EventsResponder.new(site_token, params).response
+      EventsResponder.new(env, site_token, params).response
     else
       []
     end

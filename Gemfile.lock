@@ -51,6 +51,7 @@ GEM
     log4r (1.1.10)
     lumberjack (1.0.2)
     method_source (0.8.1)
+    moped (1.3.2)
     multi_json (1.5.0)
     newrelic-redis (1.4.0)
       newrelic_rpm (~> 3.0)
@@ -99,6 +100,7 @@ DEPENDENCIES
   goliath
   guard-rspec
   hiredis
+  moped
   newrelic-redis
   newrelic_rpm
   rb-fsevent

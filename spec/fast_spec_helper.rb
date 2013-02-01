@@ -1,10 +1,4 @@
-begin
-  # use `bundle install --standalone' to get this...
-  require_relative '../bundle/bundler/setup'
-rescue LoadError
-  # fall back to regular bundler if the developer hasn't bundled standalone
-  require 'bundler'
-  Bundler.setup
-end
+$LOAD_PATH.unshift("#{Dir.pwd}/lib") unless $LOAD_PATH.include?("#{Dir.pwd}/lib")
 
-require_relative 'config/rspec_config'
+require 'bundler/setup'
+require_relative 'config/rspec'

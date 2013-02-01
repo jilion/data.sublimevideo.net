@@ -1,16 +1,19 @@
-require "fast_spec_helper"
+require 'fast_spec_helper'
 
-require File.expand_path('lib/events_responder')
+require 'events_responder'
 
 describe EventsResponder do
+  let(:env) { mock('env') }
   let(:site_token) { 'site_token' }
   let(:uid) { 'uid' }
-  let(:events_responder) { EventsResponder.new(site_token, params) }
+  let(:events_responder) { EventsResponder.new(env, site_token, params) }
+  let(:video_tag_crc32_hash) { mock(VideoTagCRC32Hash) }
 
   describe "#response" do
+    before { VideoTagCRC32Hash.stub(:new).with(env, site_token, uid) { video_tag_crc32_hash } }
 
     it "responds only to Array params" do
-      responder = EventsResponder.new(site_token, { 'foo' => 'bar' })
+      responder = EventsResponder.new(env, site_token, { 'foo' => 'bar' })
       responder.response.should eq []
     end
 
@@ -18,7 +21,7 @@ describe EventsResponder do
       let(:params) { [{ 'h' => { 'u' => uid } }] }
 
       it "returns video_tag_crc32_hash" do
-        VideoTagCRC32Hash.should_receive(:get).with(site_token, uid) { 'crc32_hash' }
+        video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
         events_responder.response.should eq [{ h: { u: "uid", h: "crc32_hash" } }]
       end
     end
@@ -30,8 +33,10 @@ describe EventsResponder do
       ] }
 
       it "returns video_tag_crc32_hash" do
-        VideoTagCRC32Hash.should_receive(:get).with(site_token, uid) { 'crc32_hash' }
-        VideoTagCRC32Hash.should_receive(:get).with(site_token, 'other_uid') { nil }
+        video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
+        VideoTagCRC32Hash.stub(:new).with(env, site_token, 'other_uid') { video_tag_crc32_hash }
+        video_tag_crc32_hash.should_receive(:get) { nil }
+
         events_responder.response.should eq [
           { h: { u: "uid", h: "crc32_hash" } },
           { h: { u: "other_uid", h: nil } }
@@ -40,15 +45,15 @@ describe EventsResponder do
     end
 
     context "with one v event" do
-      let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'crc32_hash', 'uo' => 'a', 't' => { "data" => "settings" } } }] }
+      let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } } }] }
 
       before {
-        VideoTagCRC32Hash.stub(:set)
+        video_tag_crc32_hash.stub(:set)
         VideoTagUpdaterWorker.stub(:perform_async)
       }
 
       it "sets video_tag_crc32_hash" do
-        VideoTagCRC32Hash.should_receive(:set).with(site_token, uid, 'crc32_hash')
+        video_tag_crc32_hash.should_receive(:set).with('crc32_hash')
         events_responder.response
       end
 
@@ -56,7 +61,7 @@ describe EventsResponder do
         VideoTagUpdaterWorker.should_receive(:perform_async).with(
           site_token,
           uid,
-          { "uo" => "a", "t" => { "data" => "settings" } })
+          { "a" => { "data" => "settings" } })
         events_responder.response
       end
 
@@ -65,7 +70,4 @@ describe EventsResponder do
       end
     end
   end
-
-
-
 end

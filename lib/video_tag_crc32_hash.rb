@@ -1,27 +1,19 @@
-require 'redis_wrapper'
-
 class VideoTagCRC32Hash
-  attr_reader :site_token, :uid
+  attr_reader :env, :site_token, :uid
 
-  def self.get(site_token, uid)
-    new(site_token, uid).get
-  end
-
-  def self.set(site_token, uid, crc32_hash)
-    new(site_token, uid).set(crc32_hash)
-  end
-
-  def initialize(site_token, uid)
+  def initialize(env, site_token, uid)
+    @env        = env
     @site_token = site_token
-    @uid = uid
+    @uid        = uid
   end
 
   def get
-    RedisWrapper.connection { |r| r.hget(:video_tag_crc32_hashes, key) }
+    object = mongo_collection.find({ k: key }).first
+    object && object['h']
   end
 
   def set(crc32_hash)
-    RedisWrapper.connection { |r| r.hset(:video_tag_crc32_hashes, key, crc32_hash) }
+    mongo_collection.insert({ k: key, h: crc32_hash, t: Time.now.utc })
   end
 
   private
@@ -30,4 +22,7 @@ class VideoTagCRC32Hash
     "#{site_token}#{uid}"
   end
 
+  def mongo_collection
+    env.moped[:video_tag_crc32_hashes]
+  end
 end
