@@ -113,7 +113,7 @@ t*, Video title, e.g. n: "My Awesome Video"
 p*, Video poster url, e.g. p: "http://posters.sublimevideo.net/123asda3.png"
 z, Player size, e.g. z: "400x300"
 s*, Video sources hash, see below params for each source
-a*, Video data attributes hash.
+a*, Video data attributes (settings) hash.
 o*, Video options hash (ie. { autoembed: true })
 ```
 
