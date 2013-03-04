@@ -13,7 +13,7 @@ class VideoTagCRC32Hash
   end
 
   def set(crc32_hash)
-    mongo_collection.find(k: key, h: crc32_hash).upsert(t: Time.now.utc)
+    mongo_collection.insert({ k: key, h: crc32_hash, t: Time.now.utc })
   end
 
   private
