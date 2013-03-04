@@ -24,7 +24,10 @@ describe VideoTagCRC32Hash do
 
   describe "#set" do
     it "sets crc32_hash" do
-      collection.should_receive(:insert).with(k: "#{site_token}#{uid}", h: "crc32_hash", t: kind_of(Time))
+      collection.should_receive(:find).with(k: "#{site_token}#{uid}", h: "crc32_hash") { |mock|
+        mock.should_receive(:upsert).with(t: kind_of(Time))
+        mock
+      }
       video_tag_crc32_hash.set("crc32_hash")
     end
   end
