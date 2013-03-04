@@ -12,6 +12,7 @@ gem 'moped'
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 gem 'newrelic_rpm'
 gem 'newrelic-redis'
+gem 'airbrake'
 
 group :test do
   gem 'em-http-request'

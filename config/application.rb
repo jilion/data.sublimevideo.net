@@ -13,3 +13,8 @@ config['moped'] = EM::Synchrony::ConnectionPool.new(size: 10) do
   session.login(mongo_uri.user, mongo_uri.password) if mongo_uri.user
   session
 end
+
+require 'airbrake'
+Airbrake.configure do |config|
+  config.api_key = ENV['AIRBRAKE_API_KEY']
+end

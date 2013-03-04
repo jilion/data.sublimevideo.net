@@ -11,8 +11,9 @@ require 'rack/newrelic_stats_reporter'
 require 'events_responder'
 
 class Application < Goliath::API
-  use Rack::NewrelicStatsReporter
   use Goliath::Rack::Heartbeat  # respond to /status with 200, OK (monitoring, etc)
+  use Rack::NewrelicStatsReporter
+  use Airbrake::Rack
   use Rack::GETRedirector       # add good headers for CORS
   use Rack::Cors                # add good headers for CORS
   use Rack::JSONParser          # always parse & merge body parameters as JSON
