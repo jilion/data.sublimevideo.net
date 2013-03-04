@@ -20,7 +20,6 @@ class Application < Goliath::API
   use Rack::JSONFormatter       # always ouptut JSON
 
   def response(env)
-    raise "test airbrake"
     site_token = extract_site_token(env)
     response = if site_token
       EventsResponder.new(env, site_token, params).response
