@@ -14,6 +14,10 @@ config['moped'] = EM::Synchrony::ConnectionPool.new(size: 10) do
   session
 end
 
+require 'librato/metrics'
+Librato::Metrics.authenticate ENV['LIBRATO_METRICS_USER'], ENV['LIBRATO_METRICS_TOKEN']
+config['metrics_queue'] = Librato::Metrics::Queue.new(autosubmit_interval: 5)
+
 require 'airbrake'
 Airbrake.configure do |config|
   config.api_key = ENV['AIRBRAKE_API_KEY']

@@ -15,6 +15,7 @@ class EventsResponder
   def response
     response = []
     events do |event_key, data|
+      env.metrics_queue.add "data.events_type" => { type: :counter, value: 1, source: event_key }
       response << send("#{event_key}_event_response", data)
     end
     response.compact

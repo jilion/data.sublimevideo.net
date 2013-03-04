@@ -13,6 +13,7 @@ gem 'moped'
 gem 'newrelic_rpm'
 gem 'newrelic-redis'
 gem 'airbrake'
+gem 'librato-metrics'
 
 group :test do
   gem 'em-http-request'

@@ -3,7 +3,8 @@ require 'fast_spec_helper'
 require 'events_responder'
 
 describe EventsResponder do
-  let(:env) { mock('env') }
+  let(:metrics_queue) { mock('metrics_queue', add: true) }
+  let(:env) { mock('env', metrics_queue: metrics_queue) }
   let(:site_token) { 'site_token' }
   let(:uid) { 'uid' }
   let(:events_responder) { EventsResponder.new(env, site_token, params) }
