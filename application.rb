@@ -9,7 +9,6 @@ require 'rack/json_parser'
 require 'rack/json_formatter'
 require 'events_responder'
 
-NewRelic::Agent.manual_start(env: Goliath.env.to_s)
 
 class Application < Goliath::API
   use Goliath::Rack::Heartbeat  # respond to /status with 200, OK (monitoring, etc)
@@ -18,6 +17,10 @@ class Application < Goliath::API
   use Rack::Cors                # add good headers for CORS
   use Rack::JSONParser          # always parse & merge body parameters as JSON
   use Rack::JSONFormatter       # always ouptut JSON
+
+  def setup
+    NewRelic::Agent.manual_start(env: Goliath.env.to_s)
+  end
 
   def response(env)
     site_token = extract_site_token(env)
