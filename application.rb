@@ -7,12 +7,11 @@ require 'rack/cors'
 require 'rack/get_redirector'
 require 'rack/json_parser'
 require 'rack/json_formatter'
-require 'rack/newrelic_stats_reporter'
+require 'new_relic/agent/instrumentation/rack'
 require 'events_responder'
 
 class Application < Goliath::API
   use Goliath::Rack::Heartbeat  # respond to /status with 200, OK (monitoring, etc)
-  use Rack::NewrelicStatsReporter
   use Airbrake::Rack
   use Rack::GETRedirector       # add good headers for CORS
   use Rack::Cors                # add good headers for CORS
@@ -35,4 +34,6 @@ class Application < Goliath::API
     matches = env['REQUEST_PATH'].match(%r{/([a-z0-9]{8}).json})
     matches && matches[1]
   end
+
+  include ::NewRelic::Agent::Instrumentation::Rack
 end
