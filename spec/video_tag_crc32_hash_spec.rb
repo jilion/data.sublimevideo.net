@@ -17,7 +17,7 @@ describe VideoTagCRC32Hash do
     end
 
     it "returns crc32 hash when exist" do
-      collection.stub_chain(:find, :first) { {'h' => 'crc32_hash'} }
+      collection.stub_chain(:find, :first) { { 'h' => 'crc32_hash' } }
       video_tag_crc32_hash.get.should eq 'crc32_hash'
     end
   end

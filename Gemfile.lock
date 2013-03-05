@@ -75,7 +75,7 @@ GEM
     newrelic-redis (1.4.0)
       newrelic_rpm (~> 3.0)
       redis (< 4.0)
-    newrelic_rpm (3.5.8.70)
+    newrelic_rpm (3.5.8.72)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)

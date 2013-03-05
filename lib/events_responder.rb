@@ -49,8 +49,7 @@ class EventsResponder
 
   def increment_metrics(event_key)
     EM.next_tick do
-      env.metrics_queue.add "data.events_type" => { value: 1, source: event_key }
+      env.metrics_queue.add("data.events_type" => { value: 1, source: event_key }) unless Goliath.env == :test
     end
   end
-
 end

@@ -8,7 +8,7 @@ class VideoTagCRC32Hash
   end
 
   def get
-    object = mongo_collection.find({ k: key }).first
+    object = mongo_collection.find(k: key).first
     object && object['h']
   end
 
