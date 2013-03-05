@@ -15,8 +15,8 @@ class EventsResponder
   def response
     response = []
     events do |event_key, data|
-      env.metrics_queue.add "data.events_type" => { value: 1, source: event_key }
       response << send("#{event_key}_event_response", data)
+      increment_metrics(event_key)
     end
     response.compact
   end
@@ -44,6 +44,12 @@ class EventsResponder
       if EVENT_KEYS.include?(event_key)
         block.call(event_key, data)
       end
+    end
+  end
+
+  def increment_metrics(event_key)
+    EM.next_tick do
+      env.metrics_queue.add "data.events_type" => { value: 1, source: event_key }
     end
   end
 
