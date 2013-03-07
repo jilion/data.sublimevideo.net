@@ -87,7 +87,7 @@ Note:
 
 Video tag data crc32 hash generation:
 
-The video tag data used to generate the crc32 hash are all video tag data without source's urls. When autoembed is true, videos sources are used to generate the crc32.
+The video tag data used to generate the crc32 hash are all video tag data without source's urls and player size (that change on a responsive site). When autoembed is true, videos sources are used to generate the crc32.
 
 ### CORS – Video tag data
 
