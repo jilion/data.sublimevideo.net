@@ -4,17 +4,20 @@ require 'events_responder'
 
 describe EventsResponder do
   let(:metrics_queue) { mock('metrics_queue', add: true) }
-  let(:env) { mock('env', metrics_queue: metrics_queue) }
   let(:site_token) { 'site_token' }
   let(:uid) { 'uid' }
-  let(:events_responder) { EventsResponder.new(env, site_token, params) }
+  let(:events_responder) { EventsResponder.new(site_token, params) }
   let(:video_tag_crc32_hash) { mock(VideoTagCRC32Hash) }
 
+  before {
+    $metrics_queue = metrics_queue
+  }
+
   describe "#response" do
-    before { VideoTagCRC32Hash.stub(:new).with(env, site_token, uid) { video_tag_crc32_hash } }
+    before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
 
     it "responds only to Array params" do
-      responder = EventsResponder.new(env, site_token, { 'foo' => 'bar' })
+      responder = EventsResponder.new(site_token, { 'foo' => 'bar' })
       responder.response.should eq []
     end
 
@@ -35,7 +38,7 @@ describe EventsResponder do
 
       it "returns video_tag_crc32_hash" do
         video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
-        VideoTagCRC32Hash.stub(:new).with(env, site_token, 'other_uid') { video_tag_crc32_hash }
+        VideoTagCRC32Hash.stub(:new).with(site_token, 'other_uid') { video_tag_crc32_hash }
         video_tag_crc32_hash.should_receive(:get) { nil }
 
         events_responder.response.should eq [

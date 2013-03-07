@@ -24,14 +24,14 @@ class EventsResponder
 
   def h_event_response(data)
     uid = data.delete('u')
-    crc32 = VideoTagCRC32Hash.new(env, site_token, uid).get
+    crc32 = VideoTagCRC32Hash.new(site_token, uid).get
     { h: { u: uid, h: crc32 } }
   end
 
   def v_event_response(data)
     uid = data.delete('u')
     crc32 = data.delete('h')
-    VideoTagCRC32Hash.new(env, site_token, uid).set(crc32)
+    VideoTagCRC32Hash.new(site_token, uid).set(crc32)
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
     nil
   end

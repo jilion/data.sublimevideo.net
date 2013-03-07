@@ -1,30 +1,30 @@
 require 'spec_helper'
+require 'rack/test'
+
+APP = Rack::Builder.parse_file('config.ru').first
 
 describe Application do
+  include Rack::Test::Methods
+
+  def app
+    APP
+  end
+
   it "redirects to sublimevideo on GET" do
-    with_api(Application) do |a|
-      get_request(path: '/foo') do |api|
-        api.response_header.status.should eq 301
-        api.response.should eq "Redirect to http://sublimevideo.net"
-      end
-    end
+    get '/foo'
+    last_response.status.should eq 301
+    last_response.body.should eq "Redirect to http://sublimevideo.net"
   end
 
   context "on /status path" do
     it "responses OK on GET /status" do
-      with_api(Application) do |a|
-        get_request(path: '/status') do |api|
-          api.response.should eq 'OK'
-        end
-      end
+      get '/status'
+      last_response.body.should eq 'OK'
     end
 
     it "responses OK on POST /status" do
-      with_api(Application) do |a|
-        post_request(path: '/status') do |api|
-          api.response.should eq 'OK'
-        end
-      end
+      post '/status'
+      last_response.body.should eq 'OK'
     end
   end
 
@@ -32,7 +32,6 @@ describe Application do
     let(:site_token) { 'abcd1234' }
     let(:uid) { 'uid' }
     let(:crc32_hash) { 'crc32_hash' }
-    let(:path) { "/#{site_token}.json" }
     let(:h_data) { [
       { 'h' => { 'u' => uid } },
       { 'h' => { 'u' => 'other_uid' } }
@@ -42,51 +41,36 @@ describe Application do
     ] }
 
     it "responses with CORS headers on OPTIONS" do
-      with_api(Application) do |a|
-        options_request(path: path) do |api|
-          headers = api.response_header
-          headers['Access-Control-Allow-Origin'].should eq '*'
-          headers['Access-Control-Allow-Methods'].should eq 'POST'
-          headers['Access-Control-Allow-Headers'].should eq 'Content-Type'
-          headers['Access-Control-Allow-Credentials'].should eq 'true'
-          headers['Access-Control-Max-Age'].should eq '1728000'
-        end
-      end
+      options "/#{site_token}.json"
+      headers = last_response.header
+      headers['Access-Control-Allow-Origin'].should eq '*'
+      headers['Access-Control-Allow-Methods'].should eq 'POST'
+      headers['Access-Control-Allow-Headers'].should eq 'Content-Type'
+      headers['Access-Control-Allow-Credentials'].should eq 'true'
+      headers['Access-Control-Max-Age'].should eq '1728000'
     end
 
     it "responses with CORS headers on POST" do
-      with_api(Application) do |a|
-        post_request(path: path) do |api|
-          headers = api.response_header
-          headers['Access-Control-Allow-Origin'].should eq '*'
-        end
-      end
+      post "/#{site_token}.json"
+      last_response.header['Access-Control-Allow-Origin'].should eq '*'
     end
 
     it "always responds in JSON" do
-      headers = { 'Content-Type' => 'text/plain' }
-      with_api(Application) do |a|
-        post_request(path: path, head: headers) do |api|
-          body = MultiJson.load(api.response)
-          body.should eq([])
-        end
-      end
+      post "/#{site_token}.json", nil, 'Content-Type' => 'text/plain'
+      body = MultiJson.load(last_response.body)
+      body.should eq([])
     end
 
     context "with h event" do
-
-      before { with_api(Application) { post_request(path: path, body: MultiJson.dump(v_data)) } }
+      before { post "/#{site_token}.json", MultiJson.dump(v_data) }
 
       it "responses with VideoTag data CRC32 hash" do
-        with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(h_data)) do |api|
-            body = MultiJson.load(api.response)
-            body.should eq([
-              { 'h' => { 'u' => uid, 'h' => crc32_hash } },
-              { 'h' => { 'u' => 'other_uid', 'h' => nil } }
-            ])
-          end
-        end
+        post "/#{site_token}.json", MultiJson.dump(h_data)
+        body = MultiJson.load(last_response.body)
+        body.should eq([
+          { 'h' => { 'u' => uid, 'h' => crc32_hash } },
+          { 'h' => { 'u' => 'other_uid', 'h' => nil } }
+        ])
       end
     end
 
@@ -95,24 +79,16 @@ describe Application do
       let(:crc32_hash) { 'crc32_hash' }
 
       it "delays update on VideoTagUpdater" do
-        with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(v_data)) do |api|
-            Sidekiq::Worker.jobs.should have(1).job
-            Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
-          end
-        end
+        post "/#{site_token}.json", MultiJson.dump(v_data)
+        Sidekiq::Worker.jobs.should have(1).job
+        Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
       end
 
       it "responses and empty array" do
-        with_api(Application) do |a|
-          post_request(path: path, body: MultiJson.dump(v_data)) do |api|
-            body = MultiJson.load(api.response)
-            body.should eq []
-          end
-        end
+        post "/#{site_token}.json", MultiJson.dump(v_data)
+        body = MultiJson.load(last_response.body)
+        body.should eq []
       end
     end
-
   end
-
 end

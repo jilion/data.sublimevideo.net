@@ -6,9 +6,11 @@ describe VideoTagCRC32Hash do
   let(:site_token) { 'abcd1234' }
   let(:uid) { 'uid' }
   let(:collection) { mock('collection') }
-  let(:moped) { mock('moped', :[] => collection) }
-  let(:env) { mock('env', moped: moped )}
-  let(:video_tag_crc32_hash) { VideoTagCRC32Hash.new(env, site_token, uid) }
+  let(:video_tag_crc32_hash) { VideoTagCRC32Hash.new(site_token, uid) }
+
+  before {
+    $moped = mock('moped', :[] => collection)
+  }
 
   describe "#get" do
     it "returns nil when no CRC32 Hash exist" do

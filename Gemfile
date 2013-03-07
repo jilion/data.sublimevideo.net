@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 ruby '1.9.3'
 
+gem 'rack'
 gem 'puma'
 
 gem 'yajl-ruby', require: 'yajl' # fast json
@@ -18,8 +19,8 @@ gem 'airbrake'
 gem 'librato-metrics'
 
 group :test do
-  # gem 'em-http-request'
   gem 'rspec'
+  gem 'rack-test'
 end
 
 group :tools do

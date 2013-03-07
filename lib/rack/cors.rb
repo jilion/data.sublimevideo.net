@@ -14,7 +14,10 @@ module Rack
           'Access-Control-Max-Age' => '1728000'
         }, {}]
       else
-        @app.call(env)
+        status, headers, body = @app.call(env)
+        headers['Access-Control-Allow-Origin'] = '*'
+        headers['Cache-Control'] = 'no-cache'
+        [status, headers, body]
       end
     end
   end

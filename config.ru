@@ -14,23 +14,27 @@ require 'rack/json_parser'
 require 'rack/json_formatter'
 require 'events_responder'
 
+require 'multi_json'
+
 class Application
   def call(env)
-    site_token = extract_site_token(env)
-    response = if site_token
-      EventsResponder.new(env, site_token, params).response
-    else
-      []
-    end
-    [200, {}, response]
+    [200, {}, body(env)]
   end
 
   include NewRelic::Agent::Instrumentation::Rack
 
   private
 
+  def body(env)
+    if site_token = extract_site_token(env)
+      EventsResponder.new(site_token, env['params']).response
+    else
+      []
+    end
+  end
+
   def extract_site_token(env)
-    matches = env['REQUEST_PATH'].match(%r{/([a-z0-9]{8}).json})
+    matches = env['PATH_INFO'].match(%r{/([a-z0-9]{8}).json})
     matches && matches[1]
   end
 end
