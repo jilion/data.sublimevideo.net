@@ -1,13 +1,15 @@
 source 'http://rubygems.org'
 ruby '1.9.3'
 
-gem 'goliath'
+gem 'puma'
+
 gem 'yajl-ruby', require: 'yajl' # fast json
 
 gem 'sidekiq'
-gem 'redis', require: ['redis/connection/synchrony', 'redis']
-gem 'hiredis'
 gem 'moped'
+gem 'rack-status'
+# gem 'redis', require: ['redis/connection/synchrony', 'redis']
+# gem 'hiredis'
 
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 gem 'newrelic_rpm'
@@ -16,7 +18,7 @@ gem 'airbrake'
 gem 'librato-metrics'
 
 group :test do
-  gem 'em-http-request'
+  # gem 'em-http-request'
   gem 'rspec'
 end
 

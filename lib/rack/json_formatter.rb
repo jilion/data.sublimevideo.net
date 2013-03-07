@@ -1,15 +1,13 @@
 require 'multi_json'
 
 module Rack
-  # A JSON formatter. Uses MultiJson so you can use the JSON
-  # encoder that is right for your project.
-  #
-  # @example
-  #   use Rack::JSONFormatter
   class JSONFormatter
-    include Goliath::Rack::AsyncMiddleware
+    def initialize(app)
+      @app = app
+    end
 
-    def post_process(env, status, headers, body)
+    def call(env)
+      status, headers, body = @app.call(env)
       body = [MultiJson.dump(body)]
       [status, headers, body]
     end

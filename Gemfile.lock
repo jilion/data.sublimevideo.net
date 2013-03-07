@@ -4,50 +4,21 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-    addressable (2.3.3)
     aggregate (0.2.2)
     airbrake (3.1.8)
       activesupport
       builder
       json
-    async-rack (0.5.1)
-      rack (~> 1.1)
     builder (3.2.0)
     celluloid (0.12.4)
       facter (>= 1.6.12)
       timers (>= 1.0.0)
     coderay (1.0.9)
     connection_pool (1.0.0)
-    cookiejar (0.3.0)
     diff-lcs (1.2.1)
-    em-http-request (1.0.3)
-      addressable (>= 2.2.3)
-      cookiejar
-      em-socksify
-      eventmachine (>= 1.0.0.beta.4)
-      http_parser.rb (>= 0.5.3)
-    em-socksify (0.2.1)
-      eventmachine (>= 1.0.0.beta.4)
-    em-synchrony (1.0.3)
-      eventmachine (>= 1.0.0.beta.1)
-    em-websocket (0.5.0)
-      eventmachine (>= 0.12.9)
-      http_parser.rb (~> 0.5.3)
-    eventmachine (1.0.1)
     facter (1.6.17)
     faraday (0.8.6)
       multipart-post (~> 1.1)
-    goliath (1.0.1)
-      async-rack
-      em-synchrony (>= 1.0.0)
-      em-websocket
-      eventmachine (>= 1.0.0.beta.4)
-      http_parser.rb (= 0.5.3)
-      log4r
-      multi_json
-      rack (>= 1.2.2)
-      rack-contrib
-      rack-respond_to
     guard (1.6.2)
       listen (>= 0.6.0)
       lumberjack (>= 1.0.2)
@@ -57,8 +28,6 @@ GEM
     guard-rspec (2.5.0)
       guard (>= 1.1)
       rspec (~> 2.11)
-    hiredis (0.4.5)
-    http_parser.rb (0.5.3)
     i18n (0.6.4)
     json (1.7.7)
     librato-metrics (1.0.3)
@@ -66,7 +35,6 @@ GEM
       faraday (~> 0.7)
       multi_json
     listen (0.7.3)
-    log4r (1.1.10)
     lumberjack (1.0.2)
     method_source (0.8.1)
     moped (1.4.3)
@@ -80,12 +48,10 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    puma (1.6.3)
+      rack (~> 1.2)
     rack (1.5.2)
-    rack-accept-media-types (0.9)
-    rack-contrib (1.1.0)
-      rack (>= 0.9.1)
-    rack-respond_to (0.9.8)
-      rack-accept-media-types (>= 0.6)
+    rack-status (1.0.0)
     rb-fsevent (0.9.3)
     rb-readline (0.4.2)
     redis (3.0.3)
@@ -117,17 +83,15 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
-  em-http-request
-  goliath
   guard-rspec
-  hiredis
   librato-metrics
   moped
   newrelic-redis
   newrelic_rpm
+  puma
+  rack-status
   rb-fsevent
   rb-readline
-  redis
   rspec
   ruby_gntp
   sidekiq

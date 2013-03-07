@@ -7,7 +7,9 @@ module Rack
   #  use Rack::Params::JSONParser
   #
   class JSONParser
-    include Goliath::Rack::AsyncMiddleware
+    def initialize(app)
+      @app = app
+    end
 
     def call(env)
       env['params'] = {}

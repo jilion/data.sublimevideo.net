@@ -4,10 +4,9 @@ require 'workers/video_tag_updater_worker'
 class EventsResponder
   EVENT_KEYS = %w[h v]
 
-  attr_reader :env, :site_token, :params
+  attr_reader :site_token, :params
 
-  def initialize(env, site_token, params)
-    @env        = env
+  def initialize(site_token, params)
     @site_token = site_token
     @params     = params
   end
@@ -48,8 +47,6 @@ class EventsResponder
   end
 
   def increment_metrics(event_key)
-    EM.next_tick do
-      env.metrics_queue.add("data.events_type" => { value: 1, source: event_key }) unless Goliath.env == :test
-    end
+    $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
   end
 end

@@ -1,8 +1,7 @@
 class VideoTagCRC32Hash
-  attr_reader :env, :site_token, :uid
+  attr_reader :site_token, :uid
 
-  def initialize(env, site_token, uid)
-    @env        = env
+  def initialize(site_token, uid)
     @site_token = site_token
     @uid        = uid
   end
@@ -24,6 +23,6 @@ class VideoTagCRC32Hash
   end
 
   def mongo_collection
-    env.moped[:video_tag_crc32_hashes]
+    $moped[:video_tag_crc32_hashes]
   end
 end

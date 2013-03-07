@@ -1,8 +1,10 @@
 module Rack
   class Cors
-    include Goliath::Rack::AsyncMiddleware
+    def initialize(app)
+      @app = app
+    end
 
-    def call(env, *args)
+    def call(env)
       if env['REQUEST_METHOD'] == 'OPTIONS'
         [200, {
           'Access-Control-Allow-Origin' => '*',
@@ -12,16 +14,8 @@ module Rack
           'Access-Control-Max-Age' => '1728000'
         }, {}]
       else
-        super(env, *args)
+        super(env)
       end
     end
-
-    def post_process(env, status, headers, body)
-      headers ||= {}
-      headers['Access-Control-Allow-Origin'] = '*'
-      headers['Cache-Control'] = 'no-cache'
-      [status, headers, body]
-    end
-
   end
 end

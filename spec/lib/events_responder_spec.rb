@@ -1,7 +1,6 @@
 require 'fast_spec_helper'
 
 require 'events_responder'
-require 'eventmachine'
 
 describe EventsResponder do
   let(:metrics_queue) { mock('metrics_queue', add: true) }

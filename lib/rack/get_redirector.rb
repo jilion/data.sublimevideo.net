@@ -1,14 +1,15 @@
 module Rack
   class GETRedirector
-    include Goliath::Rack::AsyncMiddleware
+    def initialize(app)
+      @app = app
+    end
 
-    def call(env, *args)
+    def call(env)
       if env['REQUEST_METHOD'] == 'GET'
         [301, { 'Location' => 'http://sublimevideo.net' }, "Redirect to http://sublimevideo.net"]
       else
-        super(env, *args)
+        super(env)
       end
     end
-
   end
 end
