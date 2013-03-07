@@ -9,8 +9,6 @@ gem 'yajl-ruby', require: 'yajl' # fast json
 gem 'sidekiq'
 gem 'moped'
 gem 'rack-status'
-# gem 'redis', require: ['redis/connection/synchrony', 'redis']
-# gem 'hiredis'
 
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 gem 'newrelic_rpm'
