@@ -14,7 +14,7 @@ module Rack
           'Access-Control-Max-Age' => '1728000'
         }, {}]
       else
-        super(env)
+        @app.call(env)
       end
     end
   end
