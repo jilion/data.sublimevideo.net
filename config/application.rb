@@ -1,11 +1,11 @@
 NewRelic::Agent.manual_start(env: Goliath.env.to_s)
 
 Sidekiq.configure_client do |config|
-  config.redis = { driver: 'synchrony' }
+  config.redis = { driver: 'synchrony', size: 20}
 end
 
 require 'moped'
-config['moped'] = EM::Synchrony::ConnectionPool.new(size: 10) do
+config['moped'] = EM::Synchrony::ConnectionPool.new(size: 20) do
   mongo_uri = URI.parse(ENV['MONGOHQ_URI'] || 'mongodb://127.0.0.1/sv-data2')
   session = Moped::Session.new(
     [[mongo_uri.host, mongo_uri.port].compact.join(':')],
