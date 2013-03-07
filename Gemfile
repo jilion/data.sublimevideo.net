@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 ruby '1.9.3'
 
 gem 'goliath'
-gem 'oj' # fast json
+gem 'yajl-ruby', require: 'yajl' # fast json
 
 gem 'sidekiq'
 gem 'redis', require: ['redis/connection/synchrony', 'redis']
