@@ -4,10 +4,12 @@
 
 require 'moped'
 mongo_uri = URI.parse(ENV['MONGOHQ_URI'] || 'mongodb://127.0.0.1/sv-data2')
-$moped = Moped::Session.new(
+session = Moped::Session.new(
   [[mongo_uri.host, mongo_uri.port].compact.join(':')],
-  database: mongo_uri.path.gsub(/^\//, ''))
-$moped.login(mongo_uri.user, mongo_uri.password) if mongo_uri.user
+  database: mongo_uri.path.gsub(/^\//, '')
+)
+session.login(mongo_uri.user, mongo_uri.password) if mongo_uri.user
+$moped = session
 
 require 'librato/metrics'
 Librato::Metrics.authenticate ENV['LIBRATO_METRICS_USER'], ENV['LIBRATO_METRICS_TOKEN']
