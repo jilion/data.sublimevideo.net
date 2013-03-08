@@ -9,10 +9,6 @@ describe EventsResponder do
   let(:events_responder) { EventsResponder.new(site_token, params) }
   let(:video_tag_crc32_hash) { mock(VideoTagCRC32Hash) }
 
-  before {
-    $metrics_queue = metrics_queue
-  }
-
   describe "#response" do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
 

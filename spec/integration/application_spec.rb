@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rack/test'
-
 APP = Rack::Builder.parse_file('config.ru').first
+require 'sidekiq/testing'
 
 describe Application do
   include Rack::Test::Methods

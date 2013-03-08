@@ -1,15 +1,11 @@
-# Sidekiq.configure_client do |config|
-#   config.redis = { size: 5}
-# end
+require 'sidekiq'
+Sidekiq.configure_client do |config|
+  config.redis = { size: 20 }
+end
 
-require 'moped'
-mongo_uri = URI.parse(ENV['MONGOHQ_URI'] || 'mongodb://127.0.0.1/sv-data2')
-session = Moped::Session.new(
-  [[mongo_uri.host, mongo_uri.port].compact.join(':')],
-  database: mongo_uri.path.gsub(/^\//, '')
-)
-session.login(mongo_uri.user, mongo_uri.password) if mongo_uri.user
-$moped = session
+require 'mongo'
+include Mongo
+$mongo = MongoClient.new(pool_size: 20, pool_timeout: 5).db['sv-data']
 
 require 'librato/metrics'
 Librato::Metrics.authenticate ENV['LIBRATO_METRICS_USER'], ENV['LIBRATO_METRICS_TOKEN']

@@ -7,21 +7,17 @@ require 'application'
 
 $: << File.dirname(__FILE__) + '/lib'
 require 'rack/status'
-require 'new_relic/agent/instrumentation/rack'
+require 'rack/newrelic'
 require 'rack/cors'
 require 'rack/get_redirector'
 require 'rack/json_parser'
 require 'rack/json_formatter'
 require 'events_responder'
 
-require 'multi_json'
-
 class Application
   def call(env)
     [200, {}, body(env)]
   end
-
-  include NewRelic::Agent::Instrumentation::Rack
 
   private
 
@@ -40,6 +36,7 @@ class Application
 end
 
 use Rack::Status
+use Rack::Newrelic
 use Airbrake::Rack
 use Rack::GETRedirector       # add good headers for CORS
 use Rack::Cors                # add good headers for CORS

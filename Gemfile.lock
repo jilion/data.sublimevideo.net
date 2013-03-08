@@ -9,6 +9,9 @@ GEM
       activesupport
       builder
       json
+    bson (1.8.3)
+    bson_ext (1.8.3)
+      bson (~> 1.8.3)
     builder (3.2.0)
     celluloid (0.12.4)
       facter (>= 1.6.12)
@@ -37,7 +40,8 @@ GEM
     listen (0.7.3)
     lumberjack (1.0.2)
     method_source (0.8.1)
-    moped (1.4.3)
+    mongo (1.8.3)
+      bson (~> 1.8.3)
     multi_json (1.6.1)
     multipart-post (1.2.0)
     newrelic-redis (1.4.0)
@@ -85,9 +89,10 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
+  bson_ext
   guard-rspec
   librato-metrics
-  moped
+  mongo
   newrelic-redis
   newrelic_rpm
   puma

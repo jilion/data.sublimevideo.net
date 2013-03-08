@@ -13,7 +13,7 @@ class VideoTagCRC32Hash
 
   def set(crc32_hash)
     document = { k: key }
-    mongo_collection.find(document).upsert(document.merge(h: crc32_hash, t: Time.now.utc))
+    mongo_collection.update({ k: key }, { :$set => { h: crc32_hash, t: Time.now.utc } }, upsert: true)
   end
 
   private
@@ -23,6 +23,6 @@ class VideoTagCRC32Hash
   end
 
   def mongo_collection
-    $moped[:video_tag_crc32_hashes]
+    $mongo[:video_tag_crc32_hashes]
   end
 end
