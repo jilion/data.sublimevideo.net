@@ -47,8 +47,8 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    puma (1.6.3)
-      rack (~> 1.2)
+    puma (2.0.0.b6)
+      rack (>= 1.1, < 2.0)
     rack (1.5.2)
     rack-status (1.0.0)
     rack-test (0.6.2)
@@ -90,7 +90,7 @@ DEPENDENCIES
   librato-metrics
   newrelic-redis
   newrelic_rpm
-  puma
+  puma (= 2.0.0.b6)
   rack
   rack-status
   rack-test
