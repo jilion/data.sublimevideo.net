@@ -1,4 +1,4 @@
-# SublimeVideo Async Data2 Server (Goliath)
+# SublimeVideo Async Data2 Server (Rack + Puma)
 
 ## Installation
 
@@ -10,10 +10,10 @@ bundle install
 
 ## Development
 
-Running Goliath:
+Running:
 
 ``` bash
-bundle exec ruby application.rb -sv
+bundle exec rackup
 ```
 
 ## Deployment
@@ -21,15 +21,6 @@ bundle exec ruby application.rb -sv
 ``` bash
 git push production2
 ```
-
-Don't forget to set MONGOHQ_URI env variable and set a custom index on the `video_tag_crc32_hashes` collection with:
-
-`
-db.video_tag_crc32_hashes.ensureIndex( { "t": 1 }, { expireAfterSeconds: 86400 } )
-`
-
-so crc32 hash are automaticaly removed after 1 day.
-
 
 ## CORS data requests
 
