@@ -1,6 +1,6 @@
 require 'sidekiq'
 Sidekiq.configure_client do |config|
-  config.redis = { size: 1 }
+  config.redis = { size: 2 }
 end
 
 require 'librato/metrics'
