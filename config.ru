@@ -12,6 +12,9 @@ require 'rack/get_redirector'
 require 'rack/json'
 require 'application'
 
+require "rack/timeout"
+use Rack::Timeout
+Rack::Timeout.timeout = 5  # this line is optional. if omitted, default is 15 seconds.
 use Rack::Status
 use Rack::Newrelic
 use Airbrake::Rack
