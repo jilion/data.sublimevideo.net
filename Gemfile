@@ -4,7 +4,8 @@ ruby '1.9.3'
 gem 'rack'
 gem 'rack-status'
 gem 'rack-timeout'
-gem 'puma', '2.0.0.b6'
+# gem 'puma', '2.0.0.b6'
+gem 'thin'
 
 gem 'yajl-ruby', require: 'yajl' # fast json
 
