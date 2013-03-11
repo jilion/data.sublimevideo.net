@@ -1,11 +1,7 @@
 require 'sidekiq'
 Sidekiq.configure_client do |config|
-  config.redis = { size: 20 }
+  config.redis = { size: 50 }
 end
-
-require 'mongo'
-include Mongo
-$mongo = MongoClient.new(pool_size: 20, pool_timeout: 5).db['sv-data']
 
 require 'librato/metrics'
 Librato::Metrics.authenticate ENV['LIBRATO_METRICS_USER'], ENV['LIBRATO_METRICS_TOKEN']

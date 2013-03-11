@@ -2,38 +2,15 @@
 require "bundler"
 Bundler.require
 
-$: << File.dirname(__FILE__) + '/config'
-require 'application'
+require './config'
 
-$: << File.dirname(__FILE__) + '/lib'
 require 'rack/status'
 require 'rack/newrelic'
 require 'rack/cors'
 require 'rack/get_redirector'
 require 'rack/json_parser'
 require 'rack/json_formatter'
-require 'events_responder'
-
-class Application
-  def call(env)
-    [200, {}, body(env)]
-  end
-
-  private
-
-  def body(env)
-    if site_token = extract_site_token(env)
-      EventsResponder.new(site_token, env['params']).response
-    else
-      []
-    end
-  end
-
-  def extract_site_token(env)
-    matches = env['PATH_INFO'].match(%r{/([a-z0-9]{8}).json})
-    matches && matches[1]
-  end
-end
+require 'application'
 
 use Rack::Status
 use Rack::Newrelic

@@ -1,4 +1,5 @@
 class VideoTagCRC32Hash
+  REDIS_HASH = :video_tag_crc32_hashes
   attr_reader :site_token, :uid
 
   def initialize(site_token, uid)
@@ -7,22 +8,18 @@ class VideoTagCRC32Hash
   end
 
   def get
-    object = mongo_collection.find(k: key).first
-    object && object['h']
+    value = Sidekiq.redis { |con| con.hget(REDIS_HASH, key) }
+    time, hash = value && value.split(':')
+    return hash if time.to_i > (Time.now.to_i - 60*60*24)
   end
 
   def set(crc32_hash)
-    document = { k: key }
-    mongo_collection.update({ k: key }, { :$set => { h: crc32_hash, t: Time.now.utc } }, upsert: true)
+    Sidekiq.redis { |con| con.hset(REDIS_HASH, key, "#{Time.now.to_i}:#{crc32_hash}") }
   end
 
   private
 
   def key
     "#{site_token}#{uid}"
-  end
-
-  def mongo_collection
-    $mongo[:video_tag_crc32_hashes]
   end
 end

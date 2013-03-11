@@ -8,8 +8,6 @@ gem 'puma'
 gem 'yajl-ruby', require: 'yajl' # fast json
 
 gem 'sidekiq'
-gem 'mongo'
-gem 'bson_ext'
 
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 gem 'newrelic_rpm'
@@ -20,6 +18,7 @@ gem 'librato-metrics'
 group :test do
   gem 'rspec'
   gem 'rack-test'
+  gem 'timecop'
 end
 
 group :tools do
