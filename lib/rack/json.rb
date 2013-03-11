@@ -9,7 +9,7 @@ module Rack
     def call(env)
       env['params'] = parse_input(env) || {}
       status, headers, body = @app.call(env)
-      [status, headers, MultiJson.dump(body)]
+      [status, headers, [MultiJson.dump(body)]]
     end
 
     private
