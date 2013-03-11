@@ -7,19 +7,18 @@ module Rack
     end
 
     def call(env)
-      parse_json(env)
+      env['params'] = parse_input(env) || {}
       status, headers, body = @app.call(env)
       [status, headers, MultiJson.dump(body)]
     end
 
     private
 
-    def parse_json(env)
-      env['params'] = {}
+    def parse_input(env)
       if env && env['rack.input']
         body = env['rack.input'].read
         env['rack.input'].rewind
-        env['params'] = MultiJson.load(body) || {}
+        MultiJson.load(body)
       end
     end
   end
