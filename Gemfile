@@ -19,9 +19,6 @@ group :test do
   gem 'rspec'
   gem 'rack-test'
   gem 'timecop'
-end
-
-group :tools do
   # Guard
   gem 'ruby_gntp'
   gem 'rb-fsevent'
