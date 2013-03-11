@@ -1,2 +1,2 @@
-web: rackup -s puma -p $PORT -t 8:32
+web: bundle exec puma -p $PORT -t 8:32
 
