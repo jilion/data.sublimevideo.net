@@ -7,7 +7,7 @@ module Rack
     end
 
     def call(env)
-       @app.call(env)
+      @app.call(env)
     end
 
     include NewRelic::Agent::Instrumentation::Rack

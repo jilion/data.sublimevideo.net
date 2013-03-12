@@ -7,14 +7,14 @@ module Rack
     end
 
     def call(env)
-      env['params'] = parse_input(env) || {}
+      env['params'] = load_input(env) || {}
       status, headers, body = @app.call(env)
-      [status, headers, [MultiJson.dump(body)]]
+      [status, headers, [dump_output(body)]]
     end
 
     private
 
-    def parse_input(env)
+    def load_input(env)
       if env && env['rack.input']
         body = env['rack.input'].read
         env['rack.input'].rewind
@@ -23,6 +23,13 @@ module Rack
     rescue => e
       Airbrake.notify_or_ignore(e)
       []
+    end
+
+    def dump_output(body)
+      MultiJson.dump(body)
+    rescue => e
+      Airbrake.notify_or_ignore(e)
+      "[]"
     end
   end
 end
