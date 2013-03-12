@@ -46,7 +46,6 @@ describe Application do
       headers['Access-Control-Allow-Origin'].should eq '*'
       headers['Access-Control-Allow-Methods'].should eq 'POST'
       headers['Access-Control-Allow-Headers'].should eq 'Content-Type'
-      headers['Access-Control-Allow-Credentials'].should eq 'true'
       headers['Access-Control-Max-Age'].should eq '1728000'
     end
 

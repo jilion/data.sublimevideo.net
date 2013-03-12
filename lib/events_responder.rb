@@ -15,7 +15,7 @@ class EventsResponder
     response = []
     events do |event_key, data|
       response << send("#{event_key}_event_response", data)
-      # increment_metrics(event_key)
+      increment_metrics(event_key)
     end
     response.compact
   end
@@ -26,8 +26,8 @@ class EventsResponder
     uid = data.delete('u')
     crc32 = VideoTagCRC32Hash.new(site_token, uid).get
     { h: { u: uid, h: crc32 } }
-  rescue # => e
-    # Airbrake.notify_or_ignore(e)
+  rescue => e
+    Airbrake.notify_or_ignore(e)
     { h: { u: uid, h: nil } }
   end
 
@@ -37,8 +37,8 @@ class EventsResponder
     VideoTagCRC32Hash.new(site_token, uid).set(crc32)
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
     nil
-  rescue # => e
-    # Airbrake.notify_or_ignore(e)
+  rescue => e
+    Airbrake.notify_or_ignore(e)
     nil
   end
 
@@ -52,7 +52,7 @@ class EventsResponder
     end
   end
 
-  # def increment_metrics(event_key)
-  #   $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
-  # end
+  def increment_metrics(event_key)
+    $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
+  end
 end
