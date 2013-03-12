@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 ruby '1.9.3'
 
-gem 'unicorn'
+# gem 'unicorn'
+gem 'thin'
 
 gem 'rack'
 gem 'rack-status'

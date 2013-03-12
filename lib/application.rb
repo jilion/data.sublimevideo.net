@@ -13,7 +13,7 @@ class Application
     else
       []
     end
-  rescue => e
+  rescue # => e
     # Airbrake.notify_or_ignore(e)
     []
   end

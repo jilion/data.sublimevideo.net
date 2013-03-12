@@ -20,14 +20,14 @@ module Rack
         env['rack.input'].rewind
         MultiJson.load(body)
       end
-    rescue => e
+    rescue # => e
       # Airbrake.notify_or_ignore(e)
       []
     end
 
     def dump_output(body)
       MultiJson.dump(body)
-    rescue => e
+    rescue # => e
       # Airbrake.notify_or_ignore(e)
       "[]"
     end
