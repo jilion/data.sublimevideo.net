@@ -21,14 +21,14 @@ module Rack
         MultiJson.load(body)
       end
     rescue => e
-      Airbrake.notify_or_ignore(e)
+      # Airbrake.notify_or_ignore(e)
       []
     end
 
     def dump_output(body)
       MultiJson.dump(body)
     rescue => e
-      Airbrake.notify_or_ignore(e)
+      # Airbrake.notify_or_ignore(e)
       "[]"
     end
   end

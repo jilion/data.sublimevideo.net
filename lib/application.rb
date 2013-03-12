@@ -14,7 +14,7 @@ class Application
       []
     end
   rescue => e
-    Airbrake.notify_or_ignore(e)
+    # Airbrake.notify_or_ignore(e)
     []
   end
 

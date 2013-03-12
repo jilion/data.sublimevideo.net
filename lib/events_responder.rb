@@ -27,7 +27,7 @@ class EventsResponder
     crc32 = VideoTagCRC32Hash.new(site_token, uid).get
     { h: { u: uid, h: crc32 } }
   rescue => e
-    Airbrake.notify_or_ignore(e)
+    # Airbrake.notify_or_ignore(e)
     { h: { u: uid, h: nil } }
   end
 
@@ -38,7 +38,7 @@ class EventsResponder
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
     nil
   rescue => e
-    Airbrake.notify_or_ignore(e)
+    # Airbrake.notify_or_ignore(e)
     nil
   end
 
