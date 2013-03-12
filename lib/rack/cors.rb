@@ -17,6 +17,7 @@ module Rack
         status, headers, body = @app.call(env)
         headers['Access-Control-Allow-Origin'] = '*'
         headers['Cache-Control'] = 'no-cache'
+        headers['Connection'] = 'close'
         [status, headers, body]
       end
     end
