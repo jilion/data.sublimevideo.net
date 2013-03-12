@@ -13,13 +13,13 @@ require 'rack/json'
 require 'application'
 
 require "rack/timeout"
+use Airbrake::Rack
 use Rack::Timeout
 Rack::Timeout.timeout = 5  # this line is optional. if omitted, default is 15 seconds.
 use Rack::Status
 use Rack::Newrelic
-use Airbrake::Rack
-use Rack::GETRedirector       # add good headers for CORS
-use Rack::Cors                # add good headers for CORS
+use Rack::GETRedirector
+use Rack::Cors
 use Rack::JSON
 
 run Application.new
