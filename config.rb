@@ -1,7 +1,7 @@
-require 'sidekiq'
-Sidekiq.configure_client do |config|
-  config.redis = { size: 1 }
-end
+# require 'sidekiq'
+# Sidekiq.configure_client do |config|
+#   config.redis = { size: 1 }
+# end
 
 # require 'librato/metrics'
 # Librato::Metrics.authenticate ENV['LIBRATO_METRICS_USER'], ENV['LIBRATO_METRICS_TOKEN']
