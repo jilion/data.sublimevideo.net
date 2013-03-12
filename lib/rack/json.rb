@@ -20,6 +20,9 @@ module Rack
         env['rack.input'].rewind
         MultiJson.load(body)
       end
+    rescue => e
+      Airbrake.notify_or_ignore(e)
+      []
     end
   end
 end

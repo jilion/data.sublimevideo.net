@@ -13,6 +13,9 @@ class Application
     else
       []
     end
+  rescue => e
+    Airbrake.notify_or_ignore(e)
+    []
   end
 
   def extract_site_token(env)
