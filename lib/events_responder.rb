@@ -15,7 +15,7 @@ class EventsResponder
     response = []
     events do |event_key, data|
       response << send("#{event_key}_event_response", data)
-      increment_metrics(event_key)
+      # increment_metrics(event_key)
     end
     response.compact
   end
@@ -52,7 +52,7 @@ class EventsResponder
     end
   end
 
-  def increment_metrics(event_key)
-    $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
-  end
+  # def increment_metrics(event_key)
+  #   $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
+  # end
 end

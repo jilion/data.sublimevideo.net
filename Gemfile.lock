@@ -1,15 +1,6 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.2.12)
-      i18n (~> 0.6)
-      multi_json (~> 1.0)
-    aggregate (0.2.2)
-    airbrake (3.1.8)
-      activesupport
-      builder
-      json
-    builder (3.2.0)
     celluloid (0.12.4)
       facter (>= 1.6.12)
       timers (>= 1.0.0)
@@ -17,8 +8,6 @@ GEM
     connection_pool (1.0.0)
     diff-lcs (1.2.1)
     facter (1.6.17)
-    faraday (0.8.6)
-      multipart-post (~> 1.1)
     guard (1.6.2)
       listen (>= 0.6.0)
       lumberjack (>= 1.0.2)
@@ -28,22 +17,11 @@ GEM
     guard-rspec (2.5.0)
       guard (>= 1.1)
       rspec (~> 2.11)
-    i18n (0.6.4)
-    json (1.7.7)
     kgio (2.8.0)
-    librato-metrics (1.0.3)
-      aggregate (~> 0.2.2)
-      faraday (~> 0.7)
-      multi_json
     listen (0.7.3)
     lumberjack (1.0.2)
     method_source (0.8.1)
     multi_json (1.6.1)
-    multipart-post (1.2.0)
-    newrelic-redis (1.4.0)
-      newrelic_rpm (~> 3.0)
-      redis (< 4.0)
-    newrelic_rpm (3.5.8.72)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -52,7 +30,6 @@ GEM
     rack-status (1.0.0)
     rack-test (0.6.2)
       rack (>= 1.0)
-    rack-timeout (0.0.3)
     raindrops (0.10.0)
     rb-fsevent (0.9.3)
     rb-readline (0.4.2)
@@ -89,15 +66,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  airbrake
   guard-rspec
-  librato-metrics
-  newrelic-redis
-  newrelic_rpm
   rack
   rack-status
   rack-test
-  rack-timeout
   rb-fsevent
   rb-readline
   rspec
