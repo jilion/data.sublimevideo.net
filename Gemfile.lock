@@ -30,6 +30,7 @@ GEM
       rspec (~> 2.11)
     i18n (0.6.4)
     json (1.7.7)
+    kgio (2.8.0)
     librato-metrics (1.0.3)
       aggregate (~> 0.2.2)
       faraday (~> 0.7)
@@ -47,13 +48,12 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    puma (2.0.0.b6)
-      rack (>= 1.1, < 2.0)
     rack (1.5.2)
     rack-status (1.0.0)
     rack-test (0.6.2)
       rack (>= 1.0)
     rack-timeout (0.0.3)
+    raindrops (0.10.0)
     rb-fsevent (0.9.3)
     rb-readline (0.4.2)
     redis (3.0.3)
@@ -79,6 +79,10 @@ GEM
     thor (0.17.0)
     timecop (0.6.0)
     timers (1.1.0)
+    unicorn (4.6.2)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
     yajl-ruby (1.1.0)
 
 PLATFORMS
@@ -90,7 +94,6 @@ DEPENDENCIES
   librato-metrics
   newrelic-redis
   newrelic_rpm
-  puma (= 2.0.0.b6)
   rack
   rack-status
   rack-test
@@ -101,4 +104,5 @@ DEPENDENCIES
   ruby_gntp
   sidekiq
   timecop
+  unicorn
   yajl-ruby
