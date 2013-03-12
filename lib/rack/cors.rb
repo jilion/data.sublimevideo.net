@@ -10,7 +10,7 @@ module Rack
           'Access-Control-Allow-Origin' => '*',
           'Access-Control-Allow-Methods' => 'POST',
           'Access-Control-Allow-Headers' => 'Content-Type',
-          'Access-Control-Allow-Credentials' => 'true',
+          # 'Access-Control-Allow-Credentials' => 'true',
           'Access-Control-Max-Age' => '1728000'
         }, {}]
       else
