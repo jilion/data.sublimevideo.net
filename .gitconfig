@@ -1,18 +1,30 @@
+[user]
+  name  = YOUR NAME
+  email = YOUR EMAIL
+
+
 [core]
-	repositoryformatversion = 0
-	filemode = true
-	bare = false
-	logallrefupdates = true
-	ignorecase = true
+  repositoryformatversion = 0
+  filemode                = true
+  bare                    = false
+  logallrefupdates        = true
+  ignorecase              = true
+
+
 [remote "origin"]
-	url    = git@github.com:jilion/data.sublimevideo.net.git
-	fetch  = +refs/heads/*:refs/remotes/origin/*
+  url    = git@github.com:jilion/data.sublimevideo.net.git
+  fetch  = +refs/heads/*:refs/remotes/origin/*
+
 [remote "production"]
-	url    = git@heroku.com:sv-data.git
-	fetch  = +refs/heads/*:refs/remotes/production/*
+  url    = git@heroku.com:sv-data.git
+  fetch  = +refs/heads/*:refs/remotes/production/*
   push   = master:master
+
+
 [branch "master"]
   remote = origin
   merge  = refs/heads/master
+
+
 [heroku]
   remote = "production"
