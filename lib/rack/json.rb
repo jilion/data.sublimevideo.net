@@ -21,7 +21,7 @@ module Rack
         MultiJson.load(body)
       end
     rescue => e
-      Airbrake.notify_or_ignore(e)
+      Airbrake.notify_or_ignore(e, rack_env: env) 
       []
     end
 
