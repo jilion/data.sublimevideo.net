@@ -40,7 +40,7 @@ The params (json) sent can include multiples requests event types (load, play, v
 ]
 ```
 
-All requests will be managed and parsed separately by the server. Event type params (e) is mandatory for each request. To begin, only 'video tag data' and 'video tag crc32 hash request' will be supported.
+All requests will be managed and parsed separately by the server. To begin, only 'video tag data' and 'video tag crc32 hash request' will be supported.
 
 Some request types need a response (like 'video tag crc32 hash request') so in some case an array of responses (json) can be sent back. Order of responses aren't related to order of requests.
 
