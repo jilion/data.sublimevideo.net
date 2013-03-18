@@ -14,7 +14,6 @@ class EventsResponder
   def response
     response = []
     events do |event_key, data|
-      @uid = data.delete('u')
       response << send("#{event_key}_event_response", data)
       increment_metrics(event_key)
     end
@@ -24,14 +23,13 @@ class EventsResponder
   private
 
   def h_event_response(data)
+    @uid = data.delete('u')
     crc32 = video_tag_crc32_hash.get
     { h: { u: uid, h: crc32 } }
-  rescue => e
-    Airbrake.notify_or_ignore(e)
-    { h: { u: uid, h: nil } }
   end
 
   def v_event_response(data)
+    @uid = data.delete('u')
     crc32 = data.delete('h')
     video_tag_crc32_hash.set(crc32)
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
@@ -45,9 +43,7 @@ class EventsResponder
     return unless params.is_a?(Array)
     params.each do |event|
       event_key, data = event.flatten
-      if EVENT_KEYS.include?(event_key)
-        block.call(event_key, data)
-      end
+      block.call(event_key, data) if EVENT_KEYS.include?(event_key)
     end
   end
 
