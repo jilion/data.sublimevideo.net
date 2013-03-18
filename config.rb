@@ -3,7 +3,7 @@ Airbrake.configure do |config|
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { size: 1 }
+  config.redis = { size: 5 }
 end
 
 Librato::Metrics.authenticate ENV['LIBRATO_METRICS_USER'], ENV['LIBRATO_METRICS_TOKEN']
