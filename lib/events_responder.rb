@@ -4,7 +4,7 @@ require 'workers/video_tag_updater_worker'
 class EventsResponder
   EVENT_KEYS = %w[h v]
 
-  attr_reader :site_token, :params
+  attr_reader :site_token, :uid, :params
 
   def initialize(site_token, params)
     @site_token = site_token
@@ -14,6 +14,7 @@ class EventsResponder
   def response
     response = []
     events do |event_key, data|
+      @uid = data.delete('u')
       response << send("#{event_key}_event_response", data)
       increment_metrics(event_key)
     end
@@ -23,8 +24,7 @@ class EventsResponder
   private
 
   def h_event_response(data)
-    uid = data.delete('u')
-    crc32 = VideoTagCRC32Hash.new(site_token, uid).get
+    crc32 = video_tag_crc32_hash.get
     { h: { u: uid, h: crc32 } }
   rescue => e
     Airbrake.notify_or_ignore(e)
@@ -32,9 +32,8 @@ class EventsResponder
   end
 
   def v_event_response(data)
-    uid = data.delete('u')
     crc32 = data.delete('h')
-    VideoTagCRC32Hash.new(site_token, uid).set(crc32)
+    video_tag_crc32_hash.set(crc32)
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
     nil
   rescue => e
@@ -54,5 +53,9 @@ class EventsResponder
 
   def increment_metrics(event_key)
     $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
+  end
+
+  def video_tag_crc32_hash
+    VideoTagCRC32Hash.new(site_token, uid)
   end
 end

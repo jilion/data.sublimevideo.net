@@ -11,10 +11,12 @@ class VideoTagCRC32Hash
     value = Sidekiq.redis { |con| con.hget(REDIS_HASH, key) }
     time, hash = value && value.split(':')
     return hash if time.to_i > (Time.now.to_i - 60*60*24)
+  rescue; nil
   end
 
   def set(crc32_hash)
     Sidekiq.redis { |con| con.hset(REDIS_HASH, key, "#{Time.now.to_i}:#{crc32_hash}") }
+  rescue; nil
   end
 
   private
