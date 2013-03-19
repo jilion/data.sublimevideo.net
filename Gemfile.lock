@@ -56,6 +56,7 @@ GEM
     redis (3.0.3)
     redis-namespace (1.2.1)
       redis (~> 3.0.0)
+    rescue_me (0.1.1)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -93,6 +94,7 @@ DEPENDENCIES
   rack-timeout
   rb-fsevent
   rb-readline
+  rescue_me
   rspec
   ruby_gntp
   sidekiq

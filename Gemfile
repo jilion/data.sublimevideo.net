@@ -15,6 +15,7 @@ gem 'sidekiq'
 gem 'newrelic_rpm'
 gem 'airbrake'
 gem 'librato-metrics', require: 'librato/metrics'
+gem 'rescue_me'
 
 group :test do
   gem 'rspec'

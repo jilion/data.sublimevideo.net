@@ -1,3 +1,4 @@
+require 'rescue_me'
 require 'video_tag_crc32_hash'
 require 'workers/video_tag_updater_worker'
 
@@ -32,7 +33,9 @@ class EventsResponder
     @uid = data.delete('u')
     crc32 = data.delete('h')
     video_tag_crc32_hash.set(crc32)
-    VideoTagUpdaterWorker.perform_async(site_token, uid, data)
+    rescue_and_retry(3) {
+      VideoTagUpdaterWorker.perform_async(site_token, uid, data)
+    }
     nil
   rescue => e
     Airbrake.notify_or_ignore(e)
