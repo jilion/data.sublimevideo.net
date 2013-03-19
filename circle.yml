@@ -1,0 +1,5 @@
+deployment:
+  production:
+    branch: data2
+    heroku:
+      appname: sv-data2
