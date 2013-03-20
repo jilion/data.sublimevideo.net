@@ -15,7 +15,7 @@ require 'application'
 
 use Airbrake::Rack
 use Rack::Timeout
-Rack::Timeout.timeout = 2
+Rack::Timeout.timeout = 10
 use Rack::Status
 use Rack::Newrelic
 use Rack::GETRedirector
