@@ -5,7 +5,7 @@ gem 'puma', '2.0.0.b7'
 
 gem 'rack'
 gem 'rack-status'
-gem 'rack-timeout'
+gem 'rack-timeout', github: 'kch/rack-timeout', branch: 'debug'
 
 gem 'yajl-ruby', require: 'yajl' # fast json
 
