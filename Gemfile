@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 ruby '2.0.0'
 
-gem 'puma', '2.0.0.b7'
+gem 'unicorn'
 
 gem 'rack'
 gem 'rack-status'
