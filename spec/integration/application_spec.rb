@@ -56,8 +56,7 @@ describe Application do
 
     it "always responds in JSON" do
       post "/#{site_token}.json", nil, 'Content-Type' => 'text/plain'
-      body = MultiJson.load(last_response.body)
-      body.should eq([])
+      last_response.body.should eq "[]"
     end
 
     context "with h event" do
@@ -85,8 +84,7 @@ describe Application do
 
       it "responses and empty array" do
         post "/#{site_token}.json", MultiJson.dump(v_data)
-        body = MultiJson.load(last_response.body)
-        body.should eq []
+        last_response.body.should eq "[]"
       end
     end
   end
