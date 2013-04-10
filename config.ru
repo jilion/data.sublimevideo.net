@@ -6,7 +6,6 @@ Bundler.require
 
 require './config'
 require 'rack/status'
-require "rack/timeout"
 require 'rack/newrelic'
 require 'rack/cors'
 require 'rack/get_redirector'
@@ -14,8 +13,6 @@ require 'rack/json'
 require 'application'
 
 use Honeybadger::Rack
-use Rack::Timeout
-Rack::Timeout.timeout = 3
 use Rack::Status
 use Rack::Newrelic
 use Rack::GETRedirector

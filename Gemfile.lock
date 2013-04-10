@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/honeybadger-io/honeybadger-ruby.git
+  revision: c256d900b8f3d6daf344260c297d1dfdf88ae64a
+  specs:
+    honeybadger (1.6.1)
+      json
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -21,8 +28,6 @@ GEM
     guard-rspec (2.5.2)
       guard (>= 1.1)
       rspec (~> 2.11)
-    honeybadger (1.6.1)
-      json
     json (1.7.7)
     kgio (2.8.0)
     librato-metrics (1.0.4)
@@ -34,7 +39,7 @@ GEM
     method_source (0.8.1)
     multi_json (1.7.2)
     multipart-post (1.2.0)
-    newrelic_rpm (3.6.0.78)
+    newrelic_rpm (3.6.0.83)
     oj (2.0.10)
     pry (0.9.12)
       coderay (~> 1.0.5)
@@ -44,7 +49,6 @@ GEM
     rack-status (1.0.0)
     rack-test (0.6.2)
       rack (>= 1.0)
-    rack-timeout (0.0.3)
     raindrops (0.10.0)
     rb-fsevent (0.9.3)
     rb-readline (0.4.2)
@@ -81,7 +85,7 @@ PLATFORMS
 
 DEPENDENCIES
   guard-rspec
-  honeybadger
+  honeybadger!
   librato-metrics
   multi_json
   newrelic_rpm
@@ -89,7 +93,6 @@ DEPENDENCIES
   rack
   rack-status
   rack-test
-  rack-timeout
   rb-fsevent
   rb-readline
   rescue_me

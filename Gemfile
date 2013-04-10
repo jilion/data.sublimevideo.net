@@ -5,7 +5,6 @@ gem 'unicorn'
 
 gem 'rack'
 gem 'rack-status'
-gem 'rack-timeout'
 
 gem 'multi_json'
 gem 'oj'
@@ -14,7 +13,7 @@ gem 'sidekiq'
 
 # https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 gem 'newrelic_rpm'
-gem 'honeybadger'
+gem 'honeybadger', github: 'honeybadger-io/honeybadger-ruby'
 gem 'librato-metrics', require: 'librato/metrics'
 gem 'rescue_me'
 
