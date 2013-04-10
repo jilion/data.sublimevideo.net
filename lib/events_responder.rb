@@ -37,8 +37,8 @@ class EventsResponder
       VideoTagUpdaterWorker.perform_async(site_token, uid, data)
     }
     nil
-  rescue => e
-    Airbrake.notify_or_ignore(e)
+  rescue => ex
+    notify_honeybadger(ex)
     nil
   end
 
