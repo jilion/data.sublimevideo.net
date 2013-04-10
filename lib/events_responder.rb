@@ -38,7 +38,7 @@ class EventsResponder
     }
     nil
   rescue => ex
-    notify_honeybadger(ex)
+    Honeybadger.notify_or_ignore(ex)
     nil
   end
 

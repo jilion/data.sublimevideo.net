@@ -9,7 +9,7 @@ module Rack
     def call(env)
       env['params'] = load_input(env) || {}
       status, headers, body = @app.call(env)
-      [status, headers, [dump_output(body)]]
+      [status, headers, [dump_output(body, env)]]
     end
 
     private
@@ -21,14 +21,14 @@ module Rack
         MultiJson.load(body)
       end
     rescue => ex
-      notify_honeybadger(ex)
+      Honeybadger.notify_or_ignore(ex, rack_env: env)
       []
     end
 
-    def dump_output(body)
+    def dump_output(body, env)
       MultiJson.dump(body)
     rescue => ex
-      notify_honeybadger(ex)
+      Honeybadger.notify_or_ignore(ex, rack_env: env)
       "[]"
     end
   end
