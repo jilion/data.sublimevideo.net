@@ -13,7 +13,7 @@ require 'rack/get_redirector'
 require 'rack/json'
 require 'application'
 
-use Airbrake::Rack
+use Honeybadger::Rack
 use Rack::Timeout
 Rack::Timeout.timeout = 3
 use Rack::Status
