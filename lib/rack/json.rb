@@ -18,7 +18,7 @@ module Rack
       if env && env['rack.input']
         body = env['rack.input'].read
         env['rack.input'].rewind
-        MultiJson.load(body)
+        body == '' ? [] : MultiJson.load(body)
       end
     rescue => ex
       Honeybadger.notify_or_ignore(ex, rack_env: env)
