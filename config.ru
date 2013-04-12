@@ -12,9 +12,10 @@ require 'rack/get_redirector'
 require 'rack/json'
 require 'application'
 
-use Honeybadger::Rack
 use Rack::Status
+use Honeybadger::Rack
 use Rack::Newrelic
+use Librato::Rack
 use Rack::GETRedirector
 use Rack::Cors
 use Rack::JSON

@@ -1,4 +1,3 @@
-require 'rescue_me'
 require 'video_tag_crc32_hash'
 require 'workers/video_tag_updater_worker'
 
@@ -16,7 +15,7 @@ class EventsResponder
     response = []
     events do |event_key, data|
       response << send("#{event_key}_event_response", data)
-      increment_metrics(event_key)
+      Librato.increment 'data.events_type', source: event_key
     end
     response.compact
   end
@@ -48,10 +47,6 @@ class EventsResponder
       event_key, data = event.flatten
       block.call(event_key, data) if EVENT_KEYS.include?(event_key)
     end
-  end
-
-  def increment_metrics(event_key)
-    $metrics_queue.add("data.events_type" => { value: 1, source: event_key })
   end
 
   def video_tag_crc32_hash

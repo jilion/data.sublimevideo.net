@@ -19,10 +19,16 @@ describe EventsResponder do
 
     context "with one h event" do
       let(:params) { [{ 'h' => { 'u' => uid } }] }
+      before { video_tag_crc32_hash.stub(:get) }
 
       it "returns video_tag_crc32_hash" do
         video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
         events_responder.response.should eq [{ h: { u: "uid", h: "crc32_hash" } }]
+      end
+
+      it "increments Librato metrics" do
+        Librato.should_receive(:increment).with("data.events_type", source: "h")
+        events_responder.response
       end
     end
 
