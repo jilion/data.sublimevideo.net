@@ -29,7 +29,7 @@ module Rack
       MultiJson.dump(body)
     rescue => ex
       Honeybadger.notify_or_ignore(ex, rack_env: env)
-      "[]"
+      '[]'
     end
   end
 end

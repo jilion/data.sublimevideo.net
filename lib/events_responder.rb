@@ -32,9 +32,9 @@ class EventsResponder
     @uid = data.delete('u')
     crc32 = data.delete('h')
     video_tag_crc32_hash.set(crc32)
-    rescue_and_retry(3) {
+    rescue_and_retry(3) do
       VideoTagUpdaterWorker.perform_async(site_token, uid, data)
-    }
+    end
     nil
   rescue => ex
     Honeybadger.notify_or_ignore(ex)
