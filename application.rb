@@ -22,7 +22,7 @@ module DataSublimeVideo
       EM::next_tick do
         Pusher.url = PusherConfig.url
         Mongoid.load!(File.join(DataSublimeVideo::Application.root, 'config', 'mongoid.yml'))
-        $redis = Redis.connect(url: ENV['REDISCLOUD_URL'] || 'redis://127.0.0.1:6379')
+        $redis = Redis.connect(url: ENV['OPENREDIS_URL'] || 'redis://127.0.0.1:6379')
       end
     end
 
