@@ -7,33 +7,29 @@ module Rack
     end
 
     def call(env)
-      env['params'] = load_json_params(env)
-      if env['REQUEST_METHOD'] == 'POST'
+      case env['REQUEST_METHOD']
+      when 'POST'
+        env['params'] = load_rack_input(env)
         status, headers, body = @app.call(env)
         [status, headers, [dump_body(body, env)]]
-      else # GIF request
+      when 'GET' # GIF request
+        env['params'] = load_query_string(env)
+        @app.call(env)
+      else
         @app.call(env)
       end
     end
 
     private
 
-    def load_json_params(env)
-      send("load_#{env['REQUEST_METHOD']}_json_params", env)
-    rescue => ex
-      Honeybadger.notify_or_ignore(ex, rack_env: env)
-    ensure
-      []
-    end
-
-    def load_GET_json_params(env)
+    def load_query_string(env)
       case URI.unescape(env['QUERY_STRING'])
       when /d=(.*)/ then MultiJson.load($1)
       else; []
       end
     end
 
-    def load_POST_json_params(env)
+    def load_rack_input(env)
       body = env['rack.input'] && env['rack.input'].read
       case body
       when '', nil then []
