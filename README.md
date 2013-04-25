@@ -122,6 +122,8 @@ Done for each video started (via DOM or API). Request params:
 {
   e: 's',
   u*: <video uid>, # only if valid
+  d: <device>, # d:desktop, m:mobile
+  t: <tech>: # h:html5, f:flash (include YouTube hack for now)
   ex*: <external>, # 1, if (parent.)document.url is external
   em*: <embedded>, # 1, only sent if embedded
   du: <document url>, # (parent.)document.href
