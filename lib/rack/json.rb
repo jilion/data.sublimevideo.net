@@ -27,14 +27,18 @@ module Rack
     end
 
     def load_GET_json_params(env)
-      query_string = URI.unescape(env['QUERY_STRING'])
-      data_params = query_string.match(/d=(.*)/)[1]
-      MultiJson.load(data_params)
+      case URI.unescape(env['QUERY_STRING'])
+      when /d=(.*)/ then MultiJson.load($1)
+      else; []
+      end
     end
 
     def load_POST_json_params(env)
       body = env['rack.input'] && env['rack.input'].read
-      body == '' ? [] : MultiJson.load(body)
+      case body
+      when '', nil then []
+      else MultiJson.load(body)
+      end
     end
 
     def dump_body(body, env)
