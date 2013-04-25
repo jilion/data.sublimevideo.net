@@ -6,73 +6,217 @@ describe EventsResponder do
   let(:metrics_queue) { mock('metrics_queue', add: true) }
   let(:site_token) { 'site_token' }
   let(:uid) { 'uid' }
-  let(:events_responder) { EventsResponder.new(site_token, params) }
+  let(:request) { mock('request', ip: '127.0.0.1', user_agent: 'user_agent') }
+  let(:events_responder) { EventsResponder.new(site_token, params, request) }
   let(:video_tag_crc32_hash) { mock(VideoTagCRC32Hash) }
 
   describe "#response" do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
 
     it "responds only to Array params" do
-      responder = EventsResponder.new(site_token, { 'foo' => 'bar' })
+      responder = EventsResponder.new(site_token, { 'foo' => 'bar' }, request)
       responder.response.should eq []
     end
 
-    context "with one h event" do
-      let(:params) { [{ 'h' => { 'u' => uid } }] }
-      before { video_tag_crc32_hash.stub(:get) }
+    context "NEW PROTOCOL" do
+      context 'app load (al) event' do
+        let(:params) { [{ 'e' => 'al', 'h' => 'm' }] }
+        before { StatsHandlerWorker.stub(:perform_async) }
 
-      it "returns video_tag_crc32_hash" do
-        video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
-        events_responder.response.should eq [{ h: { u: "uid", h: "crc32_hash" } }]
+        it "delays stats handling" do
+          StatsHandlerWorker.should_receive(:perform_async).with(
+            site_token,
+            :al,
+            { 'h' => 'm', user_agent: 'user_agent', ip: '127.0.0.1' }
+          )
+          events_responder.response
+        end
+
+        it "responses nothing" do
+          events_responder.response.should eq []
+        end
+
+        it "increments Librato metrics" do
+          Librato.should_receive(:increment).with("data.events_type", source: "al")
+          events_responder.response
+        end
       end
 
-      it "increments Librato metrics" do
-        Librato.should_receive(:increment).with("data.events_type", source: "h")
-        events_responder.response
+      context 'start (s) event' do
+        let(:params) { [{ 'e' => 's', 'ex' => '1' }] }
+        before { StatsHandlerWorker.stub(:perform_async) }
+
+        it "delays stats handling" do
+          StatsHandlerWorker.should_receive(:perform_async).with(
+            site_token,
+            :s,
+            { 'ex' => '1', user_agent: 'user_agent', ip: '127.0.0.1' }
+          )
+          events_responder.response
+        end
+
+        it "responses nothing" do
+          events_responder.response.should eq []
+        end
+
+        it "increments Librato metrics" do
+          Librato.should_receive(:increment).with("data.events_type", source: "s")
+          events_responder.response
+        end
       end
+
+      context 'load (l) event' do
+        before { StatsHandlerWorker.stub(:perform_async) }
+
+        context "multiple events" do
+          let(:params) { [
+            { 'e' => 'l', 'u' => uid },
+            { 'e' => 'l' ,'u' => 'other_uid' }
+          ] }
+
+          it "returns video_tag_crc32_hash" do
+            video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
+            VideoTagCRC32Hash.stub(:new).with(site_token, 'other_uid') { video_tag_crc32_hash }
+            video_tag_crc32_hash.should_receive(:get) { nil }
+
+            events_responder.response.should eq [
+              { e: 'l', u: "uid", h: "crc32_hash" },
+              { e: 'l', u: "other_uid", h: nil }
+            ]
+          end
+        end
+
+        context "with uid" do
+          let(:params) { [{ 'e' => 'l', 'u' => uid }] }
+          before { video_tag_crc32_hash.stub(:get) }
+
+          it "returns video_tag_crc32_hash" do
+            video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
+            events_responder.response.should eq [{ e: 'l', u: "uid", h: "crc32_hash" }]
+          end
+
+          it "delays stats handling" do
+            StatsHandlerWorker.should_receive(:perform_async).with(
+              site_token,
+              :l,
+              { 'u' => 'uid', user_agent: 'user_agent', ip: '127.0.0.1' }
+            )
+            events_responder.response
+          end
+
+          it "increments Librato metrics" do
+            Librato.should_receive(:increment).with("data.events_type", source: "l")
+            events_responder.response
+          end
+        end
+
+        context "without uid" do
+          let(:params) { [{ 'e' => 'l', 'd' => 'm' }] }
+
+          it "responses nothing" do
+            events_responder.response.should eq []
+          end
+
+          it "delays stats handling" do
+            StatsHandlerWorker.should_receive(:perform_async).with(
+              site_token,
+              :l,
+              { 'd' => 'm', user_agent: 'user_agent', ip: '127.0.0.1' }
+            )
+            events_responder.response
+          end
+
+          it "increments Librato metrics" do
+            Librato.should_receive(:increment).with("data.events_type", source: "l")
+            events_responder.response
+          end
+        end
+      end
+
+      context "video tag data (v) event" do
+        let(:params) { [{ 'e' => 'v', 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } }] }
+        before {
+          video_tag_crc32_hash.stub(:set)
+          VideoTagUpdaterWorker.stub(:perform_async)
+        }
+
+        it "sets video_tag_crc32_hash" do
+          video_tag_crc32_hash.should_receive(:set).with('crc32_hash')
+          events_responder.response
+        end
+
+        it "delays video_tag update" do
+          VideoTagUpdaterWorker.should_receive(:perform_async).with(
+            site_token,
+            uid,
+            { "a" => { "data" => "settings" } })
+          events_responder.response
+        end
+
+        it "responses nothing" do
+          events_responder.response.should eq []
+        end
+      end
+
     end
 
-    context "with multiple h events" do
-      let(:params) { [
-        { 'h' => { 'u' => uid } },
-        { 'h' => { 'u' => 'other_uid' } }
-      ] }
+    context 'OLD PROTOCOL' do
+      context "with one h event" do
+        let(:params) { [{ 'h' => { 'u' => uid } }] }
+        before { video_tag_crc32_hash.stub(:get) }
 
-      it "returns video_tag_crc32_hash" do
-        video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
-        VideoTagCRC32Hash.stub(:new).with(site_token, 'other_uid') { video_tag_crc32_hash }
-        video_tag_crc32_hash.should_receive(:get) { nil }
+        it "returns video_tag_crc32_hash" do
+          video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
+          events_responder.response.should eq [{ h: { u: "uid", h: "crc32_hash" } }]
+        end
 
-        events_responder.response.should eq [
-          { h: { u: "uid", h: "crc32_hash" } },
-          { h: { u: "other_uid", h: nil } }
-        ]
-      end
-    end
-
-    context "with one v event" do
-      let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } } }] }
-
-      before {
-        video_tag_crc32_hash.stub(:set)
-        VideoTagUpdaterWorker.stub(:perform_async)
-      }
-
-      it "sets video_tag_crc32_hash" do
-        video_tag_crc32_hash.should_receive(:set).with('crc32_hash')
-        events_responder.response
+        it "increments Librato metrics" do
+          Librato.should_receive(:increment).with("data.events_type", source: "h")
+          events_responder.response
+        end
       end
 
-      it "delays video_tag update" do
-        VideoTagUpdaterWorker.should_receive(:perform_async).with(
-          site_token,
-          uid,
-          { "a" => { "data" => "settings" } })
-        events_responder.response
+      context "with multiple h events" do
+        let(:params) { [
+          { 'h' => { 'u' => uid } },
+          { 'h' => { 'u' => 'other_uid' } }
+        ] }
+
+        it "returns video_tag_crc32_hash" do
+          video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
+          VideoTagCRC32Hash.stub(:new).with(site_token, 'other_uid') { video_tag_crc32_hash }
+          video_tag_crc32_hash.should_receive(:get) { nil }
+
+          events_responder.response.should eq [
+            { h: { u: "uid", h: "crc32_hash" } },
+            { h: { u: "other_uid", h: nil } }
+          ]
+        end
       end
 
-      it "responses nothing" do
-        events_responder.response.should eq []
+      context "with one v event" do
+        let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } } }] }
+        before {
+          video_tag_crc32_hash.stub(:set)
+          VideoTagUpdaterWorker.stub(:perform_async)
+        }
+
+        it "sets video_tag_crc32_hash" do
+          video_tag_crc32_hash.should_receive(:set).with('crc32_hash')
+          events_responder.response
+        end
+
+        it "delays video_tag update" do
+          VideoTagUpdaterWorker.should_receive(:perform_async).with(
+            site_token,
+            uid,
+            { "a" => { "data" => "settings" } })
+          events_responder.response
+        end
+
+        it "responses nothing" do
+          events_responder.response.should eq []
+        end
       end
     end
   end
