@@ -9,11 +9,11 @@ module Rack
     def call(env)
       case env['REQUEST_METHOD']
       when 'POST'
-        env['params'] = load_rack_input(env)
+        env['params'] = load(:rack_input, env)
         status, headers, body = @app.call(env)
         [status, headers, [dump_body(body, env)]]
       when 'GET' # GIF request
-        env['params'] = load_query_string(env)
+        env['params'] = load(:query_string, env)
         @app.call(env)
       else
         @app.call(env)
@@ -21,6 +21,13 @@ module Rack
     end
 
     private
+
+    def load(type, env)
+      send("load_#{type.to_s}", env)
+    rescue => ex
+      Honeybadger.notify_or_ignore(ex, rack_env: env)
+      []
+    end
 
     def load_query_string(env)
       case URI.unescape(env['QUERY_STRING'])
