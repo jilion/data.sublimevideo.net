@@ -38,7 +38,7 @@ CORS requests are always sent to the same url via POST HTTP(S):
 
 The params (json) sent can include multiples requests event types (load, play, video tag data, video tag crc32 hash request) in any order all sent via an array, ie:
 
-``` json
+```
 [
   { e: 'al', ... # app load event params },
   { e: 'l', ...  # video load event params },
@@ -66,7 +66,7 @@ Query param is the same as the JSON (escaped) sent via CORS so a GIF request can
 
 Done on Page Visit (on app load). Request params:
 
-``` json
+```
 {
   e: 'al',
   h: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
@@ -89,7 +89,7 @@ Done for each video loaded (via DOM or API).
 
 #### Request params:
 
-``` json
+```
 {
   e: 'l',
   u*: <video uid>, # only if valid
@@ -106,7 +106,7 @@ Done for each video loaded (via DOM or API).
 
 #### Response params:
 
-``` json
+```
 {
   e: 'l',
   u: <video uid>,
@@ -118,7 +118,7 @@ Done for each video loaded (via DOM or API).
 
 Done for each video started (via DOM or API). Request params:
 
-``` json
+```
 {
   e: 's',
   u*: <video uid>, # only if valid
@@ -142,7 +142,7 @@ This request is sent when the video tag crc32 hash returned differ from the one 
 
 Request params:
 
-``` json
+```
 {
   e: 'v',
   h: <new video tag crc32 hash>,
