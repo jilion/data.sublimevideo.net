@@ -77,10 +77,15 @@ class EventsResponder
   end
 
   def delay_stats_handling(event_key, data)
-    StatsHandlerWorker.perform_async(site_token, event_key, data.merge(request_data))
+    StatsHandlerWorker.perform_async(event_key, data.merge(request_data))
   end
 
   def request_data
-    { user_agent: request.user_agent, ip: request.ip }
+    {
+      's'  => site_token,
+      't'  => Time.now.to_i,
+      'ua' => request.user_agent,
+      'ip' => request.ip
+    }
   end
 end

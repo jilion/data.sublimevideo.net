@@ -20,14 +20,14 @@ describe EventsResponder do
 
     context "NEW PROTOCOL" do
       context 'app load (al) event' do
-        let(:params) { [{ 'e' => 'al', 'h' => 'm' }] }
+        let(:params) { [{ 'e' => 'al', 'ho' => 'm' }] }
         before { StatsHandlerWorker.stub(:perform_async) }
 
         it "delays stats handling" do
           StatsHandlerWorker.should_receive(:perform_async).with(
             site_token,
             :al,
-            { 'h' => 'm', user_agent: 'user_agent', ip: '127.0.0.1' }
+            { 'ho' => 'm', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
           events_responder.response
         end
@@ -50,7 +50,7 @@ describe EventsResponder do
           StatsHandlerWorker.should_receive(:perform_async).with(
             site_token,
             :s,
-            { 'ex' => '1', user_agent: 'user_agent', ip: '127.0.0.1' }
+            { 'ex' => '1', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
           events_responder.response
         end
@@ -99,7 +99,7 @@ describe EventsResponder do
             StatsHandlerWorker.should_receive(:perform_async).with(
               site_token,
               :l,
-              { 'u' => 'uid', user_agent: 'user_agent', ip: '127.0.0.1' }
+              { 'u' => 'uid', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
             )
             events_responder.response
           end
@@ -121,7 +121,7 @@ describe EventsResponder do
             StatsHandlerWorker.should_receive(:perform_async).with(
               site_token,
               :l,
-              { 'd' => 'm', user_agent: 'user_agent', ip: '127.0.0.1' }
+              { 'd' => 'm', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
             )
             events_responder.response
           end
