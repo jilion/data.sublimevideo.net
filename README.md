@@ -69,8 +69,8 @@ Done on Page Visit (on app load). Request params:
 ```
 {
   e: 'al',
-  h: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
-  s*: <ssl>, # 1, not sent if https
+  ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
+  ss*: <ssl>, # 1, not sent if https
   st: <version stage>, # s:stable, b:beta, a:alpha
   dt: <document title>, # (parent.)document.title
   du: <document url>, # (parent.)document.href     ru: <referrer url>, # (parent.)document.referrer   fv*: <flash version>, # not sent if not installed
@@ -93,8 +93,8 @@ Done for each video loaded (via DOM or API).
 {
   e: 'l',
   u*: <video uid>, # only if valid
-  d: <device>, # d:desktop, m:mobile
-  t: <tech>: # h:html5, f:flash (include YouTube hack for now)
+  de: <device>, # d:desktop, m:mobile
+  te: <tech>: # h:html5, f:flash (include YouTube hack for now)
   ex*: <external>, # 1, if (parent.)document.url is external
   em*: <embedded>, # 1, only sent if embedded
   du: <document url>, # (parent.)document.href
@@ -122,8 +122,8 @@ Done for each video started (via DOM or API). Request params:
 {
   e: 's',
   u*: <video uid>, # only if valid
-  d: <device>, # d:desktop, m:mobile
-  t: <tech>: # h:html5, f:flash (include YouTube hack for now)
+  de: <device>, # d:desktop, m:mobile
+  te: <tech>: # h:html5, f:flash (include YouTube hack for now)
   ex*: <external>, # 1, if (parent.)document.url is external
   em*: <embedded>, # 1, only sent if embedded
   du: <document url>, # (parent.)document.href
