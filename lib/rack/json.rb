@@ -32,7 +32,7 @@ module Rack
     def load_query_string(env)
       case URI.unescape(env['QUERY_STRING'])
       when /d=(.*)/ then MultiJson.load($1)
-      else; []
+      else []
       end
     end
 

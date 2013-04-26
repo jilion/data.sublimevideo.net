@@ -17,6 +17,12 @@ describe Application do
     last_response.body.should eq "Redirect to http://sublimevideo.net"
   end
 
+  it "responds on HEAD" do
+    head '/'
+    last_response.status.should eq 200
+    last_response.body.should be_empty
+  end
+
   context "on /status path" do
     it "responses OK on GET /status" do
       get '/status'

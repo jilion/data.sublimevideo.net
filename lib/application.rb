@@ -5,15 +5,18 @@ class Application
 
   def call(env)
     response_body = handle_event(env)
-    case env['REQUEST_METHOD']
-    when 'POST'
-      [200, {}, response_body]
-    when 'GET' # GIF Request
+    if gif_request?(env)
       Rack::File.new('public', 'Cache-Control' => 'no-cache').call(env)
+    else
+      [200, {}, response_body]
     end
   end
 
   private
+
+  def gif_request?(env)
+    env['REQUEST_METHOD'] == 'GET'
+  end
 
   def handle_event(env)
     return [] unless env['site_token']
