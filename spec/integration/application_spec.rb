@@ -62,9 +62,10 @@ describe Application do
       it "delays stats handling" do
         get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
         StatsHandlerWorker.jobs.should have(3).job
-        StatsHandlerWorker.jobs.first['args'].should eq [site_token, 'al', {
-          't' => kind_of(Integer), 'ua' => nil, 'ip' => '127.0.0.1'
-        }]
+        StatsHandlerWorker.jobs.first['args'].should eq [
+          'al',
+          't' => kind_of(Integer), 's' => site_token, 'ua' => nil, 'ip' => '127.0.0.1'
+        ]
         Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
       end
 

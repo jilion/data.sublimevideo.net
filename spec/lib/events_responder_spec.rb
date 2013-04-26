@@ -25,9 +25,8 @@ describe EventsResponder do
 
         it "delays stats handling" do
           StatsHandlerWorker.should_receive(:perform_async).with(
-            site_token,
             :al,
-            { 'ho' => 'm', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+            { 'ho' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
           events_responder.response
         end
@@ -48,9 +47,8 @@ describe EventsResponder do
 
         it "delays stats handling" do
           StatsHandlerWorker.should_receive(:perform_async).with(
-            site_token,
             :s,
-            { 'ex' => '1', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+            { 'ex' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
           events_responder.response
         end
@@ -97,9 +95,8 @@ describe EventsResponder do
 
           it "delays stats handling" do
             StatsHandlerWorker.should_receive(:perform_async).with(
-              site_token,
               :l,
-              { 'u' => 'uid', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+              { 'u' => 'uid', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
             )
             events_responder.response
           end
@@ -119,9 +116,8 @@ describe EventsResponder do
 
           it "delays stats handling" do
             StatsHandlerWorker.should_receive(:perform_async).with(
-              site_token,
               :l,
-              { 'd' => 'm', 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+              { 'd' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
             )
             events_responder.response
           end
