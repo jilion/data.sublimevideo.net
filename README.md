@@ -73,8 +73,11 @@ Done on Page Visit (on app load). Request params:
   ss*: <ssl>, # 1, not sent if https
   st: <version stage>, # s:stable, b:beta, a:alpha
   dt: <document title>, # (parent.)document.title
-  du: <document url>, # (parent.)document.href     ru: <referrer url>, # (parent.)document.referrer   fv*: <flash version>, # not sent if not installed
-  sr: <screen resolution>, # '2400x1920'   sd: <screen dpr>, # window.devicePixelRatio (1 if not def)
+  du: <document url>, # (parent.)document.href
+  ru: <referrer url>, # (parent.)document.referrer
+  fv*: <flash version>, # not sent if not installed
+  sr: <screen resolution>, # '2400x1920'
+  sd: <screen dpr>, # window.devicePixelRatio (1 if not def)
   bl*: <browser language>, # 'pt-br'
 }
 ```
