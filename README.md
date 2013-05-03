@@ -76,6 +76,7 @@ Done on Page Visit (on app load). Request params:
   du: <document url>, # (parent.)document.href
   ru: <referrer url>, # (parent.)document.referrer
   fv*: <flash version>, # not sent if not installed
+  jq*: <jquery version>, # not sent if not used
   sr: <screen resolution>, # '2400x1920'
   sd: <screen dpr>, # window.devicePixelRatio (1 if not def)
   bl*: <browser language>, # 'pt-br'
