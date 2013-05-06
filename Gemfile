@@ -14,7 +14,6 @@ gem 'sidekiq'
 gem 'newrelic_rpm'
 gem 'honeybadger'
 gem 'librato-rack'
-gem 'librato-sidekiq'
 gem 'rescue_me'
 
 group :test do
