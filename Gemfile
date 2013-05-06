@@ -11,10 +11,10 @@ gem 'oj'
 
 gem 'sidekiq'
 
-# https://github.com/adamlwatson/goliath/blob/master/examples/newrelic_stats/newrelic_stats.rb
 gem 'newrelic_rpm'
 gem 'honeybadger'
 gem 'librato-rack'
+gem 'librato-sidekiq'
 gem 'rescue_me'
 
 group :test do
