@@ -73,8 +73,6 @@ Done on Page Visit (on app load). Request params:
   ss*: <ssl>, # 1, not sent if https
   st: <version stage>, # s:stable, b:beta, a:alpha
   dt: <document title>, # (parent.)document.title
-  du: <document url>, # (parent.)document.href
-  ru: <referrer url>, # (parent.)document.referrer
   fv*: <flash version>, # not sent if not installed
   jq*: <jquery version>, # not sent if not used
   sr: <screen resolution>, # '2400x1920'
@@ -101,8 +99,6 @@ Done for each video loaded (via DOM or API).
   te: <tech>: # h:html5, f:flash (include YouTube hack for now)
   ex*: <external>, # 1, if (parent.)document.url is external
   em*: <embedded>, # 1, only sent if embedded
-  du: <document url>, # (parent.)document.href
-  ru: <referrer url>, # (parent.)document.referrer
 }
 ```
 

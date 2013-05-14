@@ -81,11 +81,9 @@ class EventsResponder
   end
 
   def request_data
-    {
-      's'  => site_token,
+    { 's'  => site_token,
       't'  => Time.now.to_i,
       'ua' => request.user_agent,
-      'ip' => request.ip
-    }
+      'ip' => request.ip }
   end
 end
