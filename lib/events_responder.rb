@@ -15,8 +15,8 @@ class EventsResponder
 
   def response
     response = []
-    events do |event_key, data|
-      response << send("#{event_key}_event_response", data)
+    _events do |event_key, data|
+      response << send("_#{event_key}_event_response", data)
       Librato.increment 'data.events_type', source: event_key
     end
     response.compact
@@ -24,35 +24,35 @@ class EventsResponder
 
   private
 
-  def al_event_response(data)
-    delay_stats_handling(:al, data)
+  def _al_event_response(data)
+    _delay_stats_handling(:al, data)
     nil
   end
 
-  def l_event_response(data)
-    delay_stats_handling(:l, data)
+  def _l_event_response(data)
+    _delay_stats_handling(:l, data)
     if @uid = data.delete('u')
-      crc32 = video_tag_crc32_hash.get
+      crc32 = _video_tag_crc32_hash.get
       { e: 'l', u: uid, h: crc32 }
     end
   end
 
-  def s_event_response(data)
-    delay_stats_handling(:s, data)
+  def _s_event_response(data)
+    _delay_stats_handling(:s, data)
     nil
   end
 
   # Old protocol
-  def h_event_response(data)
+  def _h_event_response(data)
     @uid = data.delete('u')
-    crc32 = video_tag_crc32_hash.get
+    crc32 = _video_tag_crc32_hash.get
     { h: { u: uid, h: crc32 } }
   end
 
-  def v_event_response(data)
+  def _v_event_response(data)
     @uid = data.delete('u')
     crc32 = data.delete('h')
-    video_tag_crc32_hash.set(crc32)
+    _video_tag_crc32_hash.set(crc32)
     VideoTagUpdaterWorker.perform_async(site_token, uid, data)
   rescue => ex
     Honeybadger.notify_or_ignore(ex)
@@ -60,27 +60,27 @@ class EventsResponder
     return nil
   end
 
-  def events(&block)
+  def _events(&block)
     return unless params.is_a?(Array)
-    params.each do |event|
-      if EVENT_KEYS.include?(event['e']) # New protocol
-        block.call(event.delete('e'), event)
+    params.each do |data|
+      if EVENT_KEYS.include?(data['e']) # New protocol
+        block.call(data.delete('e'), data)
       else # Old protocol
-        event_key, data = event.flatten
+        event_key, data = data.flatten
         block.call(event_key, data) if EVENT_KEYS.include?(event_key)
       end
     end
   end
 
-  def video_tag_crc32_hash
+  def _video_tag_crc32_hash
     VideoTagCRC32Hash.new(site_token, uid)
   end
 
-  def delay_stats_handling(event_key, data)
-    StatsHandlerWorker.perform_async(event_key, data.merge(request_data))
+  def _delay_stats_handling(event_key, data)
+    StatsHandlerWorker.perform_async(event_key, data.merge(_request_data))
   end
 
-  def request_data
+  def _request_data
     { 's'  => site_token,
       't'  => Time.now.to_i,
       'ua' => request.user_agent,

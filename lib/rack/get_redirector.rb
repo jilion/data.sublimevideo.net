@@ -5,7 +5,7 @@ module Rack
     end
 
     def call(env)
-      if get_request_but_not_gif?(env)
+      if _get_request_but_not_gif?(env)
         [301, { 'Location' => 'http://sublimevideo.net' }, ['Redirect to http://sublimevideo.net']]
       else
         @app.call(env)
@@ -14,7 +14,7 @@ module Rack
 
     private
 
-    def get_request_but_not_gif?(env)
+    def _get_request_but_not_gif?(env)
       env['REQUEST_METHOD'] == 'GET' && env['PATH_INFO'] != '/_.gif'
     end
   end
