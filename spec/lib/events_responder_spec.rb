@@ -8,7 +8,7 @@ describe EventsResponder do
   let(:uid) { 'uid' }
   let(:request) { mock('request', ip: '127.0.0.1', user_agent: 'user_agent') }
   let(:events_responder) { EventsResponder.new(site_token, params, request) }
-  let(:video_tag_crc32_hash) { mock(VideoTagCRC32Hash) }
+  let(:video_tag_crc32_hash) { stub('VideoTagCRC32Hash') }
 
   describe "#response" do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
@@ -133,6 +133,7 @@ describe EventsResponder do
         let(:params) { [{ 'e' => 'v', 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } }] }
         before {
           video_tag_crc32_hash.stub(:set)
+          video_tag_crc32_hash.stub(:get) { 'other_crc32_hash' }
           VideoTagUpdaterWorker.stub(:perform_async)
         }
 
@@ -147,6 +148,20 @@ describe EventsResponder do
             uid,
             { "a" => { "data" => "settings" } })
           events_responder.response
+        end
+
+        context "video_tag_crc32_hash already set" do
+          before { video_tag_crc32_hash.stub(:get) { 'crc32_hash' } }
+
+          it "doesn't set it again" do
+            video_tag_crc32_hash.should_not_receive(:set)
+            events_responder.response
+          end
+
+          it "doesn't delays video_tag update" do
+            VideoTagUpdaterWorker.should_not_receive(:perform_async)
+            events_responder.response
+          end
         end
 
         it "responses nothing" do
@@ -194,6 +209,7 @@ describe EventsResponder do
         let(:params) { [{ 'v' => { 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } } }] }
         before {
           video_tag_crc32_hash.stub(:set)
+          video_tag_crc32_hash.stub(:get)
           VideoTagUpdaterWorker.stub(:perform_async)
         }
 
