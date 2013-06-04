@@ -70,7 +70,7 @@ Done on Page Visit (on app load). Request params:
 {
   e: 'al',
   ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
-  ss*: <ssl>, # 1, not sent if https
+  ss*: <ssl>, # 1, not sent if http
   st: <version stage>, # s:stable, b:beta, a:alpha
   dt: <document title>, # (parent.)document.title
   fv*: <flash version>, # not sent if not installed
