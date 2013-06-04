@@ -126,8 +126,8 @@ Done for each video started (via DOM or API). Request params:
   te: <tech>: # h:html5, f:flash (include YouTube hack for now)
   ex*: <external>, # 1, if (parent.)document.url is external
   em*: <embedded>, # 1, only sent if embedded
-  du: <document url>, # (parent.)document.href
-  ru: <referrer url>, # (parent.)document.referrer
+  du: <document url>, document.href (document.referrer for embeds)
+  ru*: <referrer url>, document.referrer (nil for embeds)
   vsr*: <video source resolution>, # '400x300'
 }
 ```
