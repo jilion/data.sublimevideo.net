@@ -96,7 +96,7 @@ Done for each video loaded (via DOM or API).
   e: 'l',
   u*: <video uid>, # only if valid
   de: <device>, # d:desktop, m:mobile
-  te: <tech>: # h:html5, f:flash (include YouTube hack for now)
+  te: <tech>: # h:html5, f:flash, y:youtube, d:dailymotion
   ex*: <external>, # 1, if (parent.)document.url is external
   em*: <embedded>, # 1, only sent if embedded
 }
