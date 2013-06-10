@@ -95,6 +95,7 @@ Done for each video loaded (via DOM or API).
 {
   e: 'l',
   u*: <video uid>, # only if valid
+  ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
   de: <device>, # d:desktop, m:mobile
   te: <tech>: # h:html5, f:flash, y:youtube, d:dailymotion
   ex*: <external>, # 1, if (parent.)document.url is external
@@ -122,6 +123,7 @@ Done for each video started (via DOM or API). Request params:
 {
   e: 's',
   u*: <video uid>, # only if valid
+  ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
   de: <device>, # d:desktop, m:mobile
   te: <tech>: # h:html5, f:flash (include YouTube hack for now)
   ex*: <external>, # 1, if (parent.)document.url is external
