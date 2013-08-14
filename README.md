@@ -62,7 +62,7 @@ Query param is the same as the JSON (escaped) sent via CORS so a GIF request can
 
 ## Events:
 
-### App load (l)
+### App load (al)
 
 Done on Page Visit (on app load). Request params:
 
