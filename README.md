@@ -130,7 +130,7 @@ Done for each video started (via DOM or API). Request params:
   em*: <embedded>, # 1, only sent if embedded
   du: <document url>, document.href (document.referrer for embeds)
   ru*: <referrer url>, document.referrer (nil for embeds)
-  vd*: <video duration>, # "123" (in seconds, nil if streaming)
+  vd*: <video duration>, # "123456" (in miliseconds, nil if streaming)
   vsr*: <video source resolution>, # '400x300'
 }
 ```
