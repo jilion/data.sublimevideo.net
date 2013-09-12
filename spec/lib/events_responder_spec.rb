@@ -6,9 +6,9 @@ describe EventsResponder do
   let(:metrics_queue) { mock('metrics_queue', add: true) }
   let(:site_token) { 'site_token' }
   let(:uid) { 'uid' }
-  let(:request) { mock('request', ip: '127.0.0.1', user_agent: 'user_agent') }
+  let(:request) { double('request', ip: '127.0.0.1', user_agent: 'user_agent') }
   let(:events_responder) { EventsResponder.new(site_token, params, request) }
-  let(:video_tag_crc32_hash) { stub('VideoTagCRC32Hash') }
+  let(:video_tag_crc32_hash) { double('VideoTagCRC32Hash') }
 
   describe "#response" do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
@@ -42,7 +42,7 @@ describe EventsResponder do
       end
 
       context 'start (s) event' do
-        let(:params) { [{ 'e' => 's', 'ex' => '1' }] }
+        let(:params) { [{ 'e' => 's', 'ex' => '1'}] }
         before { StatsHandlerWorker.stub(:perform_async) }
 
         it "delays stats handling" do
@@ -51,6 +51,20 @@ describe EventsResponder do
             { 'ex' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
           events_responder.response
+        end
+
+        it "doesn't delays video_tag duration update without u params" do
+          expect(VideoTagDurationUpdaterWorker).to_not receive(:perform_async)
+          events_responder.response
+        end
+
+        context 'with uid and vd data' do
+          let(:params) { [{ 'e' => 's', 'u' => uid, 'vd' => '123456'}] }
+
+          it "delays video_tag duration update" do
+            expect(VideoTagDurationUpdaterWorker).to receive(:perform_async).with(site_token, uid, '123456')
+            events_responder.response
+          end
         end
 
         it "responses nothing" do
