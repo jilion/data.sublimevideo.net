@@ -16,13 +16,14 @@ gem 'honeybadger'
 gem 'librato-rack'
 gem 'rescue_me'
 
+group :development do
+  # Guard
+  gem 'ruby_gntp', require: false
+  gem 'guard-rspec', require: false
+end
+
 group :test do
   gem 'rspec'
   gem 'rack-test'
   gem 'timecop'
-  # Guard
-  gem 'ruby_gntp'
-  gem 'rb-fsevent'
-  gem 'rb-readline'
-  gem 'guard-rspec'
 end

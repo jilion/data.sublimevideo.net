@@ -6,6 +6,6 @@ vendor/bundler
 !Gemfile
 !Gemfile.lock
 !.bundle
-!.bundle/*
+bundle
 node_modules
 .env
