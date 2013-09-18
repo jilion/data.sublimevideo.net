@@ -76,7 +76,7 @@ class EventsResponder
   end
 
   def _delay_stats_handling(event_key, data)
-    StatsHandlerWorker.perform_async(event_key, data.merge(_request_data))
+    # StatsHandlerWorker.perform_async(event_key, data.merge(_request_data))
   end
 
   def _delay_video_tag_update(data)
