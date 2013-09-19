@@ -101,121 +101,80 @@ describe Application do
       last_response.body.should eq "[]"
     end
 
-    context "NEW CORS PROTOCOL" do
-      context "al event" do
-        let(:al_data) { [{ 'e' => 'al' }] }
+    context "al event" do
+      let(:al_data) { [{ 'e' => 'al' }] }
 
-        it "delays stats handling" do
-          post "/#{site_token}.json", MultiJson.dump(al_data)
-          Sidekiq::Worker.jobs.should have(1).job
-          Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
-        end
-
-        it "responses and empty array" do
-          post "/#{site_token}.json", MultiJson.dump(al_data)
-          last_response.body.should eq "[]"
-        end
+      it "delays stats handling" do
+        post "/#{site_token}.json", MultiJson.dump(al_data)
+        Sidekiq::Worker.jobs.should have(1).job
+        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
       end
 
-      context "l event" do
-        let(:uid) { 'uid' }
-        let(:crc32_hash) { 'crc32_hash' }
-        let(:v_data) { [{ 'e' => 'v', 'u' => uid, 'h' => crc32_hash }] }
-        let(:l_data) { [
-          { 'e' => 'l', 'u' => uid },
-          { 'e' => 'l', 'u' => 'other_uid' }
-        ] }
-        before { post "/#{site_token}.json", MultiJson.dump(v_data) }
-
-        it "responses with VideoTag data CRC32 hash" do
-          post "/#{site_token}.json", MultiJson.dump(l_data)
-          body = MultiJson.load(last_response.body)
-          body.should eq([
-            { 'e' => 'l', 'u' => uid, 'h' => crc32_hash },
-            { 'e' => 'l', 'u' => 'other_uid', 'h' => nil }
-          ])
-        end
-
-        it "delays stats handling" do
-          post "/#{site_token}.json", MultiJson.dump(l_data)
-          Sidekiq::Worker.jobs.should have(2).job
-          Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
-        end
-      end
-
-      context "s event" do
-        let(:s_data) { [{ 'e' => 's' }] }
-
-        it "delays stats handling" do
-          post "/#{site_token}.json", MultiJson.dump(s_data)
-          Sidekiq::Worker.jobs.should have(1).job
-          Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
-        end
-
-        it "responses and empty array" do
-          post "/#{site_token}.json", MultiJson.dump(s_data)
-          last_response.body.should eq "[]"
-        end
-      end
-
-      context "v event" do
-        let(:v_data) { [
-          { 'e' => 'v', 'u' => uid, 'h' => crc32_hash, 't' => 'Video Title', 'a' => { "data" => "settings" } }
-        ] }
-        let(:uid) { 'uid' }
-        let(:crc32_hash) { 'crc32_hash' }
-
-        it "delays update on VideoTagUpdater" do
-          post "/#{site_token}.json", MultiJson.dump(v_data)
-          Sidekiq::Worker.jobs.should have(1).job
-          Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
-        end
-
-        it "responses and empty array" do
-          post "/#{site_token}.json", MultiJson.dump(v_data)
-          last_response.body.should eq "[]"
-        end
+      it "responses and empty array" do
+        post "/#{site_token}.json", MultiJson.dump(al_data)
+        last_response.body.should eq "[]"
       end
     end
 
-    context "OLD CORS PROTOCOL" do
-      let(:v_data) { [
-        { 'v' => { 'u' => uid, 'h' => crc32_hash, 't' => 'Video Title', 'a' => { "data" => "settings" } } }
+    context "l event" do
+      let(:uid) { 'uid' }
+      let(:crc32_hash) { 'crc32_hash' }
+      let(:v_data) { [{ 'e' => 'v', 'u' => uid, 'h' => crc32_hash }] }
+      let(:l_data) { [
+        { 'e' => 'l', 'u' => uid },
+        { 'e' => 'l', 'u' => 'other_uid' }
       ] }
+      before { post "/#{site_token}.json", MultiJson.dump(v_data) }
 
-      context "h event" do
-        let(:h_data) { [
-          { 'h' => { 'u' => uid } },
-          { 'h' => { 'u' => 'other_uid' } }
-        ] }
-
-        before { post "/#{site_token}.json", MultiJson.dump(v_data) }
-
-        it "responses with VideoTag data CRC32 hash" do
-          post "/#{site_token}.json", MultiJson.dump(h_data)
-          body = MultiJson.load(last_response.body)
-          body.should eq([
-            { 'h' => { 'u' => uid, 'h' => crc32_hash } },
-            { 'h' => { 'u' => 'other_uid', 'h' => nil } }
-          ])
-        end
+      it "responses with VideoTag data CRC32 hash" do
+        post "/#{site_token}.json", MultiJson.dump(l_data)
+        body = MultiJson.load(last_response.body)
+        body.should eq([
+          { 'e' => 'l', 'u' => uid, 'h' => crc32_hash },
+          { 'e' => 'l', 'u' => 'other_uid', 'h' => nil }
+        ])
       end
 
-      context "v event" do
-        let(:uid) { 'uid' }
-        let(:crc32_hash) { 'crc32_hash' }
-
-        it "delays update on VideoTagUpdater" do
-          post "/#{site_token}.json", MultiJson.dump(v_data)
-          Sidekiq::Worker.jobs.should have(1).job
-          Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
-        end
-
-        it "responses and empty array" do
-          post "/#{site_token}.json", MultiJson.dump(v_data)
-          last_response.body.should eq "[]"
-        end
+      it "delays stats handling" do
+        post "/#{site_token}.json", MultiJson.dump(l_data)
+        Sidekiq::Worker.jobs.should have(2).job
+        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
       end
     end
+
+    context "s event" do
+      let(:s_data) { [{ 'e' => 's' }] }
+
+      it "delays stats handling" do
+        post "/#{site_token}.json", MultiJson.dump(s_data)
+        Sidekiq::Worker.jobs.should have(1).job
+        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
+      end
+
+      it "responses and empty array" do
+        post "/#{site_token}.json", MultiJson.dump(s_data)
+        last_response.body.should eq "[]"
+      end
+    end
+
+    context "v event" do
+      let(:v_data) { [
+        { 'e' => 'v', 'u' => uid, 'h' => crc32_hash, 't' => 'Video Title', 'a' => { "data" => "settings" } }
+      ] }
+      let(:uid) { 'uid' }
+      let(:crc32_hash) { 'crc32_hash' }
+
+      it "delays update on VideoTagUpdater" do
+        post "/#{site_token}.json", MultiJson.dump(v_data)
+        Sidekiq::Worker.jobs.should have(1).job
+        Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
+      end
+
+      it "responses and empty array" do
+        post "/#{site_token}.json", MultiJson.dump(v_data)
+        last_response.body.should eq "[]"
+      end
+    end
+
   end
 end

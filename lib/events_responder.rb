@@ -44,13 +44,6 @@ class EventsResponder
     nil
   end
 
-  # Old protocol
-  def _h_event_response(data)
-    uid = data.delete('u')
-    crc32 = _video_tag_crc32_hash(uid).get
-    { h: { u: uid, h: crc32 } }
-  end
-
   def _v_event_response(data)
     _delay_video_tag_update(data)
   rescue => ex
@@ -62,11 +55,8 @@ class EventsResponder
   def _events(&block)
     return unless params.is_a?(Array)
     params.each do |data|
-      if EVENT_KEYS.include?(data['e']) # New protocol
-        block.call(data.delete('e'), data)
-      else # Old protocol
-        event_key, data = data.flatten
-        block.call(event_key, data) if EVENT_KEYS.include?(event_key)
+      if event_key = data.delete('e') # New protocol only
+        block.call(event_key, data)
       end
     end
   end
