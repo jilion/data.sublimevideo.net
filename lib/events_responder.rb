@@ -55,7 +55,9 @@ class EventsResponder
   def _events(&block)
     return unless params.is_a?(Array)
     params.each do |data|
-      block.call(data.delete('e'), data)
+      if event_key = data.delete('e') # New protocol only
+        block.call(event_key, data)
+      end
     end
   end
 
@@ -64,7 +66,7 @@ class EventsResponder
   end
 
   def _delay_stats_handling(event_key, data)
-    # StatsHandlerWorker.perform_async(event_key, data.merge(_request_data))
+    StatsHandlerWorker.perform_async(event_key, data.merge(_request_data))
   end
 
   def _delay_video_tag_update(data)
