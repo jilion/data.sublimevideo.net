@@ -9,3 +9,4 @@ vendor/bundler
 bundle
 node_modules
 .env
+.tm_properties
