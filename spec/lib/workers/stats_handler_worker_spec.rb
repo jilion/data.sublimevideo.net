@@ -4,6 +4,6 @@ require 'workers/stats_handler_worker'
 
 describe StatsHandlerWorker do
   it "delays job in stats queue" do
-    StatsHandlerWorker.sidekiq_options_hash['queue'].should eq 'stats'
+    expect(StatsHandlerWorker.sidekiq_options_hash['queue']).to eq 'stats'
   end
 end

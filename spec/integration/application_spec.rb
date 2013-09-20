@@ -13,25 +13,25 @@ describe Application do
 
   it "redirects to sublimevideo on GET" do
     get '/foo'
-    last_response.status.should eq 301
-    last_response.body.should eq "Redirect to http://sublimevideo.net"
+    expect(last_response.status).to eq 301
+    expect(last_response.body).to eq "Redirect to http://sublimevideo.net"
   end
 
   it "responds on HEAD" do
     head '/'
-    last_response.status.should eq 200
-    last_response.body.should be_empty
+    expect(last_response.status).to eq 200
+    expect(last_response.body).to be_empty
   end
 
   context "on /status path" do
     it "responses OK on GET /status" do
       get '/status'
-      last_response.body.should eq 'OK'
+      expect(last_response.body).to eq 'OK'
     end
 
     it "responses OK on POST /status" do
       post '/status'
-      last_response.body.should eq 'OK'
+      expect(last_response.body).to eq 'OK'
     end
   end
 
@@ -41,18 +41,18 @@ describe Application do
 
     it "doesn't cache gif" do
       get "/_.gif"
-      last_response.header['Cache-Control'].should eq 'no-cache'
+      expect(last_response.header['Cache-Control']).to eq 'no-cache'
     end
 
     context "without site_token params" do
       it "responses with transparent gif" do
         get "/_.gif"
-        last_response.header['Content-Type'].should eq 'image/gif'
+        expect(last_response.header['Content-Type']).to eq 'image/gif'
       end
 
       it "doesn't delay stats handling" do
         get '/_.gif'
-        Sidekiq::Worker.jobs.should have(0).job
+        expect(Sidekiq::Worker.jobs).to have(0).job
       end
     end
 
@@ -61,17 +61,17 @@ describe Application do
 
       it "delays stats handling" do
         get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
-        StatsHandlerWorker.jobs.should have(3).job
-        StatsHandlerWorker.jobs.first['args'].should eq [
+        expect(StatsHandlerWorker.jobs).to have(3).job
+        expect(StatsHandlerWorker.jobs.first['args']).to eq [
           'al',
           't' => kind_of(Integer), 's' => site_token, 'ua' => nil, 'ip' => '127.0.0.1'
         ]
-        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
       end
 
       it "responses with transparent gif" do
         get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
-        last_response.header['Content-Type'].should eq 'image/gif'
+        expect(last_response.header['Content-Type']).to eq 'image/gif'
       end
     end
 
@@ -85,20 +85,20 @@ describe Application do
     it "responses with CORS headers on OPTIONS" do
       options "/#{site_token}.json"
       headers = last_response.header
-      headers['Access-Control-Allow-Origin'].should eq '*'
-      headers['Access-Control-Allow-Methods'].should eq 'POST'
-      headers['Access-Control-Allow-Headers'].should eq 'Content-Type'
-      headers['Access-Control-Max-Age'].should eq '1728000'
+      expect(headers['Access-Control-Allow-Origin']).to eq '*'
+      expect(headers['Access-Control-Allow-Methods']).to eq 'POST'
+      expect(headers['Access-Control-Allow-Headers']).to eq 'Content-Type'
+      expect(headers['Access-Control-Max-Age']).to eq '1728000'
     end
 
     it "responses with CORS headers on POST" do
       post "/#{site_token}.json"
-      last_response.header['Access-Control-Allow-Origin'].should eq '*'
+      expect(last_response.header['Access-Control-Allow-Origin']).to eq '*'
     end
 
     it "always responds in JSON" do
       post "/#{site_token}.json", nil, 'Content-Type' => 'text/plain'
-      last_response.body.should eq "[]"
+      expect(last_response.body).to eq "[]"
     end
 
     context "al event" do
@@ -106,13 +106,13 @@ describe Application do
 
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(al_data)
-        Sidekiq::Worker.jobs.should have(1).job
-        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
+        expect(Sidekiq::Worker.jobs).to have(1).job
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
       end
 
       it "responses and empty array" do
         post "/#{site_token}.json", MultiJson.dump(al_data)
-        last_response.body.should eq "[]"
+        expect(last_response.body).to eq "[]"
       end
     end
 
@@ -129,7 +129,7 @@ describe Application do
       it "responses with VideoTag data CRC32 hash" do
         post "/#{site_token}.json", MultiJson.dump(l_data)
         body = MultiJson.load(last_response.body)
-        body.should eq([
+        expect(body).to eq([
           { 'e' => 'l', 'u' => uid, 'h' => crc32_hash },
           { 'e' => 'l', 'u' => 'other_uid', 'h' => nil }
         ])
@@ -137,8 +137,8 @@ describe Application do
 
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(l_data)
-        Sidekiq::Worker.jobs.should have(2).job
-        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
+        expect(Sidekiq::Worker.jobs).to have(2).job
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
       end
     end
 
@@ -147,13 +147,13 @@ describe Application do
 
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(s_data)
-        Sidekiq::Worker.jobs.should have(1).job
-        Sidekiq::Worker.jobs.to_s.should match /StatsHandler/
+        expect(Sidekiq::Worker.jobs).to have(1).job
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
       end
 
       it "responses and empty array" do
         post "/#{site_token}.json", MultiJson.dump(s_data)
-        last_response.body.should eq "[]"
+        expect(last_response.body).to eq "[]"
       end
     end
 
@@ -166,13 +166,13 @@ describe Application do
 
       it "delays update on VideoTagUpdater" do
         post "/#{site_token}.json", MultiJson.dump(v_data)
-        Sidekiq::Worker.jobs.should have(1).job
-        Sidekiq::Worker.jobs.to_s.should match /VideoTagUpdater/
+        expect(Sidekiq::Worker.jobs).to have(1).job
+        expect(Sidekiq::Worker.jobs.to_s).to match /VideoTagUpdater/
       end
 
       it "responses and empty array" do
         post "/#{site_token}.json", MultiJson.dump(v_data)
-        last_response.body.should eq "[]"
+        expect(last_response.body).to eq "[]"
       end
     end
 

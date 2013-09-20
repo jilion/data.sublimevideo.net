@@ -15,7 +15,7 @@ describe EventsResponder do
 
     it "responds only to Array params" do
       responder = EventsResponder.new(site_token, { 'foo' => 'bar' }, request)
-      responder.response.should eq []
+      expect(responder.response).to eq []
     end
 
     context 'app load (al) event' do
@@ -23,7 +23,7 @@ describe EventsResponder do
       before { StatsHandlerWorker.stub(:perform_async) }
 
       it "delays stats handling" do
-        StatsHandlerWorker.should_receive(:perform_async).with(
+        expect(StatsHandlerWorker).to receive(:perform_async).with(
           :al,
           { 'ho' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
         )
@@ -31,11 +31,11 @@ describe EventsResponder do
       end
 
       it "responses nothing" do
-        events_responder.response.should eq []
+        expect(events_responder.response).to eq []
       end
 
       it "increments Librato metrics" do
-        Librato.should_receive(:increment).with("data.events_type", source: "al")
+        expect(Librato).to receive(:increment).with("data.events_type", source: "al")
         events_responder.response
       end
     end
@@ -45,7 +45,7 @@ describe EventsResponder do
       before { StatsHandlerWorker.stub(:perform_async) }
 
       it "delays stats handling" do
-        StatsHandlerWorker.should_receive(:perform_async).with(
+        expect(StatsHandlerWorker).to receive(:perform_async).with(
           :s,
           { 'ex' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
         )
@@ -67,11 +67,11 @@ describe EventsResponder do
       end
 
       it "responses nothing" do
-        events_responder.response.should eq []
+        expect(events_responder.response).to eq []
       end
 
       it "increments Librato metrics" do
-        Librato.should_receive(:increment).with("data.events_type", source: "s")
+        expect(Librato).to receive(:increment).with("data.events_type", source: "s")
         events_responder.response
       end
     end
@@ -86,11 +86,11 @@ describe EventsResponder do
         ] }
 
         it "returns video_tag_crc32_hash" do
-          video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
+          expect(video_tag_crc32_hash).to receive(:get) { 'crc32_hash' }
           VideoTagCRC32Hash.stub(:new).with(site_token, 'other_uid') { video_tag_crc32_hash }
-          video_tag_crc32_hash.should_receive(:get) { nil }
+          expect(video_tag_crc32_hash).to receive(:get) { nil }
 
-          events_responder.response.should eq [
+          expect(events_responder.response).to eq [
             { e: 'l', u: "uid", h: "crc32_hash" },
             { e: 'l', u: "other_uid", h: nil }
           ]
@@ -102,12 +102,12 @@ describe EventsResponder do
         before { video_tag_crc32_hash.stub(:get) }
 
         it "returns video_tag_crc32_hash" do
-          video_tag_crc32_hash.should_receive(:get) { 'crc32_hash' }
-          events_responder.response.should eq [{ e: 'l', u: "uid", h: "crc32_hash" }]
+          expect(video_tag_crc32_hash).to receive(:get) { 'crc32_hash' }
+          expect(events_responder.response).to eq [{ e: 'l', u: "uid", h: "crc32_hash" }]
         end
 
         it "delays stats handling" do
-          StatsHandlerWorker.should_receive(:perform_async).with(
+          expect(StatsHandlerWorker).to receive(:perform_async).with(
             :l,
             { 'u' => 'uid', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
@@ -115,7 +115,7 @@ describe EventsResponder do
         end
 
         it "increments Librato metrics" do
-          Librato.should_receive(:increment).with("data.events_type", source: "l")
+          expect(Librato).to receive(:increment).with("data.events_type", source: "l")
           events_responder.response
         end
       end
@@ -124,11 +124,11 @@ describe EventsResponder do
         let(:params) { [{ 'e' => 'l', 'd' => 'm' }] }
 
         it "responses nothing" do
-          events_responder.response.should eq []
+          expect(events_responder.response).to eq []
         end
 
         it "delays stats handling" do
-          StatsHandlerWorker.should_receive(:perform_async).with(
+          expect(StatsHandlerWorker).to receive(:perform_async).with(
             :l,
             { 'd' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )
@@ -136,7 +136,7 @@ describe EventsResponder do
         end
 
         it "increments Librato metrics" do
-          Librato.should_receive(:increment).with("data.events_type", source: "l")
+          expect(Librato).to receive(:increment).with("data.events_type", source: "l")
           events_responder.response
         end
       end
@@ -151,12 +151,12 @@ describe EventsResponder do
       }
 
       it "sets video_tag_crc32_hash" do
-        video_tag_crc32_hash.should_receive(:set).with('crc32_hash')
+        expect(video_tag_crc32_hash).to receive(:set).with('crc32_hash')
         events_responder.response
       end
 
       it "delays video_tag update" do
-        VideoTagUpdaterWorker.should_receive(:perform_async).with(
+        expect(VideoTagUpdaterWorker).to receive(:perform_async).with(
           site_token,
           uid,
           { "a" => { "data" => "settings" } })
@@ -167,18 +167,18 @@ describe EventsResponder do
         before { video_tag_crc32_hash.stub(:get) { 'crc32_hash' } }
 
         it "doesn't set it again" do
-          video_tag_crc32_hash.should_not_receive(:set)
+          expect(video_tag_crc32_hash).to_not receive(:set)
           events_responder.response
         end
 
         it "doesn't delays video_tag update" do
-          VideoTagUpdaterWorker.should_not_receive(:perform_async)
+          expect(VideoTagUpdaterWorker).to_not receive(:perform_async)
           events_responder.response
         end
       end
 
       it "responses nothing" do
-        events_responder.response.should eq []
+        expect(events_responder.response).to eq []
       end
     end
 
