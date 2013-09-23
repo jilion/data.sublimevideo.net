@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-require 'workers/stats_without_addon_handler_worker'
+require 'workers/stats_with_addon_handler_worker'
 
-describe StatsWithoutAddonHandlerWorker do
+describe StatsWithAddonHandlerWorker do
   it "delays job in stats queue" do
-    expect(StatsWithoutAddonHandlerWorker.sidekiq_options_hash['queue']).to eq 'stats-slow'
+    expect(StatsWithAddonHandlerWorker.sidekiq_options_hash['queue']).to eq 'stats'
   end
 end
