@@ -1,5 +1,6 @@
 require 'video_tag_crc32_hash'
-require 'workers/stats_handler_worker'
+require 'workers/stats_with_addon_handler_worker'
+require 'workers/stats_without_addon_handler_worker'
 require 'workers/video_tag_updater_worker'
 require 'workers/video_tag_duration_updater_worker'
 
@@ -66,7 +67,8 @@ class EventsResponder
   end
 
   def _delay_stats_handling(event_key, data)
-    StatsHandlerWorker.perform_async(event_key, data.merge(_request_data))
+    stats_handler_class = data['sa'] ? StatsWithAddonHandlerWorker : StatsWithoutAddonHandlerWorker
+    stats_handler_class.perform_async(event_key, data.merge(_request_data))
   end
 
   def _delay_video_tag_update(data)

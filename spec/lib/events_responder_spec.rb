@@ -20,14 +20,33 @@ describe EventsResponder do
 
     context 'app load (al) event' do
       let(:params) { [{ 'e' => 'al', 'ho' => 'm' }] }
-      before { StatsHandlerWorker.stub(:perform_async) }
+      before {
+        StatsWithAddonHandlerWorker.stub(:perform_async)
+        StatsWithoutAddonHandlerWorker.stub(:perform_async)
+      }
 
-      it "delays stats handling" do
-        expect(StatsHandlerWorker).to receive(:perform_async).with(
-          :al,
-          { 'ho' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
-        )
-        events_responder.response
+      context "with stats addon" do
+        before {
+          params.first['sa'] = '1'
+        }
+
+        it "delays stats with addon handling" do
+          expect(StatsWithAddonHandlerWorker).to receive(:perform_async).with(
+            :al,
+            { 'ho' => 'm', 'sa' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+          )
+          events_responder.response
+        end
+      end
+
+      context "without stats addon" do
+        it "delays stats with addon handling" do
+          expect(StatsWithoutAddonHandlerWorker).to receive(:perform_async).with(
+            :al,
+            { 'ho' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+          )
+          events_responder.response
+        end
       end
 
       it "responses nothing" do
@@ -42,14 +61,33 @@ describe EventsResponder do
 
     context 'start (s) event' do
       let(:params) { [{ 'e' => 's', 'ex' => '1'}] }
-      before { StatsHandlerWorker.stub(:perform_async) }
+      before {
+        StatsWithAddonHandlerWorker.stub(:perform_async)
+        StatsWithoutAddonHandlerWorker.stub(:perform_async)
+      }
 
-      it "delays stats handling" do
-        expect(StatsHandlerWorker).to receive(:perform_async).with(
+      context "with stats addon" do
+        before {
+          params.first['sa'] = '1'
+        }
+
+        it "delays stats with addon handling" do
+          expect(StatsWithAddonHandlerWorker).to receive(:perform_async).with(
           :s,
-          { 'ex' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
-        )
-        events_responder.response
+            { 'ex' => '1', 'sa' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+          )
+          events_responder.response
+        end
+      end
+
+      context "without stats addon" do
+        it "delays stats with addon handling" do
+          expect(StatsWithoutAddonHandlerWorker).to receive(:perform_async).with(
+            :s,
+            { 'ex' => '1', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+          )
+          events_responder.response
+        end
       end
 
       it "doesn't delays video_tag duration update without u params" do
@@ -77,7 +115,10 @@ describe EventsResponder do
     end
 
     context 'load (l) event' do
-      before { StatsHandlerWorker.stub(:perform_async) }
+      before {
+        StatsWithAddonHandlerWorker.stub(:perform_async)
+        StatsWithoutAddonHandlerWorker.stub(:perform_async)
+      }
 
       context "multiple events" do
         let(:params) { [
@@ -106,12 +147,28 @@ describe EventsResponder do
           expect(events_responder.response).to eq [{ e: 'l', u: "uid", h: "crc32_hash" }]
         end
 
-        it "delays stats handling" do
-          expect(StatsHandlerWorker).to receive(:perform_async).with(
-            :l,
-            { 'u' => 'uid', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
-          )
-          events_responder.response
+        context "with stats addon" do
+          before {
+            params.first['sa'] = '1'
+          }
+
+          it "delays stats with addon handling" do
+            expect(StatsWithAddonHandlerWorker).to receive(:perform_async).with(
+              :l,
+              { 'sa' => '1', 'u' => 'uid', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+            )
+            events_responder.response
+          end
+        end
+
+        context "without stats addon" do
+          it "delays stats with addon handling" do
+            expect(StatsWithoutAddonHandlerWorker).to receive(:perform_async).with(
+              :l,
+              { 'u' => 'uid', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
+            )
+            events_responder.response
+          end
         end
 
         it "increments Librato metrics" do
@@ -128,7 +185,7 @@ describe EventsResponder do
         end
 
         it "delays stats handling" do
-          expect(StatsHandlerWorker).to receive(:perform_async).with(
+          expect(StatsWithoutAddonHandlerWorker).to receive(:perform_async).with(
             :l,
             { 'd' => 'm', 's' => site_token, 't' => kind_of(Integer), 'ua' => 'user_agent', 'ip' => '127.0.0.1' }
           )

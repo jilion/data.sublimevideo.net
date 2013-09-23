@@ -61,12 +61,12 @@ describe Application do
 
       it "delays stats handling" do
         get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
-        expect(StatsHandlerWorker.jobs).to have(3).job
-        expect(StatsHandlerWorker.jobs.first['args']).to eq [
+        expect(StatsWithoutAddonHandlerWorker.jobs).to have(3).job
+        expect(StatsWithoutAddonHandlerWorker.jobs.first['args']).to eq [
           'al',
           't' => kind_of(Integer), 's' => site_token, 'ua' => nil, 'ip' => '127.0.0.1'
         ]
-        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
       end
 
       it "responses with transparent gif" do
@@ -102,12 +102,12 @@ describe Application do
     end
 
     context "al event" do
-      let(:al_data) { [{ 'e' => 'al' }] }
+      let(:al_data) { [{ 'e' => 'al', 'sa' => 1 }] }
 
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(al_data)
         expect(Sidekiq::Worker.jobs).to have(1).job
-        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithAddonHandler/
       end
 
       it "responses and empty array" do
@@ -138,7 +138,7 @@ describe Application do
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(l_data)
         expect(Sidekiq::Worker.jobs).to have(2).job
-        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
       end
     end
 
@@ -148,7 +148,7 @@ describe Application do
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(s_data)
         expect(Sidekiq::Worker.jobs).to have(1).job
-        expect(Sidekiq::Worker.jobs.to_s).to match /StatsHandler/
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
       end
 
       it "responses and empty array" do
