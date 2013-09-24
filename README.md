@@ -72,7 +72,6 @@ Done on Page Visit (on app load). Request params:
   ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
   ss*: <ssl>, # 1, not sent if http
   st: <version stage>, # s:stable, b:beta, a:alpha
-  dt: <document title>, # (parent.)document.title
   fv*: <flash version>, # not sent if not installed
   jq*: <jquery version>, # not sent if not used
   sr: <screen resolution>, # '2400x1920'
