@@ -70,9 +70,9 @@ Done on Page Visit (on app load). Request params:
 {
   e: 'al',
   ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
-  ss*: <ssl>, # 1, not sent if http
+  ss*: <ssl>, # true, not sent if http
   st: <version stage>, # s:stable, b:beta, a:alpha
-  sa*: <realtime stats>, # 1, only if realtime stats enabled
+  sa*: <realtime stats>, # true, only if realtime stats enabled
   fv*: <flash version>, # not sent if not installed
   jq*: <jquery version>, # not sent if not used
   sr: <screen resolution>, # '2400x1920'
@@ -97,10 +97,10 @@ Done for each video loaded (via DOM or API).
   u*: <video uid>, # only if valid
   ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
   de: <device>, # d:desktop, m:mobile
-  sa*: <realtime stats>, # 1, only if realtime stats enabled
+  sa*: <realtime stats>, # true, only if realtime stats enabled
   te: <tech>: # h:html5, f:flash, y:youtube, d:dailymotion
-  ex*: <external>, # 1, if (parent.)document.url is external
-  em*: <embedded>, # 1, only sent if embedded
+  ex*: <external>, # true, if (parent.)document.url is external
+  em*: <embedded>, # true, only sent if embedded
 }
 ```
 
@@ -126,10 +126,10 @@ Done for each video started (via DOM or API). Request params:
   u*: <video uid>, # only if valid
   ho: <hostname>, # m:main, e:extra, s:staging, d:dev, i:invalid
   de: <device>, # d:desktop, m:mobile
-  sa*: <realtime stats>, # 1, only if realtime stats enabled
+  sa*: <realtime stats>, # true, only if realtime stats enabled
   te: <tech>: # h:html5, f:flash (include YouTube hack for now)
-  ex*: <external>, # 1, if (parent.)document.url is external
-  em*: <embedded>, # 1, only sent if embedded
+  ex*: <external>, # true, if (parent.)document.url is external
+  em*: <embedded>, # true, only sent if embedded
   du: <document url>, document.href (document.referrer for embeds)
   ru*: <referrer url>, document.referrer (nil for embeds)
   vd*: <video duration>, # "123456" (in miliseconds, nil if streaming)

@@ -102,7 +102,7 @@ describe Application do
     end
 
     context "al event" do
-      let(:al_data) { [{ 'e' => 'al', 'sa' => 1 }] }
+      let(:al_data) { [{ 'e' => 'al', 'sa' => true }] }
 
       it "delays stats handling" do
         post "/#{site_token}.json", MultiJson.dump(al_data)
