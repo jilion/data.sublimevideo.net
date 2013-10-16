@@ -32,14 +32,18 @@ module Rack
     def _load_query_string(env)
       case URI.unescape(env['QUERY_STRING'])
       when /d=(.*)/ then MultiJson.load($1)
-      else []
+      else
+        Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: query string is invalid', parameters: env)
+        []
       end
     end
 
     def _load_rack_input(env)
       body = env['rack.input'] && env['rack.input'].read
       case body
-      when '', nil then []
+      when '', nil
+        Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: rack input is invalid', parameters: env)
+        []
       else MultiJson.load(body)
       end
     end

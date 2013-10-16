@@ -54,11 +54,14 @@ class EventsResponder
   end
 
   def _events(&block)
-    return unless params.is_a?(Array)
-    params.each do |data|
-      if event_key = data.delete('e') # New protocol only
-        block.call(event_key, data)
+    if params.is_a?(Array)
+      params.each do |data|
+        if event_key = data.delete('e') # New protocol only
+          block.call(event_key, data)
+        end
       end
+    else
+      Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: params must be an array', parameters: params)
     end
   end
 
