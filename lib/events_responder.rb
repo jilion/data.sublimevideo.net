@@ -62,8 +62,9 @@ class EventsResponder
       end
     else
       Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: params must be an array', parameters: params)
-      []
     end
+  rescue => ex
+    Honeybadger.notify(error_class: 'Special Error', error_message: "Special Error: #{ex.message}", parameters: params)
   end
 
   def _video_tag_crc32_hash(uid)
