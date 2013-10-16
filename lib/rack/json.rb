@@ -41,9 +41,7 @@ module Rack
     def _load_rack_input(env)
       body = env['rack.input'] && env['rack.input'].read
       case body
-      when '', nil
-        Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: rack input is invalid', parameters: env)
-        []
+      when '', nil then []
       else MultiJson.load(body)
       end
     end
