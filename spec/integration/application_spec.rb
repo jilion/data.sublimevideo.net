@@ -18,7 +18,7 @@ describe Application do
   end
 
   it "responds on HEAD" do
-    head '/'
+    head '/_.gif'
     expect(last_response.status).to eq 200
     expect(last_response.body).to be_empty
   end
@@ -59,7 +59,7 @@ describe Application do
     context "al, l & s events" do
       let(:data) { [{ 'e' => 'al' }, { 'e' => 'l' }, { 'e' => 's' }] }
 
-      it "delays stats handling" do
+      it "delays stats handling (GET request)" do
         get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
         expect(StatsWithoutAddonHandlerWorker.jobs).to have(3).job
         expect(StatsWithoutAddonHandlerWorker.jobs.first['args']).to eq [
@@ -67,6 +67,17 @@ describe Application do
           't' => kind_of(Integer), 's' => site_token, 'ua' => nil, 'ip' => '127.0.0.1'
         ]
         expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
+      end
+
+      it "delays stats handling (HEAD request)" do
+        head "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
+        expect(StatsWithoutAddonHandlerWorker.jobs).to have(3).job
+        expect(StatsWithoutAddonHandlerWorker.jobs.first['args']).to eq [
+          'al',
+          't' => kind_of(Integer), 's' => site_token, 'ua' => nil, 'ip' => '127.0.0.1'
+        ]
+        expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
+        expect(last_response.body).to be_empty
       end
 
       it "responses with transparent gif" do

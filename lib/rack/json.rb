@@ -12,7 +12,7 @@ module Rack
         env['params'] = _load(:rack_input, env)
         status, headers, body = @app.call(env)
         [status, headers, [_dump_body(body, env)]]
-      when 'GET' # GIF request
+      when 'GET', 'HEAD' # GIF request
         env['params'] = _load(:query_string, env)
         @app.call(env)
       else
@@ -31,7 +31,7 @@ module Rack
 
     def _load_query_string(env)
       case URI.unescape(env['QUERY_STRING'])
-      when /d=(.*)/ then MultiJson.load($1)
+      when /[&?]d=(.*)/ then MultiJson.load($1)
       else
         Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: query string is invalid', parameters: env)
         []

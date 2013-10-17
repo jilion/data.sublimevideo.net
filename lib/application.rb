@@ -17,7 +17,7 @@ class Application
   private
 
   def _gif_request?(env)
-    env['REQUEST_METHOD'] == 'GET'
+    env['PATH_INFO'] == '/_.gif'
   end
 
   def _handle_event(env)

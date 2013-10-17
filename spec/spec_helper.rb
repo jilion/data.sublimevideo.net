@@ -20,6 +20,9 @@ RSpec.configure do |config|
   config.order = ENV['ORDER'] || 'random'
 end
 
+require 'sidekiq/testing'
+Sidekiq.logger.level = Logger::WARN
+
 require 'redis'
 RSpec.configure do |config|
   config.before :each do
