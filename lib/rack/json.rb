@@ -33,7 +33,7 @@ module Rack
       case URI.unescape(env['QUERY_STRING'])
       when /[&?]d=(.*)/ then MultiJson.load($1)
       else
-        Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: query string is invalid', parameters: env)
+        Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: query string is invalid', rack_env: env)
         []
       end
     end
@@ -45,7 +45,7 @@ module Rack
       else MultiJson.load(body)
       end
     rescue => ex
-      Honeybadger.notify_or_ignore(ex, rack_env: env)
+      Honeybadger.notify_or_ignore(ex, rack_env: env, parameters: { body: body })
       []
     end
 

@@ -4,13 +4,18 @@ require 'rack/file'
 class Application
 
   def call(env)
-    body = _handle_event(env)
-    if _gif_request?(env)
-      Librato.increment 'data.request_type', source: 'gif'
-      Rack::File.new('public', 'Cache-Control' => 'no-cache').call(env)
+    if env['site_token']
+      body = _handle_event(env)
+      if _gif_request?(env)
+        Librato.increment 'data.request_type', source: 'gif'
+        Rack::File.new('public', 'Cache-Control' => 'no-cache').call(env)
+      else # ajax
+        Librato.increment 'data.request_type', source: 'ajax'
+        [200, {}, body]
+      end
     else
-      Librato.increment 'data.request_type', source: 'ajax'
-      [200, {}, body]
+      Librato.increment 'data.request_type', source: '404'
+      [404, {'Content-Type' => 'text/html', 'Content-Length' => '9'}, ['Not Found']]
     end
   end
 
@@ -21,12 +26,7 @@ class Application
   end
 
   def _handle_event(env)
-    if env['site_token']
-      req = Rack::Request.new(env)
-      EventsResponder.new(env['site_token'], env['params'], req).response
-    else
-      Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: site_token is missing', parameters: env)
-      []
-    end
+    req = Rack::Request.new(env)
+    EventsResponder.new(env['site_token'], env['params'], req).response
   end
 end

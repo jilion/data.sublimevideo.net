@@ -18,7 +18,7 @@ describe Application do
   end
 
   it "responds on HEAD" do
-    head '/_.gif'
+    head '/_.gif?s=abcd1234'
     expect(last_response.status).to eq 200
     expect(last_response.body).to be_empty
   end
@@ -36,22 +36,24 @@ describe Application do
   end
 
   context "on /_.gif path" do
+    let(:data) { [] }
     let(:site_token) { 'abcd1234' }
     let(:uid) { 'uid' }
+    let(:url) { "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}" }
 
     it "doesn't cache gif" do
-      get "/_.gif"
+      get url
       expect(last_response.header['Cache-Control']).to eq 'no-cache'
     end
 
     context "without site_token params" do
       it "responses with transparent gif" do
-        get "/_.gif"
+        get url
         expect(last_response.header['Content-Type']).to eq 'image/gif'
       end
 
       it "doesn't delay stats handling" do
-        get '/_.gif'
+        get url
         expect(Sidekiq::Worker.jobs).to have(0).job
       end
     end
@@ -60,7 +62,7 @@ describe Application do
       let(:data) { [{ 'e' => 'al' }, { 'e' => 'l' }, { 'e' => 's' }] }
 
       it "delays stats handling (GET request)" do
-        get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
+        get url
         expect(StatsWithoutAddonHandlerWorker.jobs).to have(3).job
         expect(StatsWithoutAddonHandlerWorker.jobs.first['args']).to eq [
           'al',
@@ -70,7 +72,7 @@ describe Application do
       end
 
       it "delays stats handling (HEAD request)" do
-        head "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
+        head url
         expect(StatsWithoutAddonHandlerWorker.jobs).to have(3).job
         expect(StatsWithoutAddonHandlerWorker.jobs.first['args']).to eq [
           'al',
@@ -81,7 +83,7 @@ describe Application do
       end
 
       it "responses with transparent gif" do
-        get "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}"
+        get url
         expect(last_response.header['Content-Type']).to eq 'image/gif'
       end
     end
