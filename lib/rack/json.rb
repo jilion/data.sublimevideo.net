@@ -9,11 +9,11 @@ module Rack
     def call(env)
       case env['REQUEST_METHOD']
       when 'POST'
-        env['params'] = _load(:rack_input, env)
+        env['data.events'] = _load(:rack_input, env)
         status, headers, body = @app.call(env)
         [status, headers, [_dump_body(body, env)]]
       when 'GET', 'HEAD' # GIF request
-        env['params'] = _load(:query_string, env)
+        env['data.events'] = _load(:query_string, env)
         @app.call(env)
       else
         @app.call(env)

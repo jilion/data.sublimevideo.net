@@ -6,7 +6,7 @@ module Rack
 
     def call(env)
       req = Rack::Request.new(env)
-      env['site_token'] = _extract_site_token(req)
+      env['data.site_token'] = _extract_site_token(req)
       @app.call(env)
     end
 

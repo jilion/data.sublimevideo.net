@@ -7,29 +7,27 @@ describe EventsResponder do
   let(:site_token) { 'site_token' }
   let(:uid) { 'uid' }
   let(:request) { double('request', ip: '127.0.0.1', user_agent: 'user_agent') }
-  let(:events_responder) { EventsResponder.new(site_token, params, request) }
+  let(:events_responder) { EventsResponder.new(site_token, events, request) }
   let(:video_tag_crc32_hash) { double('VideoTagCRC32Hash') }
 
   describe "#response" do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
 
-    it "responds only to Array params" do
+    it "responds only to array of events" do
       expect(Honeybadger).to receive(:notify)
       responder = EventsResponder.new(site_token, { 'foo' => 'bar' }, request)
       expect(responder.response).to eq []
     end
 
     context 'app load (al) event' do
-      let(:params) { [{ 'e' => 'al', 'ho' => 'm' }] }
+      let(:events) { [{ 'e' => 'al', 'ho' => 'm' }] }
       before {
         StatsWithAddonHandlerWorker.stub(:perform_async)
         StatsWithoutAddonHandlerWorker.stub(:perform_async)
       }
 
       context "with stats addon" do
-        before {
-          params.first['sa'] = '1'
-        }
+        before { events.first['sa'] = '1' }
 
         it "delays stats with addon handling" do
           expect(StatsWithAddonHandlerWorker).to receive(:perform_async).with(
@@ -61,16 +59,14 @@ describe EventsResponder do
     end
 
     context 'start (s) event' do
-      let(:params) { [{ 'e' => 's', 'ex' => '1'}] }
+      let(:events) { [{ 'e' => 's', 'ex' => '1'}] }
       before {
         StatsWithAddonHandlerWorker.stub(:perform_async)
         StatsWithoutAddonHandlerWorker.stub(:perform_async)
       }
 
       context "with stats addon" do
-        before {
-          params.first['sa'] = '1'
-        }
+        before { events.first['sa'] = '1' }
 
         it "delays stats with addon handling" do
           expect(StatsWithAddonHandlerWorker).to receive(:perform_async).with(
@@ -97,7 +93,7 @@ describe EventsResponder do
       end
 
       context 'with uid and vd data' do
-        let(:params) { [{ 'e' => 's', 'u' => uid, 'vd' => '123456'}] }
+        let(:events) { [{ 'e' => 's', 'u' => uid, 'vd' => '123456'}] }
 
         it "delays video_tag duration update" do
           expect(VideoTagDurationUpdaterWorker).to receive(:perform_async).with(site_token, uid, '123456')
@@ -122,7 +118,7 @@ describe EventsResponder do
       }
 
       context "multiple events" do
-        let(:params) { [
+        let(:events) { [
           { 'e' => 'l', 'u' => uid },
           { 'e' => 'l' ,'u' => 'other_uid' }
         ] }
@@ -140,7 +136,7 @@ describe EventsResponder do
       end
 
       context "with uid" do
-        let(:params) { [{ 'e' => 'l', 'u' => uid }] }
+        let(:events) { [{ 'e' => 'l', 'u' => uid }] }
         before { video_tag_crc32_hash.stub(:get) }
 
         it "returns video_tag_crc32_hash" do
@@ -149,9 +145,7 @@ describe EventsResponder do
         end
 
         context "with stats addon" do
-          before {
-            params.first['sa'] = '1'
-          }
+          before { events.first['sa'] = '1' }
 
           it "delays stats with addon handling" do
             expect(StatsWithAddonHandlerWorker).to receive(:perform_async).with(
@@ -179,7 +173,7 @@ describe EventsResponder do
       end
 
       context "without uid" do
-        let(:params) { [{ 'e' => 'l', 'd' => 'm' }] }
+        let(:events) { [{ 'e' => 'l', 'd' => 'm' }] }
 
         it "responses nothing" do
           expect(events_responder.response).to eq []
@@ -201,7 +195,7 @@ describe EventsResponder do
     end
 
     context "video tag data (v) event" do
-      let(:params) { [{ 'e' => 'v', 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } }] }
+      let(:events) { [{ 'e' => 'v', 'u' => uid, 'h' => 'crc32_hash', 'a' => { "data" => "settings" } }] }
       before {
         video_tag_crc32_hash.stub(:set)
         video_tag_crc32_hash.stub(:get) { 'other_crc32_hash' }
