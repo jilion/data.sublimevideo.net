@@ -1,4 +1,4 @@
-guard 'rspec', all_after_pass: false, keep_failed: false do
+guard :rspec do
   watch('config.rb')            { "spec" }
   watch('config.ru')            { "spec" }
   watch('lib/application.rb')   { "spec" }
