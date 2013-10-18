@@ -61,7 +61,7 @@ class EventsResponder
         end
       end
     else
-      Honeybadger.notify(error_class: 'Special Error', error_message: "Special Error: params must be an array: #{params}", parameters: request)
+      Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: params must be an array', parameters: { params: params })
       nil
     end
   end
