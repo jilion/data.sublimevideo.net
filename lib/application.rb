@@ -5,7 +5,7 @@ class Application
 
   def call(env)
     if env['data.site_token']
-      body = _handle_event(env)
+      body = EventsResponder.new(env).response
       if _gif_request?(env)
         Librato.increment 'data.request_type', source: 'gif'
         Rack::File.new('public', 'Cache-Control' => 'no-cache').call(env)
@@ -27,6 +27,6 @@ class Application
 
   def _handle_event(env)
     req = Rack::Request.new(env)
-    EventsResponder.new(env['data.site_token'], env['data.events'], req).response
+
   end
 end

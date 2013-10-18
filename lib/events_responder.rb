@@ -7,12 +7,13 @@ require 'workers/video_tag_duration_updater_worker'
 class EventsResponder
   EVENT_KEYS = %w[h v l al s]
 
-  attr_reader :site_token, :request, :events
+  attr_reader :env, :site_token, :request, :events
 
-  def initialize(site_token, events, request)
-    @site_token = site_token
-    @events = events
-    @request = request
+  def initialize(env)
+    @env = env
+    @site_token = env['data.site_token']
+    @events = env['data.events']
+    @request = Rack::Request.new(env)
   end
 
   def response
@@ -61,7 +62,7 @@ class EventsResponder
         end
       end
     else
-      Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: events must be an array', parameters: { events: events })
+      Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: events must be an array', parameters: { events: events }, rack_env: env)
       nil
     end
   end

@@ -5,17 +5,23 @@ require 'events_responder'
 describe EventsResponder do
   let(:metrics_queue) { mock('metrics_queue', add: true) }
   let(:site_token) { 'site_token' }
+  let(:events) { [] }
   let(:uid) { 'uid' }
   let(:request) { double('request', ip: '127.0.0.1', user_agent: 'user_agent') }
-  let(:events_responder) { EventsResponder.new(site_token, events, request) }
+  let(:env) { { 'data.site_token' => site_token, 'data.events' => events } }
+  let(:events_responder) { EventsResponder.new(env) }
   let(:video_tag_crc32_hash) { double('VideoTagCRC32Hash') }
+
+  before {
+    Rack::Request.stub(:new) { request }
+  }
 
   describe "#response" do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
 
     it "responds only to array of events" do
       expect(Honeybadger).to receive(:notify)
-      responder = EventsResponder.new(site_token, { 'foo' => 'bar' }, request)
+      responder = EventsResponder.new(env.merge('data.events' => 'bar'))
       expect(responder.response).to eq []
     end
 
