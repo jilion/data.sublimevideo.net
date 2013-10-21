@@ -24,9 +24,4 @@ class Application
   def _gif_request?(env)
     env['PATH_INFO'] == '/_.gif'
   end
-
-  def _handle_event(env)
-    req = Rack::Request.new(env)
-
-  end
 end

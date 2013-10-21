@@ -7,7 +7,7 @@ Bundler.require
 require './config'
 require 'rack/cors'
 require 'rack/get_redirector'
-require 'rack/json'
+require 'rack/events'
 require 'rack/newrelic'
 require 'rack/site_token'
 require 'rack/status'
@@ -20,6 +20,6 @@ use Librato::Rack
 use Rack::GETRedirector
 use Rack::CORS
 use Rack::SiteToken
-use Rack::JSON
+use Rack::Events
 
 run Application.new

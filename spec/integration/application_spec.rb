@@ -39,7 +39,7 @@ describe Application do
     let(:data) { [] }
     let(:site_token) { 'abcd1234' }
     let(:uid) { 'uid' }
-    let(:url) { "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{URI.escape(MultiJson.dump(data))}" }
+    let(:url) { "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{CGI.escape(MultiJson.dump(data))}" }
 
     it "doesn't cache gif" do
       get url
@@ -88,6 +88,24 @@ describe Application do
       end
     end
 
+  end
+
+  context "on /_.gif path (bugged d params)" do
+    let(:site_token) { 'abcd1234' }
+    let(:url) { "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&%5B%7B%22e%22%3A%22s%22%2C%22ho%22%3A%22m%22%2C%22de%22%3A%22d%22%2C%22te%22%3A%22f%22%2C%22em%22%3Atrue%2C%22du%22%3A%22http%3A%2F%2Fubdavid.org%2Fadvanced%2Fpractical%2Fpractical-christian_01.html%22%2C%22vsr%22%3A%22256x174%22%2C%22vd%22%3A30023%7D%5D" }
+
+    context "al, l & s events" do
+
+      it "delays stats handling (GET request)" do
+        get url
+        expect(StatsWithoutAddonHandlerWorker.jobs).to have(1).job
+      end
+
+      it "responses with transparent gif" do
+        get url
+        expect(last_response.header['Content-Type']).to eq 'image/gif'
+      end
+    end
   end
 
   context "on /<site token>.json path" do
