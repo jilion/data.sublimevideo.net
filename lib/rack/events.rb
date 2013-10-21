@@ -32,8 +32,8 @@ module Rack
     def _load_query_string(env)
       case URI.unescape(env['QUERY_STRING'])
       when /[&?]d=(.*)/ then MultiJson.load($1)
-      when /&({.*})/ then [MultiJson.load($1)] # Bugged d params
-      when /&([.*])/ then MultiJson.load($1) # Bugged d params
+      when /&(\{.*\})/ then [MultiJson.load($1)] # Bugged d params
+      when /&(\[.*\])/ then MultiJson.load($1) # Bugged d params
       else
         Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: query string is invalid', rack_env: env)
         []
