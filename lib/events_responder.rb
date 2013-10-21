@@ -21,6 +21,7 @@ class EventsResponder
     _events do |event_key, data|
       response << send("_#{event_key}_event_response", data)
       Librato.increment 'data.events_type', source: event_key
+      Librato.increment 'data.player_version', source: _player_version
     end
     response.compact
   end
@@ -98,5 +99,9 @@ class EventsResponder
       't'  => Time.now.to_i,
       'ua' => request.user_agent,
       'ip' => request.ip }
+  end
+
+  def _player_version
+    request.params.fetch('v', 'none')
   end
 end

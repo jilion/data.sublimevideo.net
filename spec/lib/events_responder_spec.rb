@@ -7,12 +7,13 @@ describe EventsResponder do
   let(:site_token) { 'site_token' }
   let(:events) { [] }
   let(:uid) { 'uid' }
-  let(:request) { double('request', ip: '127.0.0.1', user_agent: 'user_agent') }
+  let(:request) { double('request', ip: '127.0.0.1', user_agent: 'user_agent', params: {}) }
   let(:env) { { 'data.site_token' => site_token, 'data.events' => events } }
   let(:events_responder) { EventsResponder.new(env) }
   let(:video_tag_crc32_hash) { double('VideoTagCRC32Hash') }
 
   before {
+    Librato.stub(:increment)
     Rack::Request.stub(:new) { request }
   }
 
@@ -60,6 +61,12 @@ describe EventsResponder do
 
       it "increments Librato metrics" do
         expect(Librato).to receive(:increment).with("data.events_type", source: "al")
+        events_responder.response
+      end
+
+      it "increments player_version Librato metrics" do
+        request.stub(:params) { { 'v' => '3.2.1' } }
+        expect(Librato).to receive(:increment).with('data.player_version', source: '3.2.1')
         events_responder.response
       end
     end
@@ -113,6 +120,11 @@ describe EventsResponder do
 
       it "increments Librato metrics" do
         expect(Librato).to receive(:increment).with("data.events_type", source: "s")
+        events_responder.response
+      end
+
+      it "increments player_version Librato metrics" do
+        expect(Librato).to receive(:increment).with('data.player_version', source: 'none')
         events_responder.response
       end
     end

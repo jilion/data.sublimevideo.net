@@ -5,7 +5,10 @@ require 'sidekiq/testing'
 
 describe Application do
   include Rack::Test::Methods
-  before { Sidekiq::Worker.jobs.clear }
+  before {
+    Librato.stub(:increment)
+    Sidekiq::Worker.jobs.clear
+  }
 
   def app
     APP
@@ -39,7 +42,7 @@ describe Application do
     let(:data) { [] }
     let(:site_token) { 'abcd1234' }
     let(:uid) { 'uid' }
-    let(:url) { "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&d=#{CGI.escape(MultiJson.dump(data))}" }
+    let(:url) { "/_.gif?s=#{site_token}&v=3.2.1&i=#{Time.now.to_i}&d=#{CGI.escape(MultiJson.dump(data))}" }
 
     it "doesn't cache gif" do
       get url
@@ -82,23 +85,9 @@ describe Application do
         expect(last_response.body).to be_empty
       end
 
-      it "responses with transparent gif" do
+      it "increments player version (v) metrics" do
+        expect(Librato).to receive(:increment).with("data.player_version", source: "3.2.1")
         get url
-        expect(last_response.header['Content-Type']).to eq 'image/gif'
-      end
-    end
-
-  end
-
-  context "on /_.gif path (bugged d params)" do
-    let(:site_token) { 'abcd1234' }
-    let(:url) { "/_.gif?i=#{Time.now.to_i}&s=#{site_token}&%5B%7B%22e%22%3A%22s%22%2C%22ho%22%3A%22m%22%2C%22de%22%3A%22d%22%2C%22te%22%3A%22f%22%2C%22em%22%3Atrue%2C%22du%22%3A%22http%3A%2F%2Fubdavid.org%2Fadvanced%2Fpractical%2Fpractical-christian_01.html%22%2C%22vsr%22%3A%22256x174%22%2C%22vd%22%3A30023%7D%5D" }
-
-    context "al, l & s events" do
-
-      it "delays stats handling (GET request)" do
-        get url
-        expect(StatsWithoutAddonHandlerWorker.jobs).to have(1).job
       end
 
       it "responses with transparent gif" do
@@ -106,15 +95,17 @@ describe Application do
         expect(last_response.header['Content-Type']).to eq 'image/gif'
       end
     end
+
   end
 
   context "on /<site token>.json path" do
     let(:site_token) { 'abcd1234' }
     let(:uid) { 'uid' }
     let(:crc32_hash) { 'crc32_hash' }
+    let(:url) { "/#{site_token}.json?v=3.2.1" }
 
     it "responses with CORS headers on OPTIONS" do
-      options "/#{site_token}.json"
+      options url
       headers = last_response.header
       expect(headers['Access-Control-Allow-Origin']).to eq '*'
       expect(headers['Access-Control-Allow-Methods']).to eq 'POST'
@@ -123,12 +114,12 @@ describe Application do
     end
 
     it "responses with CORS headers on POST" do
-      post "/#{site_token}.json"
+      post url
       expect(last_response.header['Access-Control-Allow-Origin']).to eq '*'
     end
 
     it "always responds in JSON" do
-      post "/#{site_token}.json", nil, 'Content-Type' => 'text/plain'
+      post url, nil, 'Content-Type' => 'text/plain'
       expect(last_response.body).to eq "[]"
     end
 
@@ -136,13 +127,18 @@ describe Application do
       let(:al_data) { [{ 'e' => 'al', 'sa' => true }] }
 
       it "delays stats handling" do
-        post "/#{site_token}.json", MultiJson.dump(al_data)
+        post url, MultiJson.dump(al_data)
         expect(Sidekiq::Worker.jobs).to have(1).job
         expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithAddonHandler/
       end
 
+      it "increments player version (v) metrics" do
+        expect(Librato).to receive(:increment).with("data.player_version", source: "3.2.1")
+        post url, MultiJson.dump(al_data)
+      end
+
       it "responses and empty array" do
-        post "/#{site_token}.json", MultiJson.dump(al_data)
+        post url, MultiJson.dump(al_data)
         expect(last_response.body).to eq "[]"
       end
     end
@@ -155,10 +151,10 @@ describe Application do
         { 'e' => 'l', 'u' => uid },
         { 'e' => 'l', 'u' => 'other_uid' }
       ] }
-      before { post "/#{site_token}.json", MultiJson.dump(v_data) }
+      before { post url, MultiJson.dump(v_data) }
 
       it "responses with VideoTag data CRC32 hash" do
-        post "/#{site_token}.json", MultiJson.dump(l_data)
+        post url, MultiJson.dump(l_data)
         body = MultiJson.load(last_response.body)
         expect(body).to eq([
           { 'e' => 'l', 'u' => uid, 'h' => crc32_hash },
@@ -167,9 +163,14 @@ describe Application do
       end
 
       it "delays stats handling" do
-        post "/#{site_token}.json", MultiJson.dump(l_data)
+        post url, MultiJson.dump(l_data)
         expect(Sidekiq::Worker.jobs).to have(2).job
         expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
+      end
+
+      it "increments player version (v) metrics" do
+        expect(Librato).to receive(:increment).with("data.player_version", source: "3.2.1")
+        post url, MultiJson.dump(l_data)
       end
     end
 
@@ -177,14 +178,19 @@ describe Application do
       let(:s_data) { [{ 'e' => 's' }] }
 
       it "delays stats handling" do
-        post "/#{site_token}.json", MultiJson.dump(s_data)
+        post url, MultiJson.dump(s_data)
         expect(Sidekiq::Worker.jobs).to have(1).job
         expect(Sidekiq::Worker.jobs.to_s).to match /StatsWithoutAddonHandler/
       end
 
       it "responses and empty array" do
-        post "/#{site_token}.json", MultiJson.dump(s_data)
+        post url, MultiJson.dump(s_data)
         expect(last_response.body).to eq "[]"
+      end
+
+      it "increments player version (v) metrics" do
+        expect(Librato).to receive(:increment).with("data.player_version", source: "3.2.1")
+        post url, MultiJson.dump(s_data)
       end
     end
 
@@ -196,14 +202,19 @@ describe Application do
       let(:crc32_hash) { 'crc32_hash' }
 
       it "delays update on VideoTagUpdater" do
-        post "/#{site_token}.json", MultiJson.dump(v_data)
+        post url, MultiJson.dump(v_data)
         expect(Sidekiq::Worker.jobs).to have(1).job
         expect(Sidekiq::Worker.jobs.to_s).to match /VideoTagUpdater/
       end
 
       it "responses and empty array" do
-        post "/#{site_token}.json", MultiJson.dump(v_data)
+        post url, MultiJson.dump(v_data)
         expect(last_response.body).to eq "[]"
+      end
+
+      it "increments player version (v) metrics" do
+        expect(Librato).to receive(:increment).with("data.player_version", source: "3.2.1")
+        post url, MultiJson.dump(v_data)
       end
     end
 

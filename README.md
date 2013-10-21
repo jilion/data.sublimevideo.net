@@ -34,7 +34,7 @@ Data request are sent in that order of fallback:
 
 CORS requests are always sent to the same url via POST HTTP(S):
 
-`POST //data.sublimevideo.net/d/<SITE TOKEN>.json`
+`POST //data.sublimevideo.net/d/<SITE TOKEN>.json?v=<PLAYER VERSION>`
 
 The params (json) sent can include multiples requests event types (load, play, video tag data, video tag crc32 hash request) in any order all sent via an array, ie:
 
@@ -56,7 +56,7 @@ Some request types can give a response (like 'video load') so in some case an ar
 
 Requests done on data.sublimevideo.net or cdn.sublimevideo.net have the same query param.
 
-`GET //data|cdn.sublimevideo.net/_.gif?i=<TIMESTAMP>&s=<SITE TOKEN>&d=<JSON EVENTS ESCAPED>`
+`GET //data|cdn.sublimevideo.net/_.gif?s=<SITE TOKEN>&v=<PLAYER VERSION>&i=<TIMESTAMP>&d=<JSON EVENTS ESCAPED>`
 
 Query param is the same as the JSON (escaped) sent via CORS so a GIF request can sent multiple events at once. Be aware that HTTP GET request are limited to 2048 characters on <= IE8 (http://support.microsoft.com/kb/208427) so in some case a request must be split in multiple shorter GIF requests.
 
