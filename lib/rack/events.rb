@@ -25,7 +25,7 @@ module Rack
     def _load(type, env)
       send("_load_#{type.to_s}", env)
     rescue => ex
-      Honeybadger.notify_or_ignore(ex, rack_env: env)
+      Honeybadger.notify(ex, rack_env: env)
       []
     end
 
@@ -34,8 +34,7 @@ module Rack
       when /[&?]d=(.*)/ then MultiJson.load($1)
       when /&(\[.*\])/ then MultiJson.load($1) # Bugged d params
       else
-        Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: query string is invalid', rack_env: env)
-        []
+        raise('Query string is invalid')
       end
     end
 
@@ -45,16 +44,10 @@ module Rack
       when '', nil then []
       else MultiJson.load(body)
       end
-    rescue => ex
-      Honeybadger.notify_or_ignore(ex, rack_env: env, parameters: { body: body })
-      []
     end
 
     def _dump_body(body, env)
       MultiJson.dump(body)
-    rescue => ex
-      Honeybadger.notify_or_ignore(ex, rack_env: env)
-      '[]'
     end
   end
 end

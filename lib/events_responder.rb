@@ -50,20 +50,16 @@ class EventsResponder
   def _v_event_response(data)
     _delay_video_tag_update(data)
   rescue => ex
-    Honeybadger.notify_or_ignore(ex)
+    Honeybadger.notify(ex)
   ensure
     return nil
   end
 
-  def _events(&block)
+  def _events
     if events.is_a?(Array)
-      events.each do |data|
-        if event_key = data.delete('e') # New protocol only
-          block.call(event_key, data)
-        end
-      end
+      events.each { |data| yield(data.delete('e'), data) }
     else
-      Honeybadger.notify(error_class: 'Special Error', error_message: 'Special Error: events must be an array', parameters: { events: events }, rack_env: env)
+      Honeybadger.notify(error_class: 'Special Error', error_message: 'Events must be an array', parameters: { events: events }, rack_env: env)
       nil
     end
   end
