@@ -30,9 +30,8 @@ module Rack
     end
 
     def _load_query_string(env)
-      case URI.unescape(env['QUERY_STRING'])
-      when /[&?]d=(.*)/ then MultiJson.load($1)
-      when /&(\[.*\])/ then MultiJson.load($1) # Bugged d params
+      case env['QUERY_STRING']
+      when /[&?]d=([^&]*)/, /&(%5B[^&]*%5D)/ then MultiJson.load(URI.unescape($1))
       else
         raise('Query string is invalid')
       end
