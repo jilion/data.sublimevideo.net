@@ -44,6 +44,9 @@ module Rack
       when '', nil then []
       else MultiJson.load(body)
       end
+    rescue => ex
+      Honeybadger.notify(ex, parameters: { 'rack.input' => body }, rack_env: env)
+      []
     end
 
     def _dump_body(body, env)
