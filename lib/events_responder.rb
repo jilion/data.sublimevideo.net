@@ -56,12 +56,10 @@ class EventsResponder
   end
 
   def _events
-    if events.is_a?(Array)
-      events.each { |data| yield(data.delete('e'), data) }
-    else
-      Honeybadger.notify(error_class: 'Special Error', error_message: 'Events must be an array', parameters: { events: events }, rack_env: env)
-      nil
-    end
+    events.each { |data| yield(data.delete('e'), data) }
+  rescue => ex
+    Honeybadger.notify(ex, error_message: 'Events is invalid', parameters: { events: events }, rack_env: env)
+    nil
   end
 
   def _video_tag_crc32_hash(uid)
