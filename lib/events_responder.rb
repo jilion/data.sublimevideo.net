@@ -42,6 +42,7 @@ class EventsResponder
   end
 
   def _s_event_response(data)
+    Librato.increment 'temp.starts', source: 'new' if _player_version != 'none'
     _delay_stats_handling(:s, data.dup)
     _delay_video_tag_duration_update(data.dup)
     nil
