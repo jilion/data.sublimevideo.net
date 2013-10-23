@@ -29,7 +29,6 @@ class EventsResponder
   private
 
   def _al_event_response(data)
-    Librato.increment "temp.app_loads.#{_player_version}", source: 'new'
     _delay_stats_handling(:al, data)
     nil
   end
@@ -52,16 +51,13 @@ class EventsResponder
 
   def _v_event_response(data)
     _delay_video_tag_update(data)
-  rescue => ex
-    Honeybadger.notify(ex)
-  ensure
-    return nil
+    nil
   end
 
   def _events
     events.each { |data| yield(data.delete('e'), data) }
   rescue => ex
-    Honeybadger.notify(ex, error_message: 'Events is invalid', parameters: { events: events }, rack_env: env)
+    Honeybadger.notify(ex, error_message: 'Events is invalid', context: { events: events }, rack_env: env)
     nil
   end
 

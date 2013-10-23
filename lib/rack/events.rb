@@ -45,7 +45,7 @@ module Rack
       else MultiJson.load(body)
       end
     rescue => ex
-      Honeybadger.notify(ex, parameters: { 'rack.input' => body }, rack_env: env)
+      Honeybadger.notify(ex, context: { 'rack.input' => body }, rack_env: env)
       []
     end
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift("#{Dir.pwd}/lib")
 
-require "bundler"
+require 'bundler'
 Bundler.require
 
 require './config'
