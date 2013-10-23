@@ -21,7 +21,7 @@ describe EventsResponder do
     before { VideoTagCRC32Hash.stub(:new).with(site_token, uid) { video_tag_crc32_hash } }
 
     it "responds only to array of events" do
-      expect(Honeybadger).to receive(:notify)
+      expect(Honeybadger).to receive(:notify_or_ignore)
       responder = EventsResponder.new(env.merge('data.events' => 'bar'))
       expect(responder.response).to eq []
     end

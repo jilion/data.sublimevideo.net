@@ -25,7 +25,7 @@ module Rack
     def _load(type, env)
       send("_load_#{type.to_s}", env)
     rescue => ex
-      Honeybadger.notify(ex, rack_env: env)
+      Honeybadger.notify_or_ignore(ex, rack_env: env)
       []
     end
 
@@ -45,7 +45,7 @@ module Rack
       else MultiJson.load(body)
       end
     rescue => ex
-      Honeybadger.notify(ex, context: { 'rack.input' => body }, rack_env: env)
+      Honeybadger.notify_or_ignore(ex, context: { 'rack.input' => body }, rack_env: env)
       []
     end
 
