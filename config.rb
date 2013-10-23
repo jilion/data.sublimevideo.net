@@ -6,7 +6,7 @@ Honeybadger.configure do |config|
   end
 
   config.ignore_by_filter do |exception_data|
-    puts exception_data.inspect
-    false
+    player_version = exception_data[:parameters]['v']
+    [nil, '2.5.28', '2.5.29', '2.5.30'].include?(player_version)
   end
 end
