@@ -40,10 +40,7 @@ module Rack
 
     def _load_rack_input(env)
       body = env['rack.input'] && env['rack.input'].read
-      case body
-      when '', nil then []
-      else MultiJson.load(body)
-      end
+      MultiJson.load(body)
     rescue => ex
       Honeybadger.notify_or_ignore(ex, context: { 'rack.input' => body }, rack_env: env)
       []

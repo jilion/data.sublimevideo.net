@@ -57,7 +57,7 @@ class EventsResponder
   def _events
     events.each { |data| yield(data.delete('e'), data) }
   rescue => ex
-    Honeybadger.notify_or_ignore(ex, error_message: 'Events is invalid', context: { events: events }, rack_env: env)
+    Honeybadger.notify_or_ignore(ex, error_message: 'Events are invalid', context: { events: events }, rack_env: env)
     nil
   end
 
