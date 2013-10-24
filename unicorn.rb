@@ -9,7 +9,7 @@ before_fork do |server, worker|
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { size: 2 } # for web dyno
+    config.redis = { size: 1 } # for web dyno
   end
 end
 
@@ -19,6 +19,6 @@ after_fork do |server, worker|
   end
 
   Sidekiq.configure_client do |config|
-    config.redis = { size: 2 } # for web dyno
+    config.redis = { size: 1 } # for web dyno
   end
 end
