@@ -127,6 +127,7 @@ describe Application do
       it "responses 400 Bad request" do
         post url, nil
         expect(last_response.status).to eq 400
+        expect(last_response.body).to eq 'Bad Request'
       end
     end
 
