@@ -119,8 +119,15 @@ describe Application do
     end
 
     it "always responds in JSON" do
-      post url, nil, 'Content-Type' => 'text/plain'
+      post url, MultiJson.dump([{ 'e' => 'al' }]), 'Content-Type' => 'text/plain'
       expect(last_response.body).to eq "[]"
+    end
+
+    context "empty body" do
+      it "responses 400 Bad request" do
+        post url, nil
+        expect(last_response.status).to eq 400
+      end
     end
 
     context "al event" do

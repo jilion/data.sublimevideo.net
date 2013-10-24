@@ -8,10 +8,7 @@ module Rack
 
     def call(env)
       case env['REQUEST_METHOD']
-      when 'POST'
-        env['data.events'] = _load(:rack_input, env)
-        status, headers, body = @app.call(env)
-        [status, headers, [_dump_body(body, env)]]
+      when 'POST' then _handle_post(env)
       when 'GET', 'HEAD' # GIF request
         env['data.events'] = _load(:query_string, env)
         @app.call(env)
@@ -21,6 +18,16 @@ module Rack
     end
 
     private
+
+    def _handle_post(env)
+      env['data.events'] = _load(:rack_input, env)
+      if env['data.events'].empty?
+        [400, { 'Content-Type' => 'text/plain', 'Content-Length' => '0' }, []]
+      else
+        status, headers, body = @app.call(env)
+        [status, headers, [_dump_body(body, env)]]
+      end
+    end
 
     def _load(type, env)
       send("_load_#{type.to_s}", env)
@@ -40,7 +47,10 @@ module Rack
 
     def _load_rack_input(env)
       body = env['rack.input'] && env['rack.input'].read
-      MultiJson.load(body)
+      case body
+      when '', nil then []
+      else MultiJson.load(body)
+      end
     rescue => ex
       Honeybadger.notify_or_ignore(ex, context: { 'rack.input' => body }, rack_env: env)
       []
