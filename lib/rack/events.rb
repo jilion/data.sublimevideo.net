@@ -21,7 +21,7 @@ module Rack
 
     def _handle_post(env)
       env['data.events'] = _load(:rack_input, env)
-      if env['data.events'].empty?
+      if env['data.events'].nil? || env['data.events'].empty?
         [400, { 'Content-Type' => 'text/plain', 'Content-Length' => '11' }, ['Bad Request']]
       else
         status, headers, body = @app.call(env)
