@@ -22,6 +22,8 @@ gem 'newrelic_api', require: false
 gem 'activeresource', require: false
 gem 'heroku-api', require: false
 
+gem 'rspec', require: false
+
 group :development do
   # Guard
   gem 'ruby_gntp', require: false
@@ -29,7 +31,6 @@ group :development do
 end
 
 group :test do
-  gem 'rspec'
   gem 'rack-test'
   gem 'timecop'
 end
