@@ -1,4 +1,4 @@
-# SublimeVideo Async Data2 Server (Rack + Puma)
+# SublimeVideo Async Data2 Server (Rack)
 
 ## Installation
 
