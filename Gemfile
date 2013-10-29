@@ -16,12 +16,7 @@ gem 'honeybadger'
 gem 'librato-rack'
 gem 'rescue_me'
 
-# scaler
 gem 'rake', require: false
-gem 'newrelic_api', require: false
-gem 'activeresource', require: false
-gem 'heroku-api', require: false
-
 gem 'rspec', require: false
 
 group :development do
