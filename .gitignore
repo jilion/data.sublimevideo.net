@@ -5,9 +5,7 @@ vendor/bundler
 !Guardfile
 !Gemfile
 !Gemfile.lock
-!.bundle
-.bundle/gems
-.bundle/bin
+!.bundle/config
 node_modules
 .env
 .tm_properties
