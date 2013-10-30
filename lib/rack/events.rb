@@ -51,8 +51,7 @@ module Rack
       when '', nil then []
       else MultiJson.load(body)
       end
-    rescue => ex
-      Honeybadger.notify_or_ignore(ex, context: { 'rack.input' => body }, rack_env: env)
+    rescue
       []
     end
 
