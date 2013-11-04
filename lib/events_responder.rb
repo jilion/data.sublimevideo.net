@@ -2,7 +2,7 @@ require 'video_tag_crc32_hash'
 require 'workers/stats_with_addon_handler_worker'
 require 'workers/stats_without_addon_handler_worker'
 require 'workers/video_tag_updater_worker'
-require 'workers/video_tag_duration_updater_worker'
+require 'workers/video_tag_start_handler_worker'
 
 class EventsResponder
   EVENT_KEYS = %w[h v l al s]
@@ -45,7 +45,7 @@ class EventsResponder
   def _s_event_response(data)
     Librato.increment "temp.starts.#{_player_version}", source: 'new'
     _delay_stats_handling(:s, data.dup)
-    _delay_video_tag_duration_update(data.dup)
+    _delay_video_tag_start_handler(data.dup)
     nil
   end
 
@@ -79,11 +79,10 @@ class EventsResponder
     end
   end
 
-  def _delay_video_tag_duration_update(data)
-    uid = data.delete('u')
-    duration = data.delete('vd')
-    if uid && duration
-      VideoTagDurationUpdaterWorker.perform_async(site_token, uid, duration)
+  def _delay_video_tag_start_handler(data)
+    if uid = data.delete('u')
+      data = { t: Time.now.utc, vd: data.delete('vd') } # duration only
+      VideoTagStartHandlerWorker.perform_async(site_token, uid, data)
     end
   end
 

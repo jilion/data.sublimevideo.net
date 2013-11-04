@@ -100,16 +100,18 @@ describe EventsResponder do
         end
       end
 
-      it "doesn't delays video_tag duration update without u params" do
-        expect(VideoTagDurationUpdaterWorker).to_not receive(:perform_async)
+      it "doesn't delays video_tag start handler without u params" do
+        expect(VideoTagStartHandlerWorker).to_not receive(:perform_async)
         events_responder.response
       end
 
       context 'with uid and vd data' do
         let(:events) { [{ 'e' => 's', 'u' => uid, 'vd' => '123456'}] }
 
-        it "delays video_tag duration update" do
-          expect(VideoTagDurationUpdaterWorker).to receive(:perform_async).with(site_token, uid, '123456')
+        it "delays video_tag start handling" do
+          expect(VideoTagStartHandlerWorker).to receive(:perform_async).with(site_token, uid, {
+            t: kind_of(Time), vd: '123456'
+          })
           events_responder.response
         end
       end
