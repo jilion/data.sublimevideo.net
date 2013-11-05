@@ -31,8 +31,7 @@ module Rack
 
     def _load(type, env)
       send("_load_#{type.to_s}", env)
-    rescue => ex
-      Honeybadger.notify_or_ignore(ex, rack_env: env)
+    rescue
       []
     end
 
