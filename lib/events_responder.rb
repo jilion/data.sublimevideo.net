@@ -20,9 +20,9 @@ class EventsResponder
     response = []
     _events do |event_key, data|
       response << send("_#{event_key}_event_response", data)
-      if site_token == '9pfe3uop'
-        Honeybadger.notify_or_ignore(error_message: '9pfe3uop data', context: { event_key: event_key, data: data.to_s }, rack_env: env)
-      end
+      # if site_token == '9pfe3uop'
+      #   Honeybadger.notify_or_ignore(error_message: '9pfe3uop data', context: { event_key: event_key, data: data.to_s }, rack_env: env)
+      # end
       Librato.increment 'data.events_type', source: event_key
       Librato.increment 'data.player_version', source: _player_version
     end
