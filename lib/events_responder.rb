@@ -34,7 +34,6 @@ class EventsResponder
   end
 
   def _l_event_response(data)
-    Librato.increment "temp.loads.#{_player_version}", source: 'new'
     _delay_stats_handling(:l, data)
     if uid = data.delete('u')
       crc32 = _video_tag_crc32_hash(uid).get
@@ -43,7 +42,6 @@ class EventsResponder
   end
 
   def _s_event_response(data)
-    Librato.increment "temp.starts.#{_player_version}", source: 'new'
     _delay_stats_handling(:s, data.dup)
     _delay_video_tag_start_handler(data.dup)
     nil
