@@ -50,6 +50,8 @@ describe Application do
     end
 
     context "without site_token params" do
+      let(:url) { "/_.gif?t=foo" }
+
       it "responses with transparent gif" do
         get url
         expect(last_response.header['Content-Type']).to eq 'image/gif'
