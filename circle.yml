@@ -3,6 +3,6 @@ dependencies:
     - '.bundle'
 deployment:
   production:
-    branch: data2
+    branch: master
     heroku:
-      appname: sv-data2
+      appname: sv-data
