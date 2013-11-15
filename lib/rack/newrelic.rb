@@ -1,10 +1,7 @@
 require 'new_relic/agent/instrumentation/rack'
 
-module DataSublimeVideo
-
-  class NewRelic
-    include ::AsyncRack::AsyncCallback::SimpleWrapper
-
+module Rack
+  class Newrelic
     def initialize(app)
       @app = app
     end
@@ -13,7 +10,6 @@ module DataSublimeVideo
       @app.call(env)
     end
 
-    include ::NewRelic::Agent::Instrumentation::Rack
+    include NewRelic::Agent::Instrumentation::Rack
   end
-
 end

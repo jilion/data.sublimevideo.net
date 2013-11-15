@@ -1,65 +1,31 @@
 source 'http://rubygems.org'
-source 'https://gems.gemfury.com/8dezqz7z7HWea9vtaFwg/' # thibaud@jilion.com account
+ruby '2.0.0'
 
-ruby '1.9.3'
+gem 'unicorn'
 
-gem 'rake'
+gem 'rack'
+gem 'rack-status'
 
-gem 'cramp', git: 'git://github.com/wtn/cramp.git', branch: 'rails_3.1-3.2'
+gem 'multi_json'
+gem 'oj'
 
-# Async webserver for running a cramp application
-gem 'thin'
-
-# Rack based routing
-gem 'http_router'
-
-# Collection of async-proof rack middlewares - https://github.com/rkh/async-rack.git
-gem 'async-rack'
-
-# For stats parsing
-gem 'useragent', git: 'git://github.com/jilion/useragent.git' # needed for stat_request_parser
-gem 'stat_request_parser'
-
-gem 'settingslogic'
-gem 'pusher'
-gem 'em-http-request'
-
-# For Mongoid.
-gem 'bson_ext'
-gem 'mongoid'
-gem 'em-mongo'
-
-gem 'require_all'
+gem 'sidekiq'
 
 gem 'newrelic_rpm'
-gem 'rpm_contrib'
+gem 'honeybadger'
+gem 'librato-rack'
+gem 'rescue_me'
 
-# Using Fibers + async callbacks to emulate synchronous programming
-gem 'em-synchrony', '~> 1.0.0'
+gem 'rake', require: false
+gem 'rspec', require: false
 
-# For Redis
-gem 'hiredis', '~> 0.4.5'
-gem 'redis',   '~> 2.2.2', require: ['redis/connection/synchrony', 'redis']
-
-# Generic interface to multiple Ruby template engines - https://github.com/rtomayko/tilt
-# gem 'tilt'
-
-group :test do
-  gem 'rspec'
-  gem 'rspec-cramp', require: 'rspec/cramp'
+group :development do
+  # Guard
+  gem 'ruby_gntp', require: false
+  gem 'guard-rspec', require: false
 end
 
-group :tools do
-  gem 'heroku'
-  gem 'foreman'
-  gem 'powder'
-  gem 'pry'
-
-  # Guard
-  gem 'growl'
-  platforms :ruby do
-    gem 'rb-readline'
-  end
-
-  gem 'guard-rspec'
+group :test do
+  gem 'rack-test'
+  gem 'timecop'
 end

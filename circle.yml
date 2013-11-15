@@ -1,0 +1,8 @@
+dependencies:
+  cache_directories:
+    - '.bundle'
+deployment:
+  production:
+    branch: data2
+    heroku:
+      appname: sv-data2

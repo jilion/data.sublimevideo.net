@@ -1,9 +1,10 @@
-guard 'rspec', :version => 2, :cli => "--color" do
-  watch('application.rb')       { "spec" }
-  watch('config/routes.rb')     { "spec" }
+guard :rspec do
+  watch('config.rb')            { "spec" }
+  watch('config.ru')            { "spec" }
+  watch('lib/application.rb')   { "spec" }
+  watch(%r{^lib/rack/.+\.rb$})  { "spec" }
+  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
+
   watch('spec/spec_helper.rb')  { "spec" }
-
   watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^app/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
 end
-

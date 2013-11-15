@@ -1,18 +1,25 @@
-require './application'
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift("#{Dir.pwd}/lib")
 
-DataSublimeVideo::Application.initialize!
+require 'bundler'
+Bundler.require
 
-# Middlewares
-case DataSublimeVideo::Application.env
-when 'development'
-  use AsyncRack::CommonLogger
-  # Enable code reloading on every request
-  use Rack::Reloader, 0
-  # Serve assets from /public
-  use Rack::Static, :urls => ["/javascripts"], :root => DataSublimeVideo::Application.root(:public)
-when 'production'
-  require './newrelic'
-  use DataSublimeVideo::NewRelic
-end
+require './config'
+require 'rack/cors'
+require 'rack/get_redirector'
+require 'rack/events'
+require 'rack/newrelic'
+require 'rack/site_token'
+require 'rack/status'
+require 'application'
 
-run DataSublimeVideo::Application.routes
+use Rack::Status
+use Honeybadger::Rack
+use Rack::Newrelic
+use Librato::Rack
+use Rack::GETRedirector
+use Rack::CORS
+use Rack::SiteToken
+use Rack::Events
+
+run Application.new

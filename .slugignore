@@ -1,7 +1,6 @@
 *.psd
 *.pdf
 .gitconfig
-.rvmrc
 Guardfile
 test
 spec

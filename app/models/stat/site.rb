@@ -1,2 +1,0 @@
-module Stat::Site
-end
