@@ -6,7 +6,7 @@ class Application
   def call(env)
     if env['data.site_token']
       body = EventsResponder.new(env).response
-      _gif_request?(env) ? _gif_response(env) : [200, {}, body]
+      _gif_request?(env) ? _gif_response(env) : [200, {'Content-Type' => 'text/plain'}, body]
     else
       _gif_request?(env) ? _gif_response(env) : _404_response
     end
@@ -23,6 +23,6 @@ class Application
   end
 
   def _404_response
-    [404, {'Content-Type' => 'text/html', 'Content-Length' => '9'}, ['Not Found']]
+    [404, {'Content-Type' => 'text/plain', 'Content-Length' => '9'}, ['Not Found']]
   end
 end
